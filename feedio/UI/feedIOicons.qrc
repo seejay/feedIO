@@ -1,0 +1,16 @@
+<RCC>
+  <qresource prefix="/">
+    <file>images/addFeed.png</file>
+    <file>images/downVote.png</file>
+    <file>images/exit.png</file>
+    <file>images/feedIO.png</file>
+    <file>images/preferences.png</file>
+    <file>images/read.png</file>
+    <file>images/removeFeed.png</file>
+    <file>images/splash.png</file>
+    <file>images/upVote.png</file>
+    <file>images/fetchAll.png</file>
+    <file>images/fetchFeed.png</file>
+    <file>images/visitPage.png</file>
+  </qresource>
+</RCC>

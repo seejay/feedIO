@@ -1,0 +1,16 @@
+feedIO was originally created in early 2011 at Sri Lanka Institute of 
+Information Technology by the project developers mentioned below as their 
+final year research and development project for the Bsc. Special Honors 
+in Information Technology.
+
+The project authors are:
+
+    * Chanaka Jayamal (Project Lead)
+    * Lanka Amarasekara
+    * Kolitha Gajanayake
+    * Chamika Viraj
+    
+A BIG thank goes to:
+    * Mr. Lakmal Rupasinghe (Project Supervisor)
+    * Mr. Samantha Rajapaksha (Project Co-supervisor)
+    * Guido van Rossum for creating Python.
