@@ -14,8 +14,8 @@
    <string>Remove Topic</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../images/feedIOicons.qrc">
-    <normaloff>:/feedIO.png</normaloff>:/feedIO.png</iconset>
+   <iconset resource="feedIOicons.qrc">
+    <normaloff>:/images/feedIO.png</normaloff>:/images/feedIO.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -69,7 +69,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../images/feedIOicons.qrc"/>
+  <include location="feedIOicons.qrc"/>
  </resources>
  <connections/>
 </ui>

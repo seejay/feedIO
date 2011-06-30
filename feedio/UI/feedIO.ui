@@ -440,6 +440,7 @@
     <property name="title">
      <string>feedI&amp;O</string>
     </property>
+    <addaction name="actionMinimizeToTray"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuTopics">
@@ -660,6 +661,11 @@
   <action name="actionRemoveTopic">
    <property name="text">
     <string>&amp;Remove Topic</string>
+   </property>
+  </action>
+  <action name="actionMinimizeToTray">
+   <property name="text">
+    <string>Mi&amp;nimize to tray</string>
    </property>
   </action>
  </widget>

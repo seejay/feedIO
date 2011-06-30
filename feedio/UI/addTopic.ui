@@ -34,8 +34,8 @@
    <string>Add Topic</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../images/feedIOicons.qrc">
-    <normaloff>:/feedIO.png</normaloff>:/feedIO.png</iconset>
+   <iconset resource="feedIOicons.qrc">
+    <normaloff>:/images/feedIO.png</normaloff>:/images/feedIO.png</iconset>
   </property>
   <property name="windowOpacity">
    <double>1.000000000000000</double>
@@ -124,7 +124,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../images/feedIOicons.qrc"/>
+  <include location="feedIOicons.qrc"/>
  </resources>
  <connections/>
 </ui>

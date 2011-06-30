@@ -27,9 +27,9 @@ __license__ = """
 
 __author__ = "Chanaka Jayamal <seejay@seejay.net>"
 
-__developers__ = ["Chanaka Jayamal", 
-                  "Lanka Amarasekara", 
-                  "Kolitha Gajanayake", 
+__developers__ = ["Chanaka Jayamal",
+                  "Lanka Amarasekara",
+                  "Kolitha Gajanayake",
                   "Chamika Viraj"]
 
 
@@ -54,8 +54,10 @@ import feedmanager as fm
 class mainUI(QMainWindow):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
+        self.parent = parent
         self.ui = Ui_feedIO()
         self.ui.setupUi(self)
+        self.raise_()
 
         self.feedList = []
         self.itemList = []
@@ -66,6 +68,14 @@ class mainUI(QMainWindow):
         self.connect(self.ui.listUnread, SIGNAL("currentItemChanged(QListWidgetItem *,QListWidgetItem *)"), self.displayArticle)
         self.connect(self.ui.actionVisitPage, SIGNAL("activated()"), self.visitPage)
         self.connect(self.ui.actionFetchAllFeeds, SIGNAL("activated()"), self.fetchAllFeeds)
+#        self.connect(self, SIGNAL('triggered()'), self.closeEvent)
+
+    def closeEvent(self, event):
+        """
+        Modification to the closeEvent so that pressing the close button in main window will only exit the
+        """
+        self.hide()
+        event.ignore()
 
     def displayFeeds(self):
         self.feedList = fm.listFeeds()
@@ -79,7 +89,7 @@ class mainUI(QMainWindow):
         function to update the Articles list according to the selected feeds list.
         """
         selectedIndex = self.ui.comboFeed.currentIndex()
-        
+
         if len(self.feedList) == 0:
             itemTitles = []
         else:
@@ -92,11 +102,11 @@ class mainUI(QMainWindow):
             else:
                 selectedFeed = self.feedList[selectedIndex]
                 self.itemList = fm.listItems(selectedFeed)
-                itemTitles = [item.title for item in self.itemList]            
+                itemTitles = [item.title for item in self.itemList]
                 #Code to change the window title to the currently viewing feed's title
                 windowTitle = selectedFeed.title + " - feedIO"
                 self.setWindowTitle(windowTitle)
-            
+
         self.ui.listUnread.clear()
         self.ui.listUnread.addItems(itemTitles)
 
@@ -182,9 +192,16 @@ class mainUI(QMainWindow):
         if i is None: return
 
         RemoveTopicDialog(self).exec_()
-        
+
 
     def on_actionExit_activated(self, i = None):
+        """
+        Exit action implementataion. Exits the application.
+        """
+        if i is None: return
+        self.parent.close()
+
+    def on_actionMinimizeToTray_activated(self, i = None):
         """
         Exit action implementataion. Exits the application.
         """
@@ -204,12 +221,12 @@ class AddFeedDialog(QDialog):
 
     def addFeed(self):
         feedUrl = unicode(self.ui.UrlLineEdit.text())
-        
+
         thread = threading.Thread(target=fm.addFeed, args=(feedUrl,))
         thread.setDaemon(True)
         thread.start()
 #        fm.addFeed(feedUrl)
-        
+
         thread.join()
         self.close()
 
@@ -233,12 +250,12 @@ class RemoveFeedDialog(QDialog):
         feedTitles = [feed.title for feed in self.feedList]
         self.ui.feedList.clear()
         self.ui.feedList.addItems(feedTitles)
-    
+
     def removeFeed(self):
         selectedIndex = self.ui.feedList.currentIndex()
         selectedFeed = self.feedList[selectedIndex]
         fm.removeFeed(selectedFeed)
-        self.close()        
+        self.close()
 
 
 class ManageFeedsDialog(QDialog):
@@ -296,19 +313,28 @@ def initUI():
     splash.show()
     app.processEvents()
 
-    #time.sleep(2)
+#    time.sleep(2)
 
-    mainApp = mainUI()
-    
-    trayIcon = QIcon()
-    trayIcon.addPixmap(QPixmap(":/images/feedIO.png"), QIcon.Normal, QIcon.Off)
-#    trayIcon = SystemTrayIcon(QIcon("./images/feedIO.png"), mainApp)
-    trayIcon = SystemTrayIcon(trayIcon, mainApp)
+    # create a feedIO QWidget instance
+    feedIO = QWidget()
+
+    # pass feedIO as the parent for the mainWindow.
+    mainWindow = mainUI(feedIO)
+
+    # system tray icon
+    icon = QIcon()
+    icon.addPixmap(QPixmap(":/images/feedIO.png"), QIcon.Normal, QIcon.Off)
+
+    # Pass the feedIO instance as the parent and the mainWindow instance as the child.
+    trayIcon = SystemTrayIcon(icon, feedIO, mainWindow)
+
+    #tool tip for the system try icon.
+    # TODO this should be updated appropriately at run time.
     trayIcon.setToolTip("feedIO " + __version__ + " developer build running...")
     trayIcon.show()
 
-    mainApp.show()
-    splash.finish(mainApp)
+    mainWindow.show()
+    splash.finish(mainWindow)
     sys.exit(app.exec_())
 
 

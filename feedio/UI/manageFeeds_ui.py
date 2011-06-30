@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'manageFeeds.ui'
 #
-# Created: Thu Jun 30 01:38:37 2011
+# Created: Thu Jun 30 09:35:02 2011
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,7 @@ class Ui_manageFeeds(object):
         manageFeeds.setObjectName("manageFeeds")
         manageFeeds.resize(392, 293)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/feedIO.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/feedIO.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         manageFeeds.setWindowIcon(icon)
         self.feedList = QtGui.QListWidget(manageFeeds)
         self.feedList.setGeometry(QtCore.QRect(10, 20, 221, 251))

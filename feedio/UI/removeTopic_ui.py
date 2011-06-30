@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'removeTopic.ui'
 #
-# Created: Thu Jun 30 01:38:37 2011
+# Created: Thu Jun 30 09:35:02 2011
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,7 @@ class Ui_removeTopic(object):
         removeTopic.setObjectName("removeTopic")
         removeTopic.resize(422, 150)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/feedIO.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/feedIO.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         removeTopic.setWindowIcon(icon)
         self.gridLayout = QtGui.QGridLayout(removeTopic)
         self.gridLayout.setObjectName("gridLayout")
