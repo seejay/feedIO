@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'addFeed.ui'
 #
-# Created: Thu Jun 30 01:38:37 2011
+# Created: Thu Jun 30 09:35:01 2011
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,7 @@ class Ui_addFeed(object):
         addFeed.setObjectName("addFeed")
         addFeed.resize(430, 166)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/feedIO.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/feedIO.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         addFeed.setWindowIcon(icon)
         self.layoutWidget = QtGui.QWidget(addFeed)
         self.layoutWidget.setGeometry(QtCore.QRect(12, 13, 411, 151))

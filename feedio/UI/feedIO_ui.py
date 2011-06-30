@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'feedIO.ui'
 #
-# Created: Thu Jun 30 01:38:37 2011
+# Created: Thu Jun 30 09:35:01 2011
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -265,6 +265,8 @@ class Ui_feedIO(object):
         self.actionAddTopic.setObjectName("actionAddTopic")
         self.actionRemoveTopic = QtGui.QAction(feedIO)
         self.actionRemoveTopic.setObjectName("actionRemoveTopic")
+        self.actionMinimizeToTray = QtGui.QAction(feedIO)
+        self.actionMinimizeToTray.setObjectName("actionMinimizeToTray")
         self.menuFile.addAction(self.actionAddFeed)
         self.menuFile.addAction(self.actionRemoveFeed)
         self.menuFile.addAction(self.actionFetchFeed)
@@ -277,6 +279,7 @@ class Ui_feedIO(object):
         self.menuArticle.addAction(self.actionDownVote)
         self.menuArticle.addAction(self.actionRead)
         self.menuArticle.addAction(self.actionVisitPage)
+        self.menuFeedIO.addAction(self.actionMinimizeToTray)
         self.menuFeedIO.addAction(self.actionExit)
         self.menuTopics.addAction(self.actionManageTopics)
         self.menuTopics.addAction(self.actionAddTopic)
@@ -332,6 +335,7 @@ class Ui_feedIO(object):
         self.actionManageTopics.setText(QtGui.QApplication.translate("feedIO", "&Manage Topics", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAddTopic.setText(QtGui.QApplication.translate("feedIO", "&Add Topic", None, QtGui.QApplication.UnicodeUTF8))
         self.actionRemoveTopic.setText(QtGui.QApplication.translate("feedIO", "&Remove Topic", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionMinimizeToTray.setText(QtGui.QApplication.translate("feedIO", "Mi&nimize to tray", None, QtGui.QApplication.UnicodeUTF8))
 
 from PyQt4 import QtWebKit
 import feedIOicons_rc
