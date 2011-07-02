@@ -47,6 +47,7 @@ from UI.removeFeed_ui import Ui_removeFeed
 from UI.addTopic_ui import Ui_addTopic
 from UI.removeTopic_ui import Ui_removeTopic
 from UI.manageTopics_ui import Ui_manageTopics
+from UI.about_ui import Ui_About
 
 from UI.systray import SystemTrayIcon
 import feedmanager as fm
@@ -207,6 +208,13 @@ class mainUI(QMainWindow):
         """
         if i is None: return
         self.close()
+    
+    def on_actionAbout_activated(self, i = None):
+        """
+        About action implementataion.
+        """
+        if i is None: return
+        AboutDialog(self).exec_()
 
 
 class AddFeedDialog(QDialog):
@@ -300,6 +308,11 @@ class ManageTopicsDialog(QDialog):
 
         self.connect(self.ui.btnExit, SIGNAL('clicked()'), SLOT('close()'))
 
+class AboutDialog(QDialog):
+    def __init__(self, parent):
+        QDialog.__init__(self, parent)
+        self.ui=Ui_About()
+        self.ui.setupUi(self)
 
 def initUI():
 
