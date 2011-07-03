@@ -62,8 +62,8 @@ def removeTopic(topic):
         topic.delete()
         session.commit()
     except:
+        session.rollback()
         print "Error removing topic!"
-        pass
 
 
 def voteFeed(feed):
