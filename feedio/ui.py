@@ -331,6 +331,8 @@ class AboutDialog(QDialog):
         QDialog.__init__(self, parent)
         self.ui=Ui_About()
         self.ui.setupUi(self)
+        
+        self.connect(self.ui.btnClose, SIGNAL('clicked()'), SLOT('close()'))
 
 def initUI():
 

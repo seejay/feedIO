@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>451</width>
-    <height>414</height>
+    <width>454</width>
+    <height>410</height>
    </rect>
   </property>
   <property name="font">
@@ -40,6 +40,7 @@
    </property>
    <property name="font">
     <font>
+     <family>Sans Serif</family>
      <pointsize>10</pointsize>
     </font>
    </property>
@@ -59,7 +60,7 @@
     <bool>true</bool>
    </property>
    <property name="alignment">
-    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    <set>Qt::AlignCenter</set>
    </property>
    <property name="openExternalLinks">
     <bool>false</bool>
@@ -76,6 +77,7 @@
    </property>
    <property name="font">
     <font>
+     <family>Sans Serif</family>
      <pointsize>19</pointsize>
      <weight>75</weight>
      <bold>true</bold>
@@ -85,7 +87,7 @@
     <string>feedIO</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="lblAbout">
@@ -99,12 +101,12 @@
    </property>
    <property name="font">
     <font>
+     <family>Sans Serif</family>
      <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
-    <string>feedIO is a feed aggregator that tracks the user's reading tastes and prioritizes
-the content from future feed updates according to the recorded user preferences.</string>
+    <string>feedIO is a feed aggregator that tracks the user's reading tastes and prioritizes the content from future feed updates according to the recorded user preferences.</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -124,6 +126,7 @@ the content from future feed updates according to the recorded user preferences.
    </property>
    <property name="font">
     <font>
+     <family>Sans Serif</family>
      <pointsize>7</pointsize>
     </font>
    </property>
@@ -134,7 +137,7 @@ the content from future feed updates according to the recorded user preferences.
     <string>Copyright © 2011 SLIIT</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="image">
@@ -142,7 +145,7 @@ the content from future feed updates according to the recorded user preferences.
     <rect>
      <x>-19</x>
      <y>0</y>
-     <width>471</width>
+     <width>481</width>
      <height>171</height>
     </rect>
    </property>
@@ -156,11 +159,11 @@ the content from future feed updates according to the recorded user preferences.
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="btnClose">
+  <widget class="QPushButton" name="btnCredits">
    <property name="geometry">
     <rect>
-     <x>344</x>
-     <y>375</y>
+     <x>21</x>
+     <y>363</y>
      <width>85</width>
      <height>27</height>
     </rect>
@@ -171,15 +174,20 @@ the content from future feed updates according to the recorded user preferences.
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
+   <property name="font">
+    <font>
+     <family>Sans Serif</family>
+    </font>
+   </property>
    <property name="text">
-    <string>Close</string>
+    <string>C&amp;redits</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btnLicense">
    <property name="geometry">
     <rect>
-     <x>111</x>
-     <y>375</y>
+     <x>141</x>
+     <y>363</y>
      <width>85</width>
      <height>27</height>
     </rect>
@@ -190,15 +198,20 @@ the content from future feed updates according to the recorded user preferences.
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
+   <property name="font">
+    <font>
+     <family>Sans Serif</family>
+    </font>
+   </property>
    <property name="text">
-    <string>License</string>
+    <string>&amp;License</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="btnCredits">
+  <widget class="QPushButton" name="btnClose">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>375</y>
+     <x>325</x>
+     <y>363</y>
      <width>85</width>
      <height>27</height>
     </rect>
@@ -209,8 +222,13 @@ the content from future feed updates according to the recorded user preferences.
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
+   <property name="font">
+    <font>
+     <family>Sans Serif</family>
+    </font>
+   </property>
    <property name="text">
-    <string>Credits</string>
+    <string>&amp;Close</string>
    </property>
   </widget>
  </widget>
