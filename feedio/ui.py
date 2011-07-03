@@ -233,7 +233,6 @@ class AddFeedDialog(QDialog):
         thread = threading.Thread(target=fm.addFeed, args=(feedUrl,))
         thread.setDaemon(True)
         thread.start()
-#        fm.addFeed(feedUrl)
 
         thread.join()
         self.close()
@@ -271,15 +270,33 @@ class ManageFeedsDialog(QDialog):
         QDialog.__init__(self, parent)
         self.ui=Ui_manageFeeds()
         self.ui.setupUi(self)
+        self.feedList = []
         self.displayFeeds()
-
         self.connect(self.ui.btnExit, SIGNAL('clicked()'), SLOT('close()'))
+        self.connect(self.ui.btnRemove, SIGNAL('clicked()'), self.removeFeed)
+        self.connect(self.ui.btnAdd, SIGNAL('clicked()'), self.addFeed)
 
     def displayFeeds(self):
-        feedList = fm.listFeeds()
-        feedTitles = [feed.title for feed in feedList]
+        self.feedList = fm.listFeeds()
+        feedTitles = [feed.title for feed in self.feedList]
         self.ui.feedList.clear()
         self.ui.feedList.addItems(feedTitles)
+
+    def removeFeed(self):
+        selectedItemIndex = self.ui.feedList.currentRow()
+        selectedFeed = self.feedList[selectedItemIndex]
+        fm.removeFeed(selectedFeed)
+        self.displayFeeds()
+
+    def addFeed(self):
+        feedUrl = unicode(self.ui.urlLine.text())
+        #Run the addFeed function in a new thread so that the ui is responsive.
+        thread = threading.Thread(target=fm.addFeed, args=(feedUrl,))
+        thread.setDaemon(True)
+        thread.start()
+        thread.join()
+        self.ui.urlLine.clear()
+        self.displayFeeds()
 
 
 class AddTopicDialog(QDialog):
@@ -307,6 +324,7 @@ class ManageTopicsDialog(QDialog):
         self.ui.setupUi(self)
 
         self.connect(self.ui.btnExit, SIGNAL('clicked()'), SLOT('close()'))
+
 
 class AboutDialog(QDialog):
     def __init__(self, parent):
