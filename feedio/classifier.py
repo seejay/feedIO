@@ -1,11 +1,8 @@
 #!/usr/bin/python
 
 """
-Author  : Chanaka Jayamal
-Date    : 20/05/2011
-
-Classifier module for feedIO.
-Provides necessary text classification capabilities needed to prioritize the articles.
+Classifier module for feedIO. Provides necessary text classification capabilities
+ that are needed to prioritize the articles fetched from web feeds.
 """
 
 
@@ -61,9 +58,14 @@ def removeTopic(topic):
     """
     function to remove topic from the database.
     """
-    pass
-    #add code to remove the topic passed to the function
-    
+    try:
+        topic.delete()
+        session.commit()
+    except:
+        session.rollback()
+        print "Error removing topic!"
+
+
 def voteFeed(feed):
     feed.numVotes += 1
     
