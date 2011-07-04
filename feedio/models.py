@@ -61,11 +61,12 @@ class Item(Entity):
     """
     
     title = Field(Unicode(100))
-    url = Field(Unicode(255),  primary_key=True)
+    url = Field(Unicode(255), primary_key=True)
     description = Field(UnicodeText)
     updated = Field(Float) # Stores the seconds since EPOCH
     generalScore = Field(Integer, default =1000)
     isUnread = Field(Boolean,default=True)
+    favourite = Field(Boolean,default=False)
     feed = ManyToOne('Feed')
     topics = ManyToMany('Topic')
     
@@ -77,8 +78,10 @@ class Topic(Entity):
     The Topic entity to store detils of a user interest topic
     """
     
-    title = Field(Unicode(100))
+    title = Field(Unicode(100), primary_key=True)
     items = ManyToMany('Item')
+    numVotes = Field(Integer, default =1)
+    
 
     def __repr__(self):
         return '<Topic "%s">' % self.title

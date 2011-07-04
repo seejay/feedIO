@@ -53,6 +53,7 @@ from UI.credits_ui import Ui_Credits
 
 from UI.systray import SystemTrayIcon
 import feedmanager as fm
+import classifier
 
 class mainUI(QMainWindow):
     def __init__(self, parent=None):
@@ -64,6 +65,9 @@ class mainUI(QMainWindow):
 
         self.feedList = []
         self.itemList = []
+        self.topicList = []
+        
+        self.displayTopics()
         self.displayFeeds()
         self.displayItems()
 
@@ -79,6 +83,12 @@ class mainUI(QMainWindow):
         """
         self.hide()
         event.ignore()
+
+    def displayTopics(self):
+        self.topicList = classifier.listTopics()
+        topicTitles = [topic.title for topic in self.topicList]
+        self.ui.comboTopic.clear()
+        self.ui.comboTopic.addItems(topicTitles)
 
     def displayFeeds(self):
         self.feedList = fm.listFeeds()
@@ -183,18 +193,21 @@ class mainUI(QMainWindow):
         if i is None: return
 
         ManageTopicsDialog(self).exec_()
+        self.displayTopics()
 
 
     def on_actionAddTopic_activated(self, i = None):
         if i is None: return
 
         AddTopicDialog(self).exec_()
+        self.displayTopics()
 
 
     def on_actionRemoveTopic_activated(self, i = None):
         if i is None: return
 
         RemoveTopicDialog(self).exec_()
+        self.displayTopics()
 
 
     def on_actionExit_activated(self, i = None):
@@ -308,6 +321,12 @@ class AddTopicDialog(QDialog):
         self.ui.setupUi(self)
 
         self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
+        self.connect(self.ui.btnAdd, SIGNAL('clicked()'), self.addTopic)
+        
+    def addTopic(self):
+        topic = unicode(self.ui.addTopicLinedit.text())
+        classifier.addTopic(topic)
+        self.close()
 
 
 class RemoveTopicDialog(QDialog):
@@ -315,8 +334,27 @@ class RemoveTopicDialog(QDialog):
         QDialog.__init__(self, parent)
         self.ui=Ui_removeTopic()
         self.ui.setupUi(self)
+        
+        self.topicList = []
+        self.displayTopics()
 
         self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
+        self.connect(self.ui.btnRemove, SIGNAL("clicked()"), self.removeTopic)
+
+    def displayTopics(self):
+        """
+        function to display the current topics list in the combo box.
+        """
+        self.topicList = classifier.listTopics()
+        topicTitles = [topic.title for topic in self.topicList]
+        self.ui.topicListCombo.clear()
+        self.ui.topicListCombo.addItems(topicTitles)
+
+    def removeTopic(self):
+        selectedIndex = self.ui.topicListCombo.currentIndex()
+        selectedTopic = self.topicList[selectedIndex]
+        classifier.removeTopic(selectedTopic)
+        self.close()
 
 
 class ManageTopicsDialog(QDialog):

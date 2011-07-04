@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'feedIO.ui'
 #
-# Created: Thu Jun 30 09:35:01 2011
+# Created: Tue Jul  5 00:00:03 2011
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -309,7 +309,7 @@ class Ui_feedIO(object):
     def retranslateUi(self, feedIO):
         feedIO.setWindowTitle(QtGui.QApplication.translate("feedIO", "feedIO", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("feedIO", "Feed", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_4.setText(QtGui.QApplication.translate("feedIO", "Topic", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_4.setText(QtGui.QApplication.translate("feedIO", "Interest", None, QtGui.QApplication.UnicodeUTF8))
         self.btnUp.setText(QtGui.QApplication.translate("feedIO", "UP", None, QtGui.QApplication.UnicodeUTF8))
         self.btnDown.setText(QtGui.QApplication.translate("feedIO", "DOWN", None, QtGui.QApplication.UnicodeUTF8))
         self.menuFile.setTitle(QtGui.QApplication.translate("feedIO", "&Feeds", None, QtGui.QApplication.UnicodeUTF8))

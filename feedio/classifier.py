@@ -39,19 +39,27 @@ import os
 USERDIR=os.path.join(os.path.expanduser("~"),".feedIO")
 classifierDir=os.path.join(USERDIR,"classifier")
 
-sys.path.append("./lib")
-sys.path.append("./UI")
+from lib.crm import *
+from models import *
 
-from crm import *
-from models import Topic
+
+def listTopics():
+    topicsList = Topic.query.all()
+    return topicsList
+
 
 def addTopic(topic):
     """
     function to add a new topic, creates required classifier files and database entries.
     """
-    c = Classifier(classifierDir, [topic, "not"+topic])
-    
-    newTopic = Topic(title = topic)
+    try:
+        newTopic = Topic(title = unicode(topic))
+        session.commit()
+    except:
+        session.rollback()
+    else:
+        c = Classifier(classifierDir, [topic, "not"+topic])
+        print "Added new topic %s" % unicode(topic)
     
        
 def removeTopic(topic):
@@ -64,16 +72,18 @@ def removeTopic(topic):
     except:
         session.rollback()
         print "Error removing topic!"
+    else:
+        print "Removed topic %s" % unicode(topic)
 
 
 def voteFeed(feed):
     feed.numVotes += 1
     
     
-def voteArticle(upOrDown, text, topic="Good"):
+def voteArticle(upOrDown, text, topic="General"):
     """
     voteArticle function, takes arguments upOrDown vote, topic to vote, 
-    and text to vote for
+    and the text to vote for
     """
         
     c = Classifier(classifierDir, [topic,"not"+topic])
@@ -84,13 +94,14 @@ def voteArticle(upOrDown, text, topic="Good"):
     elif upOrDown is "down":
         c.learn("not"+topic, text)
     
-    if topic is not "Good":
-        d = Classifier(classifierDir, ["Good","notGood"])
+    if topic is not "General":
+        #always add the upvote to the General interest category as well.
+        d = Classifier(classifierDir, ["General","notGeneral"])
         if upOrDown is "up":
-            d.learn("Good", text)
+            d.learn("General", text)
                     
         elif upOrDown is "down":
-            d.learn("notGood"+topic, text)
+            d.learn("notGeneral"+topic, text)
             
             
 def classifyArticle(topic,text):
@@ -106,7 +117,7 @@ def classifyArticle(topic,text):
     return (classification, probability)
 
 
-def calculateScore(item, topic="Good"):
+def calculateScore(item, topic="General"):
     """
     when an item is passed this function calculates its overall score, by 
     adding content score + feed score + feed update frequency(should be 
