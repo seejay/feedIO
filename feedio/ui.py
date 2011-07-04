@@ -48,6 +48,8 @@ from UI.addTopic_ui import Ui_addTopic
 from UI.removeTopic_ui import Ui_removeTopic
 from UI.manageTopics_ui import Ui_manageTopics
 from UI.about_ui import Ui_About
+from UI.license_ui import Ui_License
+from UI.credits_ui import Ui_Credits
 
 from UI.systray import SystemTrayIcon
 import feedmanager as fm
@@ -333,6 +335,31 @@ class AboutDialog(QDialog):
         self.ui.setupUi(self)
         
         self.connect(self.ui.btnClose, SIGNAL('clicked()'), SLOT('close()'))
+        self.connect(self.ui.btnLicense, SIGNAL('clicked()'), self.loadLicense)
+        self.connect(self.ui.btnCredits, SIGNAL('clicked()'), self.loadCredits)
+        
+    def loadLicense(self):
+        LicenseDialog(self).exec_()
+        
+    def loadCredits(self):
+        CreditsDialog(self).exec_() 
+
+class LicenseDialog(QDialog):
+    def __init__(self, parent):
+        QDialog.__init__(self, parent)
+        self.ui=Ui_License()
+        self.ui.setupUi(self)
+        
+        self.connect(self.ui.btnClose, SIGNAL('clicked()'), SLOT('close()'))
+        
+class CreditsDialog(QDialog):
+    def __init__(self, parent):
+        QDialog.__init__(self, parent)
+        self.ui=Ui_Credits()
+        self.ui.setupUi(self)
+        
+        self.connect(self.ui.btnClose, SIGNAL('clicked()'), SLOT('close()'))
+        
 
 def initUI():
 
