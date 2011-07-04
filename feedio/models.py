@@ -1,11 +1,8 @@
 #!/usr/bin/python
 
 """
-Author  : Chanaka Jayamal
-Date    : 20/05/2011
-
-database models for teh feedIO reader, uses Elixir.
-Currently has Entties for "Feed" and "Item" 
+database models for feedIO, uses python elixir. Currently has Entties for
+ "Feed", "Item" and "Topic"
 
 """
 

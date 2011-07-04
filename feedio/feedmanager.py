@@ -1,9 +1,7 @@
 #!/usr/bin/python
 """
-Author  : Chanaka Jayamal
-Date    : 20/05/2011
-
-feedManager for feedIO.
+feedManager for feedIO. provides functionality to add, remove and fetch updates
+ from feeds.
 """
 
 __version__ = "0.0.1"
