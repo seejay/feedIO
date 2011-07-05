@@ -66,13 +66,13 @@ class mainUI(QMainWindow):
         self.feedList = []
         self.itemList = []
         self.topicList = []
-        
+
         self.displayTopics()
         self.displayFeeds()
         self.displayItems()
 
         self.connect(self.ui.comboFeed, SIGNAL("currentIndexChanged(int)"), self.displayItems)
-        self.connect(self.ui.listUnread, SIGNAL("currentItemChanged(QListWidgetItem *,QListWidgetItem *)"), self.displayArticle)
+        self.connect(self.ui.listUnread, SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.displayArticle)
         self.connect(self.ui.actionVisitPage, SIGNAL("activated()"), self.visitPage)
         self.connect(self.ui.actionFetchAllFeeds, SIGNAL("activated()"), self.fetchAllFeeds)
 #        self.connect(self, SIGNAL('triggered()'), self.closeEvent)
@@ -119,17 +119,32 @@ class mainUI(QMainWindow):
                 #Code to change the window title to the currently viewing feed's title
                 windowTitle = selectedFeed.title + " - feedIO"
                 self.setWindowTitle(windowTitle)
-
         self.ui.listUnread.clear()
-        self.ui.listUnread.addItems(itemTitles)
+        for article in self.itemList:
+#            item=QTreeWidgetItem([article.title, str(time.ctime(article.updated))])
+            item=QTreeWidgetItem([article.title,])
+            item.article = article
+
+            itemIcon = QIcon()
+            itemIcon.addPixmap(QPixmap(":/images/article.png"), QIcon.Normal, QIcon.Off)
+            item.setIcon(0, itemIcon)
+
+#            if article.isUnread:
+#                item.setCheckState(0,QtCore.Qt.Checked)
+#            else:
+#                item.setCheckState(0,QtCore.Qt.Unchecked)
+
+            self.ui.listUnread.addTopLevelItem(item)
+
 
     def displayArticle(self):
         """
         displays the selected article on the viewer.
         """
         try:
-            selectedItemIndex = self.ui.listUnread.currentRow()
-            selectedItem = self.itemList[selectedItemIndex]
+            selected = self.ui.listUnread.currentItem()
+            selectedItem = selected.article
+
             text = "<font face=Georgia>" + "<H3>" + selectedItem.title + \
                 "</H3>(" + selectedItem.feed.title + ")<br>" + \
                 time.ctime(selectedItem.updated) + "<br>" + \
@@ -156,12 +171,11 @@ class mainUI(QMainWindow):
         function to visit the original web page of selected article from the built in web browser.
         """
         try:
-            selectedItemIndex = self.ui.listUnread.currentRow()
-            selectedItem = self.itemList[selectedItemIndex]
+            selected = self.ui.listUnread.currentItem()
         except:
             text = "Not implemented yet."
         else:
-            self.ui.viewArticle.load(QUrl(selectedItem.url))
+            self.ui.viewArticle.load(QUrl(selected.article.url))
 
 
     def on_actionManageFeeds_activated(self, i = None):
@@ -223,7 +237,7 @@ class mainUI(QMainWindow):
         """
         if i is None: return
         self.close()
-    
+
     def on_actionAbout_activated(self, i = None):
         """
         About action implementataion.
@@ -323,7 +337,7 @@ class AddTopicDialog(QDialog):
 
         self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
         self.connect(self.ui.btnAdd, SIGNAL('clicked()'), self.addTopic)
-        
+
     def addTopic(self):
         topic = unicode(self.ui.addTopicLinedit.text())
         classifier.addTopic(topic)
@@ -335,7 +349,7 @@ class RemoveTopicDialog(QDialog):
         QDialog.__init__(self, parent)
         self.ui=Ui_removeTopic()
         self.ui.setupUi(self)
-        
+
         self.topicList = []
         self.displayTopics()
 
@@ -396,33 +410,33 @@ class AboutDialog(QDialog):
         QDialog.__init__(self, parent)
         self.ui=Ui_About()
         self.ui.setupUi(self)
-        
+
         self.connect(self.ui.btnClose, SIGNAL('clicked()'), SLOT('close()'))
         self.connect(self.ui.btnLicense, SIGNAL('clicked()'), self.loadLicense)
         self.connect(self.ui.btnCredits, SIGNAL('clicked()'), self.loadCredits)
-        
+
     def loadLicense(self):
         LicenseDialog(self).exec_()
-        
+
     def loadCredits(self):
-        CreditsDialog(self).exec_() 
+        CreditsDialog(self).exec_()
 
 class LicenseDialog(QDialog):
     def __init__(self, parent):
         QDialog.__init__(self, parent)
         self.ui=Ui_License()
         self.ui.setupUi(self)
-        
+
         self.connect(self.ui.btnClose, SIGNAL('clicked()'), SLOT('close()'))
-        
+
 class CreditsDialog(QDialog):
     def __init__(self, parent):
         QDialog.__init__(self, parent)
         self.ui=Ui_Credits()
         self.ui.setupUi(self)
-        
+
         self.connect(self.ui.btnClose, SIGNAL('clicked()'), SLOT('close()'))
-        
+
 
 def initUI():
 
