@@ -230,7 +230,7 @@
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <widget class="QListWidget" name="listUnread">
+         <widget class="QTreeWidget" name="listUnread">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -249,8 +249,19 @@
             <height>500</height>
            </size>
           </property>
+          <property name="indentation">
+           <number>-10</number>
+          </property>
+          <property name="animated">
+           <bool>true</bool>
+          </property>
+          <column>
+           <property name="text">
+            <string>Title</string>
+           </property>
+          </column>
          </widget>
-         <widget class="QListWidget" name="listOld">
+         <widget class="QTreeWidget" name="listOld">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -275,6 +286,11 @@
             <height>150</height>
            </size>
           </property>
+          <column>
+           <property name="text">
+            <string>Title</string>
+           </property>
+          </column>
          </widget>
         </widget>
         <widget class="QWebView" name="viewArticle" native="true">
