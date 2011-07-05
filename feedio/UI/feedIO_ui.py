@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'feedIO.ui'
 #
-# Created: Tue Jul  5 00:00:03 2011
+# Created: Tue Jul  5 11:19:40 2011
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -281,9 +281,9 @@ class Ui_feedIO(object):
         self.menuArticle.addAction(self.actionVisitPage)
         self.menuFeedIO.addAction(self.actionMinimizeToTray)
         self.menuFeedIO.addAction(self.actionExit)
-        self.menuTopics.addAction(self.actionManageTopics)
         self.menuTopics.addAction(self.actionAddTopic)
         self.menuTopics.addAction(self.actionRemoveTopic)
+        self.menuTopics.addAction(self.actionManageTopics)
         self.menubar.addAction(self.menuFeedIO.menuAction())
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuTopics.menuAction())
@@ -310,14 +310,14 @@ class Ui_feedIO(object):
         feedIO.setWindowTitle(QtGui.QApplication.translate("feedIO", "feedIO", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("feedIO", "Feed", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("feedIO", "Interest", None, QtGui.QApplication.UnicodeUTF8))
-        self.btnUp.setText(QtGui.QApplication.translate("feedIO", "UP", None, QtGui.QApplication.UnicodeUTF8))
-        self.btnDown.setText(QtGui.QApplication.translate("feedIO", "DOWN", None, QtGui.QApplication.UnicodeUTF8))
+        self.btnUp.setText(QtGui.QApplication.translate("feedIO", "&UP", None, QtGui.QApplication.UnicodeUTF8))
+        self.btnDown.setText(QtGui.QApplication.translate("feedIO", "&DOWN", None, QtGui.QApplication.UnicodeUTF8))
         self.menuFile.setTitle(QtGui.QApplication.translate("feedIO", "&Feeds", None, QtGui.QApplication.UnicodeUTF8))
         self.menuTools.setTitle(QtGui.QApplication.translate("feedIO", "&Settings", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHelp.setTitle(QtGui.QApplication.translate("feedIO", "&Help", None, QtGui.QApplication.UnicodeUTF8))
         self.menuArticle.setTitle(QtGui.QApplication.translate("feedIO", "&Article", None, QtGui.QApplication.UnicodeUTF8))
         self.menuFeedIO.setTitle(QtGui.QApplication.translate("feedIO", "feedI&O", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuTopics.setTitle(QtGui.QApplication.translate("feedIO", "&Topics", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuTopics.setTitle(QtGui.QApplication.translate("feedIO", "&Interests", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBar.setWindowTitle(QtGui.QApplication.translate("feedIO", "toolBar", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAddFeed.setText(QtGui.QApplication.translate("feedIO", "&Add Feed", None, QtGui.QApplication.UnicodeUTF8))
         self.actionRemoveFeed.setText(QtGui.QApplication.translate("feedIO", "&Remove Feed", None, QtGui.QApplication.UnicodeUTF8))

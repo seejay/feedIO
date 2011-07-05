@@ -287,6 +287,7 @@ class ManageFeedsDialog(QDialog):
         self.ui.setupUi(self)
         self.feedList = []
         self.displayFeeds()
+
         self.connect(self.ui.btnExit, SIGNAL('clicked()'), SLOT('close()'))
         self.connect(self.ui.btnRemove, SIGNAL('clicked()'), self.removeFeed)
         self.connect(self.ui.btnAdd, SIGNAL('clicked()'), self.addFeed)
@@ -346,6 +347,7 @@ class RemoveTopicDialog(QDialog):
         function to display the current topics list in the combo box.
         """
         self.topicList = classifier.listTopics()
+        self.topicList.remove(classifier.getTopic("General"))
         topicTitles = [topic.title for topic in self.topicList]
         self.ui.topicListCombo.clear()
         self.ui.topicListCombo.addItems(topicTitles)
@@ -362,8 +364,31 @@ class ManageTopicsDialog(QDialog):
         QDialog.__init__(self, parent)
         self.ui=Ui_manageTopics()
         self.ui.setupUi(self)
+        self.topicList = []
+        self.displayTopics()
 
         self.connect(self.ui.btnExit, SIGNAL('clicked()'), SLOT('close()'))
+        self.connect(self.ui.btnRemove, SIGNAL('clicked()'), self.removeTopic)
+        self.connect(self.ui.btnAdd, SIGNAL('clicked()'), self.addTopic)
+
+    def displayTopics(self):
+        self.topicList = classifier.listTopics()
+        self.topicList.remove(classifier.getTopic("General"))
+        topicTitles = [topic.title for topic in self.topicList]
+        self.ui.topicList.clear()
+        self.ui.topicList.addItems(topicTitles)
+
+    def removeTopic(self):
+        selectedItemIndex = self.ui.topicList.currentRow()
+        selectedTopic = self.topicList[selectedItemIndex]
+        classifier.removeTopic(selectedTopic)
+        self.displayTopics()
+
+    def addTopic(self):
+        topic = unicode(self.ui.topicLine.text())
+        classifier.addTopic(topic)
+        self.ui.topicLine.clear()
+        self.displayTopics()
 
 
 class AboutDialog(QDialog):

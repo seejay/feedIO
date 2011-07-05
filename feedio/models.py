@@ -78,7 +78,7 @@ class Topic(Entity):
     The Topic entity to store detils of a user interest topic
     """
     
-    title = Field(Unicode(100), primary_key=True)
+    title = Field(Unicode(100), required=True, primary_key=True)
     items = ManyToMany('Item')
     numVotes = Field(Integer, default =1)
     

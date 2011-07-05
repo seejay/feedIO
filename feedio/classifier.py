@@ -27,9 +27,9 @@ __license__ = """
 
 __author__ = "Chanaka Jayamal <seejay@seejay.net>"
 
-__developers__ = ["Chanaka Jayamal", 
-                  "Lanka Amarasekara", 
-                  "Kolitha Gajanayake", 
+__developers__ = ["Chanaka Jayamal",
+                  "Lanka Amarasekara",
+                  "Kolitha Gajanayake",
                   "Chamika Viraj"]
 
 
@@ -52,6 +52,9 @@ def addTopic(topic):
     """
     function to add a new topic, creates required classifier files and database entries.
     """
+    if topic is unicode(""):
+        return None
+
     try:
         newTopic = Topic(title = unicode(topic))
         session.commit()
@@ -60,8 +63,8 @@ def addTopic(topic):
     else:
         c = Classifier(classifierDir, [topic, "not"+topic])
         print "Added new topic %s" % unicode(topic)
-    
-       
+
+
 def removeTopic(topic):
     """
     function to remove topic from the database.
@@ -76,59 +79,87 @@ def removeTopic(topic):
         print "Removed topic %s" % unicode(topic)
 
 
+def getTopic(topicTitle):
+    """
+    returns the Topic object when the Topics title is passed.
+    """
+    try:
+        topic = Topic.query.filter_by(title = unicode(topicTitle))[0]
+        return topic
+    except:
+        return None
+
+
 def voteFeed(feed):
     feed.numVotes += 1
-    
-    
+
+
 def voteArticle(upOrDown, text, topic="General"):
     """
-    voteArticle function, takes arguments upOrDown vote, topic to vote, 
+    voteArticle function, takes arguments upOrDown vote, topic to vote,
     and the text to vote for
     """
-        
+
     c = Classifier(classifierDir, [topic,"not"+topic])
-    
+
     if upOrDown is "up":
         c.learn(topic, text)
-                
+
     elif upOrDown is "down":
         c.learn("not"+topic, text)
-    
+
     if topic is not "General":
         #always add the upvote to the General interest category as well.
         d = Classifier(classifierDir, ["General","notGeneral"])
         if upOrDown is "up":
             d.learn("General", text)
-                    
+
         elif upOrDown is "down":
-            d.learn("notGeneral"+topic, text)
-            
-            
+            d.learn("notGeneral", text)
+
+
 def classifyArticle(topic,text):
     """
-    function to calculate the matching probability of a given text to a 
-    specified topic. Add code to remove any tags in the code and generate a 
+    function to calculate the matching probability of a given text to a
+    specified topic. Add code to remove any tags in the code and generate a
     plain text string. Use the "markdown" module if needed.
     """
     c = Classifier(classifierDir, [topic,"not"+topic])
-    
+
     (classification, probability) = c.classify(text)
-    
+
     return (classification, probability)
 
 
 def calculateScore(item, topic="General"):
     """
-    when an item is passed this function calculates its overall score, by 
-    adding content score + feed score + feed update frequency(should be 
+    when an item is passed this function calculates its overall score, by
+    adding content score + feed score + feed update frequency(should be
     caluculated by taking the deviation from the mean update friquency.)
-        
+
     """
     pass
     text = textifyFunction(item.description) # get only the plain text.
-    
+
     classificationScore = classifyArticle(topic,text)
     feedScore = item.feed.numVotes
-    #updateFrequencyScore - score based on the feeds update frequncy. 
+    #updateFrequencyScore - score based on the feeds update frequncy.
     #less frequently updated content would get fairly better scores.
+
+
+def initTopics():
+    """
+    function to create the initial user interest profile.
+    """
     
+    #Add the "General" interest topic by default
+    if not getTopic("General"):
+        addTopic(unicode("General"))
+
+
+def main():
+    initTopics()
+
+if __name__ == "__main__":
+    print __doc__
+    main()

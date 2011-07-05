@@ -345,7 +345,7 @@
              </size>
             </property>
             <property name="text">
-             <string>UP</string>
+             <string>&amp;UP</string>
             </property>
             <property name="icon">
              <iconset resource="feedIOicons.qrc">
@@ -374,7 +374,7 @@
              </size>
             </property>
             <property name="text">
-             <string>DOWN</string>
+             <string>&amp;DOWN</string>
             </property>
             <property name="icon">
              <iconset resource="feedIOicons.qrc">
@@ -445,11 +445,11 @@
    </widget>
    <widget class="QMenu" name="menuTopics">
     <property name="title">
-     <string>&amp;Topics</string>
+     <string>&amp;Interests</string>
     </property>
-    <addaction name="actionManageTopics"/>
     <addaction name="actionAddTopic"/>
     <addaction name="actionRemoveTopic"/>
+    <addaction name="actionManageTopics"/>
    </widget>
    <addaction name="menuFeedIO"/>
    <addaction name="menuFile"/>
