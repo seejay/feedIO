@@ -35,6 +35,7 @@ __developers__ = ["Chanaka Jayamal",
 
 import sys
 import os
+import purify
 
 USERDIR=os.path.join(os.path.expanduser("~"),".feedIO")
 classifierDir=os.path.join(USERDIR,"classifier")
@@ -90,33 +91,42 @@ def getTopic(topicTitle):
         return None
 
 
-def voteFeed(feed):
-    feed.numVotes += 1
-
+def voteFeed(upOrDown, feed):
+    try:
+        if upOrDown is "up":
+            feed.numVotes += 1
+            session.commit()
+        elif upOrDown is "down" and feed.numVotes >= 0:
+            feed.numVotes -= 1
+            session.commit()
+    except:
+        session.rollback()
 
 def voteArticle(upOrDown, text, topic="General"):
     """
     voteArticle function, takes arguments upOrDown vote, topic to vote,
     and the text to vote for
     """
+    text = purify.cleanText(text)
 
     c = Classifier(classifierDir, [topic,"not"+topic])
-
-    if upOrDown is "up":
-        c.learn(topic, text)
-
-    elif upOrDown is "down":
-        c.learn("not"+topic, text)
-
-    if topic is not "General":
-        #always add the upvote to the General interest category as well.
-        d = Classifier(classifierDir, ["General","notGeneral"])
+    try:
         if upOrDown is "up":
-            d.learn("General", text)
+            c.learn(topic, text)
 
         elif upOrDown is "down":
-            d.learn("notGeneral", text)
+            c.learn("not"+topic, text)
 
+        if topic is not "General":
+            #always add the upvote to the General interest category as well.
+            d = Classifier(classifierDir, ["General","notGeneral"])
+            if upOrDown is "up":
+                d.learn("General", text)
+
+            elif upOrDown is "down":
+                d.learn("notGeneral", text)
+    except UnicodeEncodeError:
+        print "Article content contains invalid characters!"
 
 def classifyArticle(topic,text):
     """
@@ -125,10 +135,14 @@ def classifyArticle(topic,text):
     plain text string. Use the "markdown" module if needed.
     """
     c = Classifier(classifierDir, [topic,"not"+topic])
+    try:
+        (classification, probability) = c.classify(text)
 
-    (classification, probability) = c.classify(text)
-
-    return (classification, probability)
+        return (classification, probability)
+    except UnicodeEncodeError:
+        # return a dummy value for articles with character Errors
+        #TODO: filter out the invalic characters
+            return ("not"+topic, 0)
 
 
 def calculateScore(item, topic="General"):
@@ -139,19 +153,52 @@ def calculateScore(item, topic="General"):
 
     """
     pass
-    text = textifyFunction(item.description) # get only the plain text.
 
-    classificationScore = classifyArticle(topic,text)
+    # get only the plain text.
+
+    text = purify.cleanText(item.description)
+
+    titleText = purify.cleanText(item.title)
+
+    #Calculate the Score for the texual content of the article
+
+    textScore = classifyArticle(topic,text)
+
+    titleScore = classifyArticle(titleText,text)
+
+    #Get the Score for the feed from the db
     feedScore = item.feed.numVotes
+
     #updateFrequencyScore - score based on the feeds update frequncy.
     #less frequently updated content would get fairly better scores.
 
+    # Set weights to be given for the calculated individual scores.
+    #TODO: Give an option for the user to set the weights of these scores from GUI.
+
+    textScoreWeight = 0.55
+    titleScoreWeight = 0.25
+    feedScoreWeight = 0.1
+    updateFrequencyWeight = 0.1
+
+
+
+    finalScore = ( ( textScoreWeight * textScore ) +
+                    ( titleScoreWeight * titleScore ) +
+                    ( feedScoreWeight * updateFrequencyScore ) +
+                    ( updateFrequencyWeight * updateFrequencyScore ) )
+
+    try:
+        item.generalScore = finalScore
+        session.commit()
+    except:
+        session.rollback()
+        print "Error setting Article Score!"
 
 def initTopics():
     """
     function to create the initial user interest profile.
     """
-    
+
     #Add the "General" interest topic by default
     if not getTopic("General"):
         addTopic(unicode("General"))

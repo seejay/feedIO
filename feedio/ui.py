@@ -71,11 +71,18 @@ class mainUI(QMainWindow):
         self.displayFeeds()
         self.displayItems()
 
+        self.ui.listUnread.setFocus()
+        self.ui.comboFeed.setCurrentIndex(len(self.feedList))
+
         self.connect(self.ui.comboFeed, SIGNAL("currentIndexChanged(int)"), self.displayItems)
         self.connect(self.ui.listUnread, SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.displayArticle)
         self.connect(self.ui.actionVisitPage, SIGNAL("activated()"), self.visitPage)
         self.connect(self.ui.actionFetchAllFeeds, SIGNAL("activated()"), self.fetchAllFeeds)
+        self.connect(self.ui.actionUpVote, SIGNAL("activated()"), self.upVoteArticle)
+        self.connect(self.ui.actionDownVote, SIGNAL("activated()"), self.downVoteArticle)
 #        self.connect(self, SIGNAL('triggered()'), self.closeEvent)
+        self.connect(self.ui.btnUp, SIGNAL('clicked()'), self.upVoteArticle)
+        self.connect(self.ui.btnDown, SIGNAL('clicked()'), self.downVoteArticle)
 
     def closeEvent(self, event):
         """
@@ -96,6 +103,7 @@ class mainUI(QMainWindow):
         feedTitles.append("All Feeds")
         self.ui.comboFeed.clear()
         self.ui.comboFeed.addItems(feedTitles)
+        self.ui.comboFeed.setCurrentIndex(len(self.feedList))
 
     def displayItems(self):
         """
@@ -120,6 +128,11 @@ class mainUI(QMainWindow):
                 windowTitle = selectedFeed.title + " - feedIO"
                 self.setWindowTitle(windowTitle)
         self.ui.listUnread.clear()
+
+        # create font with Bold(75) weight to show the unread articles
+        unreadFont = QFont()
+        unreadFont.setWeight(75)
+
         for article in self.itemList:
 #            item=QTreeWidgetItem([article.title, str(time.ctime(article.updated))])
             item=QTreeWidgetItem([article.title,])
@@ -129,12 +142,14 @@ class mainUI(QMainWindow):
             itemIcon.addPixmap(QPixmap(":/images/article.png"), QIcon.Normal, QIcon.Off)
             item.setIcon(0, itemIcon)
 
-#            if article.isUnread:
-#                item.setCheckState(0,QtCore.Qt.Checked)
+            if article.isUnread:
+                item.setFont(0,unreadFont)
 #            else:
 #                item.setCheckState(0,QtCore.Qt.Unchecked)
 
             self.ui.listUnread.addTopLevelItem(item)
+
+        self.ui.listUnread.setFocus()
 
 
     def displayArticle(self):
@@ -156,6 +171,13 @@ class mainUI(QMainWindow):
             windowTitle = selectedItem.title + " - " + selectedItem.feed.title + " - feedIO"
             self.setWindowTitle(windowTitle)
 
+            # create font with normal weight to show the read articles
+            readFont = QFont()
+            readFont.setWeight(50)
+            selected.setFont(0,readFont)
+
+            fm.markItemRead(selectedItem)
+
 
     def fetchAllFeeds(self):
         """
@@ -176,6 +198,43 @@ class mainUI(QMainWindow):
             text = "Not implemented yet."
         else:
             self.ui.viewArticle.load(QUrl(selected.article.url))
+
+
+    def upVoteArticle(self):
+        """
+        Function to upvote the current article
+        """
+
+        selected = self.ui.listUnread.currentItem()
+        selectedTopicIndex = self.ui.comboFeed.currentIndex()
+        selectedTopic = self.topicList[selectedTopicIndex]
+
+
+        #call the classifier module
+        classifier.voteArticle("up",selected.article.description)
+
+        #upVote the feed
+        classifier.voteFeed("up", selected.article.feed)
+        print "Up Voted %s" % selected.article.title
+
+
+    def downVoteArticle(self):
+        """
+        Function to Down Vote the current article
+        """
+
+        selected = self.ui.listUnread.currentItem()
+
+        selectedTopicIndex = self.ui.comboFeed.currentIndex()
+        selectedTopic = self.topicList[selectedTopicIndex]
+
+
+        #call the classifier module
+        classifier.voteArticle("down", selected.article.description)
+
+        #downVote the feed
+        classifier.voteFeed("down", selected.article.feed)
+        print "Down Voted %s" % selected.article.title
 
 
     def on_actionManageFeeds_activated(self, i = None):

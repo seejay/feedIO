@@ -39,4 +39,5 @@ class SystemTrayIcon(QtGui.QSystemTrayIcon):
             self.child.hide()
         else:
             self.child.show()
+            self.child.ui.listUnread.setFocus()
 
