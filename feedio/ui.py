@@ -133,6 +133,11 @@ class mainUI(QMainWindow):
         unreadFont = QFont()
         unreadFont.setWeight(75)
 
+        # Sort self.itemList according to "isNew" property as primary
+        # Secondary sort it by isUnread
+        # Then sort it according to Score
+        # then sort it according to the Article date.
+
         for article in self.itemList:
 #            item=QTreeWidgetItem([article.title, str(time.ctime(article.updated))])
             item=QTreeWidgetItem([article.title,])
@@ -211,7 +216,7 @@ class mainUI(QMainWindow):
 
 
         #call the classifier module
-        classifier.voteArticle("up",selected.article.description)
+        classifier.voteArticle("up",selected.article)
 
         #upVote the feed
         classifier.voteFeed("up", selected.article.feed)
@@ -230,7 +235,7 @@ class mainUI(QMainWindow):
 
 
         #call the classifier module
-        classifier.voteArticle("down", selected.article.description)
+        classifier.voteArticle("down", selected.article)
 
         #downVote the feed
         classifier.voteFeed("down", selected.article.feed)

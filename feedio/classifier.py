@@ -96,18 +96,19 @@ def voteFeed(upOrDown, feed):
         if upOrDown is "up":
             feed.numVotes += 1
             session.commit()
-        elif upOrDown is "down" and feed.numVotes >= 0:
+        elif upOrDown is "down" and feed.numVotes > 1:
             feed.numVotes -= 1
             session.commit()
     except:
         session.rollback()
 
-def voteArticle(upOrDown, text, topic="General"):
+
+def voteArticle(upOrDown, item, topic="General"):
     """
     voteArticle function, takes arguments upOrDown vote, topic to vote,
     and the text to vote for
     """
-    text = purify.cleanText(text)
+    text = purify.cleanText(item.description)
 
     c = Classifier(classifierDir, [topic,"not"+topic])
     try:
@@ -128,6 +129,7 @@ def voteArticle(upOrDown, text, topic="General"):
     except UnicodeEncodeError:
         print "Article content contains invalid characters!"
 
+
 def classifyArticle(topic,text):
     """
     function to calculate the matching probability of a given text to a
@@ -135,14 +137,17 @@ def classifyArticle(topic,text):
     plain text string. Use the "markdown" module if needed.
     """
     c = Classifier(classifierDir, [topic,"not"+topic])
+
     try:
         (classification, probability) = c.classify(text)
 
-        return (classification, probability)
     except UnicodeEncodeError:
         # return a dummy value for articles with character Errors
         #TODO: filter out the invalic characters
-            return ("not"+topic, 0)
+            (classification, probability) = ("not"+topic, 0)
+
+    else:
+        return (classification, probability)
 
 
 def calculateScore(item, topic="General"):
@@ -152,22 +157,37 @@ def calculateScore(item, topic="General"):
     caluculated by taking the deviation from the mean update friquency.)
 
     """
-    pass
 
-    # get only the plain text.
-
+    # Get the Article title and content in plain text.
     text = purify.cleanText(item.description)
-
     titleText = purify.cleanText(item.title)
 
     #Calculate the Score for the texual content of the article
+    (textTopic, textScore) = classifyArticle(topic, text)
+#    print "text : %s, %s" % (textTopic, textScore)
 
-    textScore = classifyArticle(topic,text)
 
-    titleScore = classifyArticle(titleText,text)
+    (titleTopic,titleScore) = classifyArticle(topic, titleText)
+#    print "Title : %s, %s" % (titleTopic,titleScore)
+
+
+    #Now set the textual scores to minus values if the article "notTopic"
+    if textTopic == topic:
+        textScore = textScore * 1000
+    else:
+        textScore = textScore * (-1000)
+
+    if titleTopic == topic:
+        titleScore = titleScore * 1000
+    else:
+        titleScore = titleScore * (-1000)
+
+#    print titleScore
+#    print textScore
 
     #Get the Score for the feed from the db
-    feedScore = item.feed.numVotes
+
+    feedScore = item.feed.numVotes * 100
 
     #updateFrequencyScore - score based on the feeds update frequncy.
     #less frequently updated content would get fairly better scores.
@@ -175,23 +195,28 @@ def calculateScore(item, topic="General"):
     # Set weights to be given for the calculated individual scores.
     #TODO: Give an option for the user to set the weights of these scores from GUI.
 
+
     textScoreWeight = 0.55
     titleScoreWeight = 0.25
     feedScoreWeight = 0.1
-    updateFrequencyWeight = 0.1
-
+#    updateFrequencyWeight = 0.1
 
 
     finalScore = ( ( textScoreWeight * textScore ) +
                     ( titleScoreWeight * titleScore ) +
-                    ( feedScoreWeight * updateFrequencyScore ) +
-                    ( updateFrequencyWeight * updateFrequencyScore ) )
+                    ( feedScoreWeight * feedScore ) )
+
+#    print finalScore
+    print item.generalScore + finalScore
+
+
+##                    ( updateFrequencyWeight * updateFrequencyScore ) )
 
     try:
-        item.generalScore = finalScore
-        session.commit()
+        item.generalScore = item.generalScore + finalScore
+#        session.commit()
     except:
-        session.rollback()
+#        session.rollback()
         print "Error setting Article Score!"
 
 def initTopics():
