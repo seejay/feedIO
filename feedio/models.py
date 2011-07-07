@@ -50,10 +50,13 @@ class Feed(Entity):
     etag = Field(Unicode(100))
     lastModified = Field(Float)
     numVotes = Field(Integer, default =1)
+    frequency = Field(Integer, default =1) # calculated by the duration between articles publish times
+    fetchInterval = Field(Integer, default =1) # user defined interval to fetch.
     items = OneToMany('Item')
     
     def __repr__(self):
         return '<Feed "%s" - (%s)>' % (self.title, self.url)
+
 
 class Item(Entity):
     """
@@ -64,14 +67,17 @@ class Item(Entity):
     url = Field(Unicode(255), primary_key=True)
     description = Field(UnicodeText)
     updated = Field(Float) # Stores the seconds since EPOCH
+    author = Field(Unicode(100))
     generalScore = Field(Integer, default =1000)
-    isUnread = Field(Boolean,default=True)
+    isUnread = Field(Boolean, default=True)
+    new = Field(Boolean, default=False)
     favourite = Field(Boolean,default=False)
     feed = ManyToOne('Feed')
     topics = ManyToMany('Topic')
     
     def __repr__(self):
         return '<Item "%s" - (%s)>' % (self.title, self.url)
+
 
 class Topic(Entity):
     """
@@ -81,7 +87,7 @@ class Topic(Entity):
     title = Field(Unicode(100), required=True, primary_key=True)
     items = ManyToMany('Item')
     numVotes = Field(Integer, default =1)
-    
+
 
     def __repr__(self):
         return '<Topic "%s">' % self.title
@@ -91,11 +97,11 @@ def initDB():
     # code to make sure that the user profile dirctory ~/.feedIO exists
     if not os.path.isdir(USERDIR):
         os.mkdir(USERDIR)
-    
+
     # exilir code to set things up
     metadata.bind = "sqlite:///%s" % DBFILE
     setup_all()
-    
+
     # And if the database doesn't exist: create it.
     if not os.path.exists(DBFILE):
         create_all()
