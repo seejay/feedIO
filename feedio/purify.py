@@ -1,6 +1,12 @@
 #!/usr/bin/python
 """
-A piece of code to clear any tags and make a text readable.
+A piece of code to do the required manipulation tasks for feedIO.
+currently provides,
+
+    cleanText() function to clear any tags and make a text readable.
+
+    shorten() function to short a long text into a predefined size.
+
 To be used with the feedIO tts feature and for classification of the article text.
 TODO: find better ways to do this.
 """
@@ -34,6 +40,8 @@ __developers__ = ["Chanaka Jayamal",
 
 import HTMLParser
 
+SHORTEN_LENGTH = 100
+
 class Purify(HTMLParser.HTMLParser):
     def __init__(self):
         self.reset()
@@ -43,8 +51,12 @@ class Purify(HTMLParser.HTMLParser):
     def getData(self):
         return ''.join(self.fed)
 
+
 # Function to clen an article text.        
 def cleanText(text):
+    """
+    function to clear any tags and make a text readable.
+    """
     p= Purify()
     p.feed(text)
     data = p.getData()
@@ -56,3 +68,11 @@ def cleanText(text):
     stripped = stripped.encode('utf8')
     
     return stripped
+
+#function to summarize a text to be given a sneak peak.
+def shorten(text, numChars=SHORTEN_LENGTH):
+    """
+    function to short a long text into a predefined size.
+    """
+    info = (text[:numChars] + '..') if len(text) > numChars else text
+    return info
