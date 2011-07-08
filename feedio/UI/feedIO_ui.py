@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'feedIO.ui'
 #
-# Created: Tue Jul  5 16:31:06 2011
+# Created: Fri Jul  8 14:42:20 2011
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -197,6 +197,7 @@ class Ui_feedIO(object):
         self.toolBar.setFloatable(False)
         self.toolBar.setObjectName("toolBar")
         feedIO.addToolBar(QtCore.Qt.ToolBarArea(QtCore.Qt.TopToolBarArea), self.toolBar)
+        feedIO.insertToolBarBreak(self.toolBar)
         self.actionAddFeed = QtGui.QAction(feedIO)
         icon3 = QtGui.QIcon()
         icon3.addPixmap(QtGui.QPixmap(":/images/addFeed.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -269,6 +270,8 @@ class Ui_feedIO(object):
         self.actionRemoveTopic.setObjectName("actionRemoveTopic")
         self.actionMinimizeToTray = QtGui.QAction(feedIO)
         self.actionMinimizeToTray.setObjectName("actionMinimizeToTray")
+        self.actionUnread = QtGui.QAction(feedIO)
+        self.actionUnread.setObjectName("actionUnread")
         self.menuFile.addAction(self.actionAddFeed)
         self.menuFile.addAction(self.actionRemoveFeed)
         self.menuFile.addAction(self.actionFetchFeed)
@@ -281,6 +284,7 @@ class Ui_feedIO(object):
         self.menuArticle.addAction(self.actionDownVote)
         self.menuArticle.addAction(self.actionRead)
         self.menuArticle.addAction(self.actionVisitPage)
+        self.menuArticle.addAction(self.actionUnread)
         self.menuFeedIO.addAction(self.actionMinimizeToTray)
         self.menuFeedIO.addAction(self.actionExit)
         self.menuTopics.addAction(self.actionAddTopic)
@@ -324,22 +328,26 @@ class Ui_feedIO(object):
         self.menuTopics.setTitle(QtGui.QApplication.translate("feedIO", "&Interests", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBar.setWindowTitle(QtGui.QApplication.translate("feedIO", "toolBar", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAddFeed.setText(QtGui.QApplication.translate("feedIO", "&Add Feed", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionAddFeed.setShortcut(QtGui.QApplication.translate("feedIO", "Ctrl+1", None, QtGui.QApplication.UnicodeUTF8))
         self.actionRemoveFeed.setText(QtGui.QApplication.translate("feedIO", "&Remove Feed", None, QtGui.QApplication.UnicodeUTF8))
         self.actionHelp.setText(QtGui.QApplication.translate("feedIO", "FeedIO Help", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAbout.setText(QtGui.QApplication.translate("feedIO", "&About feedIO", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setText(QtGui.QApplication.translate("feedIO", "&Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExit.setText(QtGui.QApplication.translate("feedIO", "E&xit", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionExit.setShortcut(QtGui.QApplication.translate("feedIO", "Ctrl+Q", None, QtGui.QApplication.UnicodeUTF8))
         self.actionUpVote.setText(QtGui.QApplication.translate("feedIO", "&Up vote ", None, QtGui.QApplication.UnicodeUTF8))
         self.actionDownVote.setText(QtGui.QApplication.translate("feedIO", "&Down Vote", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionRead.setText(QtGui.QApplication.translate("feedIO", "Read", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionRead.setText(QtGui.QApplication.translate("feedIO", "&Read", None, QtGui.QApplication.UnicodeUTF8))
         self.actionFetchFeed.setText(QtGui.QApplication.translate("feedIO", "&Fetch Feed", None, QtGui.QApplication.UnicodeUTF8))
         self.actionFetchAllFeeds.setText(QtGui.QApplication.translate("feedIO", "Fetch &All Feeds", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionVisitPage.setText(QtGui.QApplication.translate("feedIO", "Visit Page", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionVisitPage.setText(QtGui.QApplication.translate("feedIO", "&Visit Page", None, QtGui.QApplication.UnicodeUTF8))
         self.actionManageFeeds.setText(QtGui.QApplication.translate("feedIO", "&Manage Feeds", None, QtGui.QApplication.UnicodeUTF8))
         self.actionManageTopics.setText(QtGui.QApplication.translate("feedIO", "&Manage Topics", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAddTopic.setText(QtGui.QApplication.translate("feedIO", "&Add Topic", None, QtGui.QApplication.UnicodeUTF8))
         self.actionRemoveTopic.setText(QtGui.QApplication.translate("feedIO", "&Remove Topic", None, QtGui.QApplication.UnicodeUTF8))
         self.actionMinimizeToTray.setText(QtGui.QApplication.translate("feedIO", "Mi&nimize to tray", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionUnread.setText(QtGui.QApplication.translate("feedIO", "&Mark as Unread", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionUnread.setShortcut(QtGui.QApplication.translate("feedIO", "Ctrl+M", None, QtGui.QApplication.UnicodeUTF8))
 
 from PyQt4 import QtWebKit
 import feedIOicons_rc

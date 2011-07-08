@@ -54,6 +54,7 @@ from UI.credits_ui import Ui_Credits
 from UI.systray import SystemTrayIcon
 import feedmanager as fm
 import classifier
+import purify
 
 class mainUI(QMainWindow):
     def __init__(self, parent=None):
@@ -62,6 +63,15 @@ class mainUI(QMainWindow):
         self.ui = Ui_feedIO()
         self.ui.setupUi(self)
         self.raise_()
+
+        self.unreadFont = QFont()
+        self.unreadFont.setWeight(87)
+
+        self.readFont = QFont()
+        self.readFont.setWeight(50)
+
+        self.readColor = QColor("#555555")
+        self.unreadColor = QColor("#444444")
 
         self.feedList = []
         self.itemList = []
@@ -80,9 +90,11 @@ class mainUI(QMainWindow):
         self.connect(self.ui.actionFetchAllFeeds, SIGNAL("activated()"), self.fetchAllFeeds)
         self.connect(self.ui.actionUpVote, SIGNAL("activated()"), self.upVoteArticle)
         self.connect(self.ui.actionDownVote, SIGNAL("activated()"), self.downVoteArticle)
+        self.connect(self.ui.actionUnread, SIGNAL("activated()"), self.markAsUnread)
 #        self.connect(self, SIGNAL('triggered()'), self.closeEvent)
         self.connect(self.ui.btnUp, SIGNAL('clicked()'), self.upVoteArticle)
         self.connect(self.ui.btnDown, SIGNAL('clicked()'), self.downVoteArticle)
+
 
     def closeEvent(self, event):
         """
@@ -91,11 +103,13 @@ class mainUI(QMainWindow):
         self.hide()
         event.ignore()
 
+
     def displayTopics(self):
         self.topicList = classifier.listTopics()
         topicTitles = [topic.title for topic in self.topicList]
         self.ui.comboTopic.clear()
         self.ui.comboTopic.addItems(topicTitles)
+
 
     def displayFeeds(self):
         self.feedList = fm.listFeeds()
@@ -105,33 +119,34 @@ class mainUI(QMainWindow):
         self.ui.comboFeed.addItems(feedTitles)
         self.ui.comboFeed.setCurrentIndex(len(self.feedList))
 
+
     def displayItems(self):
         """
         function to update the Articles list according to the selected feeds list.
         """
-        selectedIndex = self.ui.comboFeed.currentIndex()
+
+        selectedFeedIndex = self.ui.comboFeed.currentIndex()
 
         if len(self.feedList) == 0:
-            itemTitles = []
+            self.itemList = []
         else:
 
-            if selectedIndex == len(self.feedList):
+            if selectedFeedIndex == len(self.feedList):
                 self.itemList = fm.listItems()
-                itemTitles = [item.title for item in self.itemList]
                 windowTitle = "All Feeds - feedIO"
                 self.setWindowTitle(windowTitle)
             else:
-                selectedFeed = self.feedList[selectedIndex]
+                selectedFeed = self.feedList[selectedFeedIndex]
                 self.itemList = fm.listItems(selectedFeed)
-                itemTitles = [item.title for item in self.itemList]
+
                 #Code to change the window title to the currently viewing feed's title
                 windowTitle = selectedFeed.title + " - feedIO"
                 self.setWindowTitle(windowTitle)
+
         self.ui.listUnread.clear()
 
-        # create font with Bold(75) weight to show the unread articles
-        unreadFont = QFont()
-        unreadFont.setWeight(75)
+        itemIcon = QIcon()
+        itemIcon.addPixmap(QPixmap(":/images/article.png"), QIcon.Normal, QIcon.Off)
 
         # Sort self.itemList according to "isNew" property as primary
         # Secondary sort it by isUnread
@@ -143,14 +158,19 @@ class mainUI(QMainWindow):
             item=QTreeWidgetItem([article.title,])
             item.article = article
 
-            itemIcon = QIcon()
-            itemIcon.addPixmap(QPixmap(":/images/article.png"), QIcon.Normal, QIcon.Off)
             item.setIcon(0, itemIcon)
 
+#            # Set a part of the article text as the tooltip of Items
+#            tipLong = purify.cleanText(item.article.description)
+#            tip = purify.shorten(tipLong, 200)
+#            item.setToolTip(0, tip)
+
             if article.isUnread:
-                item.setFont(0,unreadFont)
-#            else:
-#                item.setCheckState(0,QtCore.Qt.Unchecked)
+                item.setFont(0, self.unreadFont)
+                item.setTextColor(0, self.unreadColor)
+            else:
+                item.setFont(0, self.readFont)
+                item.setTextColor(0, self.readColor)
 
             self.ui.listUnread.addTopLevelItem(item)
 
@@ -165,7 +185,7 @@ class mainUI(QMainWindow):
             selected = self.ui.listUnread.currentItem()
             selectedItem = selected.article
 
-            text = "<font face=Georgia>" + "<H3>" + selectedItem.title + \
+            text = "<font face=Georgia color =#444444 >" + "<H3>" + selectedItem.title + \
                 "</H3>(" + selectedItem.feed.title + ")<br>" + \
                 time.ctime(selectedItem.updated) + "<br>" + \
                 selectedItem.description + "</font>"
@@ -176,12 +196,28 @@ class mainUI(QMainWindow):
             windowTitle = selectedItem.title + " - " + selectedItem.feed.title + " - feedIO"
             self.setWindowTitle(windowTitle)
 
+            self.markAsRead()
+
+
+    def markAsRead(self):
             # create font with normal weight to show the read articles
-            readFont = QFont()
-            readFont.setWeight(50)
-            selected.setFont(0,readFont)
+            selected = self.ui.listUnread.currentItem()
+            selectedItem = selected.article
+
+            selected.setFont(0, self.readFont)
+            selected.setTextColor(0,self.readColor)
 
             fm.markItemRead(selectedItem)
+
+    def markAsUnread(self):
+            # create font with heavy weight to show the unread articles
+            selected = self.ui.listUnread.currentItem()
+            selectedItem = selected.article
+
+            selected.setFont(0,self.unreadFont)
+            selected.setTextColor(0,self.unreadColor)
+
+            fm.markItemUnread(selectedItem)
 
 
     def fetchAllFeeds(self):
@@ -191,6 +227,8 @@ class mainUI(QMainWindow):
 
         thread = threading.Thread(target=fm.updateAll, args=())
         thread.start()
+        thread.join()
+        self.displayItems()
 
 
     def  visitPage(self):
@@ -209,37 +247,40 @@ class mainUI(QMainWindow):
         """
         Function to upvote the current article
         """
-
         selected = self.ui.listUnread.currentItem()
-        selectedTopicIndex = self.ui.comboFeed.currentIndex()
-        selectedTopic = self.topicList[selectedTopicIndex]
 
+        if selected == None:
+            print "Nothing to vote!"
+        else:
+            selectedTopicIndex = self.ui.comboTopic.currentIndex()
+            selectedTopic = self.topicList[selectedTopicIndex]
 
-        #call the classifier module
-        classifier.voteArticle("up",selected.article)
+            #call the classifier module
+            classifier.voteArticle("up",selected.article)
 
-        #upVote the feed
-        classifier.voteFeed("up", selected.article.feed)
-        print "Up Voted %s" % selected.article.title
+            #upVote the feed
+            classifier.voteFeed("up", selected.article.feed)
+            print "Up Voted %s" % selected.article.title
 
 
     def downVoteArticle(self):
         """
         Function to Down Vote the current article
         """
-
         selected = self.ui.listUnread.currentItem()
 
-        selectedTopicIndex = self.ui.comboFeed.currentIndex()
-        selectedTopic = self.topicList[selectedTopicIndex]
+        if selected == None:
+            print "Nothing to vote!"
+        else:
+            selectedTopicIndex = self.ui.comboTopic.currentIndex()
+            selectedTopic = self.topicList[selectedTopicIndex]
 
+            #call the classifier module
+            classifier.voteArticle("down", selected.article)
 
-        #call the classifier module
-        classifier.voteArticle("down", selected.article)
-
-        #downVote the feed
-        classifier.voteFeed("down", selected.article.feed)
-        print "Down Voted %s" % selected.article.title
+            #downVote the feed
+            classifier.voteFeed("down", selected.article.feed)
+            print "Down Voted %s" % selected.article.title
 
 
     def on_actionManageFeeds_activated(self, i = None):
@@ -256,6 +297,7 @@ class mainUI(QMainWindow):
 
         AddFeedDialog(self).exec_()
         self.displayFeeds()
+
 
     def on_actionRemoveFeed_activated(self, i = None):
         if i is None: return
@@ -295,12 +337,14 @@ class mainUI(QMainWindow):
         if i is None: return
         self.parent.close()
 
+
     def on_actionMinimizeToTray_activated(self, i = None):
         """
         Exit action implementataion. Exits the application.
         """
         if i is None: return
         self.close()
+
 
     def on_actionAbout_activated(self, i = None):
         """
@@ -319,6 +363,7 @@ class AddFeedDialog(QDialog):
         self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
         self.connect(self.ui.btnAdd, SIGNAL("clicked()"), self.addFeed)
         self.connect(self.ui.UrlLineEdit, SIGNAL("returnPressed()"), self.addFeed)
+
 
     def addFeed(self):
         feedUrl = unicode(self.ui.UrlLineEdit.text())
@@ -342,6 +387,7 @@ class RemoveFeedDialog(QDialog):
         self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
         self.connect(self.ui.btnRemove, SIGNAL("clicked()"), self.removeFeed)
 
+
     def displayFeeds(self):
         """
         function to display the subscribed feeds list in the combo box.
@@ -350,6 +396,7 @@ class RemoveFeedDialog(QDialog):
         feedTitles = [feed.title for feed in self.feedList]
         self.ui.feedList.clear()
         self.ui.feedList.addItems(feedTitles)
+
 
     def removeFeed(self):
         selectedIndex = self.ui.feedList.currentIndex()
@@ -370,17 +417,20 @@ class ManageFeedsDialog(QDialog):
         self.connect(self.ui.btnRemove, SIGNAL('clicked()'), self.removeFeed)
         self.connect(self.ui.btnAdd, SIGNAL('clicked()'), self.addFeed)
 
+
     def displayFeeds(self):
         self.feedList = fm.listFeeds()
         feedTitles = [feed.title for feed in self.feedList]
         self.ui.feedList.clear()
         self.ui.feedList.addItems(feedTitles)
 
+
     def removeFeed(self):
         selectedItemIndex = self.ui.feedList.currentRow()
         selectedFeed = self.feedList[selectedItemIndex]
         fm.removeFeed(selectedFeed)
         self.displayFeeds()
+
 
     def addFeed(self):
         feedUrl = unicode(self.ui.urlLine.text())
@@ -420,6 +470,7 @@ class RemoveTopicDialog(QDialog):
         self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
         self.connect(self.ui.btnRemove, SIGNAL("clicked()"), self.removeTopic)
 
+
     def displayTopics(self):
         """
         function to display the current topics list in the combo box.
@@ -429,6 +480,7 @@ class RemoveTopicDialog(QDialog):
         topicTitles = [topic.title for topic in self.topicList]
         self.ui.topicListCombo.clear()
         self.ui.topicListCombo.addItems(topicTitles)
+
 
     def removeTopic(self):
         selectedIndex = self.ui.topicListCombo.currentIndex()
@@ -449,6 +501,7 @@ class ManageTopicsDialog(QDialog):
         self.connect(self.ui.btnRemove, SIGNAL('clicked()'), self.removeTopic)
         self.connect(self.ui.btnAdd, SIGNAL('clicked()'), self.addTopic)
 
+
     def displayTopics(self):
         self.topicList = classifier.listTopics()
         self.topicList.remove(classifier.getTopic("General"))
@@ -456,11 +509,13 @@ class ManageTopicsDialog(QDialog):
         self.ui.topicList.clear()
         self.ui.topicList.addItems(topicTitles)
 
+
     def removeTopic(self):
         selectedItemIndex = self.ui.topicList.currentRow()
         selectedTopic = self.topicList[selectedItemIndex]
         classifier.removeTopic(selectedTopic)
         self.displayTopics()
+
 
     def addTopic(self):
         topic = unicode(self.ui.topicLine.text())
@@ -479,11 +534,14 @@ class AboutDialog(QDialog):
         self.connect(self.ui.btnLicense, SIGNAL('clicked()'), self.loadLicense)
         self.connect(self.ui.btnCredits, SIGNAL('clicked()'), self.loadCredits)
 
+
     def loadLicense(self):
         LicenseDialog(self).exec_()
 
+
     def loadCredits(self):
         CreditsDialog(self).exec_()
+
 
 class LicenseDialog(QDialog):
     def __init__(self, parent):
@@ -492,6 +550,7 @@ class LicenseDialog(QDialog):
         self.ui.setupUi(self)
 
         self.connect(self.ui.btnClose, SIGNAL('clicked()'), SLOT('close()'))
+
 
 class CreditsDialog(QDialog):
     def __init__(self, parent):

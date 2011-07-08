@@ -451,6 +451,7 @@
     <addaction name="actionDownVote"/>
     <addaction name="actionRead"/>
     <addaction name="actionVisitPage"/>
+    <addaction name="actionUnread"/>
    </widget>
    <widget class="QMenu" name="menuFeedIO">
     <property name="title">
@@ -507,7 +508,7 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>false</bool>
+    <bool>true</bool>
    </attribute>
    <addaction name="actionAddFeed"/>
    <addaction name="actionRemoveFeed"/>
@@ -529,6 +530,9 @@
    </property>
    <property name="text">
     <string>&amp;Add Feed</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+1</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -583,6 +587,9 @@
    <property name="text">
     <string>E&amp;xit</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>
@@ -617,7 +624,7 @@
      <normaloff>:/images/read.png</normaloff>:/images/read.png</iconset>
    </property>
    <property name="text">
-    <string>Read</string>
+    <string>&amp;Read</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -653,7 +660,7 @@
      <normaloff>:/images/visitPage.png</normaloff>:/images/visitPage.png</iconset>
    </property>
    <property name="text">
-    <string>Visit Page</string>
+    <string>&amp;Visit Page</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -682,6 +689,14 @@
   <action name="actionMinimizeToTray">
    <property name="text">
     <string>Mi&amp;nimize to tray</string>
+   </property>
+  </action>
+  <action name="actionUnread">
+   <property name="text">
+    <string>&amp;Mark as Unread</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
    </property>
   </action>
  </widget>

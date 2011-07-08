@@ -173,14 +173,14 @@ def calculateScore(item, topic="General"):
 
     #Now set the textual scores to minus values if the article "notTopic"
     if textTopic == topic:
-        textScore = textScore * 1000
+        textScore = textScore * 10000
     else:
-        textScore = textScore * (-1000)
+        textScore = textScore * (-100)
 
     if titleTopic == topic:
-        titleScore = titleScore * 1000
+        titleScore = titleScore * 10000
     else:
-        titleScore = titleScore * (-1000)
+        titleScore = titleScore * (-100)
 
 #    print titleScore
 #    print textScore
@@ -199,7 +199,7 @@ def calculateScore(item, topic="General"):
     textScoreWeight = 0.55
     titleScoreWeight = 0.25
     feedScoreWeight = 0.1
-#    updateFrequencyWeight = 0.1
+    updateFrequencyWeight = 0.1
 
 
     finalScore = ( ( textScoreWeight * textScore ) +

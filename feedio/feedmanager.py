@@ -191,14 +191,23 @@ def listItems(i=-1):
         itemList.reverse()
     return itemList
 
+
 def markItemRead(item):
     try:
         item.isUnread = False
         session.commit()
     except:
         session.rollback()
-        print "mark unread failed"
+        print "mark read failed"
 
+
+def markItemUnread(item):
+    try:
+        item.isUnread = True
+        session.commit()
+    except:
+        session.rollback()
+        print "mark unread failed"
 
 
 def main():
