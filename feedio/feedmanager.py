@@ -119,7 +119,7 @@ def _removeItem(item):
 #        session.commit() #slows down the delete process when we commit each delete.
     except:
         print "Error deleting %s" % item.title
-        #session.rollback()
+#        session.rollback()
 
 
 def updateAll():
@@ -130,8 +130,10 @@ def updateAll():
         for feed in Feed.query.all():
             print "fetching updates for %s..." % feed.title
             updateFeed(feed)
+        session.commit()
     except:
-        "Error updating feeds"
+        session.commit()
+        print "Error updating feeds"
     else:
         print "all %d feeds are up to date" % len(Feed.query.all())
 
@@ -172,6 +174,12 @@ def listFeeds():
     """
     Function to return the List of subscribed feeds from the database.
     """
+#    # hack to commit less. find a better way if possible
+#    try:
+#        session.commit()
+#    except:
+#        sesrion.rollback()
+
     feedList = Feed.query.all()
     return feedList
 
@@ -181,6 +189,12 @@ def listItems(i=-1):
     Function to return the List of fetched articles on the database.
     Optional argument will define from wich feed the articles should be returned.
     """
+#    # hack to commit less. find a better way if possible
+#    try:
+#        session.commit()
+#    except:
+#        session.rollback()
+
     itemList = []
     if i is (-1):
         itemList = Item.query.order_by(Item.updated).all()
@@ -192,22 +206,68 @@ def listItems(i=-1):
     return itemList
 
 
-def markItemRead(item):
-    try:
-        item.isUnread = False
-        session.commit()
-    except:
-        session.rollback()
-        print "mark read failed"
+def listNew(i=-1):
+    """
+    Function to return the List of fetched articles on the database.
+    Optional argument will define from wich feed the articles should be returned.
+    """
+#    # hack to commit less. find a better way if possible
+#    try:
+#        session.commit()
+#    except:
+#        sesrion.rollback()
+
+    itemList = []
+    if i is (-1):
+        itemList = Item.query.filter_by(age = 0).order_by(Item.updated).all()
+        itemList.reverse()
+    else:
+        q = Item.query.filter_by(feed = i, age = 0)
+        itemList = q.order_by(Item.updated).all()
+        itemList.reverse()
+    return itemList
 
 
-def markItemUnread(item):
-    try:
-        item.isUnread = True
-        session.commit()
-    except:
-        session.rollback()
-        print "mark unread failed"
+def listRead(i=-1):
+    """
+    Function to return the List of already read articles.
+    Optional argument will define from wich feed the articles should be returned.
+    """
+#    # hack to commit less. find a better way if possible
+#    try:
+#        session.commit()
+#    except:
+#        sesrion.rollback()
+
+    itemList = []
+    if i is (-1):
+        itemList = Item.query.filter_by(age = 2).order_by(Item.updated).all()
+        itemList.reverse()
+    else:
+        q = Item.query.filter_by(feed = i, age = 2)
+        itemList = q.order_by(Item.updated).all()
+        itemList.reverse()
+    return itemList
+
+
+def setItemFlag(item, age = 2, commit = True):
+    """
+    Function to set an article as new unred or old. set the flag as 0, 1, or 2
+    as follows,
+
+    new         0
+    unread      1
+    read        2
+
+    """
+
+    item.age = age
+    if commit is True:
+        try:
+            session.commit() # disabled individual commits to increse performance.
+        except:
+            session.rollback()
+            print "Error in setItemFlags"
 
 
 def main():

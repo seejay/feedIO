@@ -64,14 +64,18 @@ class mainUI(QMainWindow):
         self.ui.setupUi(self)
         self.raise_()
 
+        self.newFont = QFont()
+        self.newFont.setWeight(75)
+
         self.unreadFont = QFont()
-        self.unreadFont.setWeight(87)
+        self.unreadFont.setWeight(75)
 
         self.readFont = QFont()
         self.readFont.setWeight(50)
 
-        self.readColor = QColor("#555555")
+        self.readColor = QColor("#666666")
         self.unreadColor = QColor("#444444")
+        self.newColor = QColor("#070788")
 
         self.feedList = []
         self.itemList = []
@@ -88,6 +92,7 @@ class mainUI(QMainWindow):
         self.connect(self.ui.listUnread, SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.displayArticle)
         self.connect(self.ui.actionVisitPage, SIGNAL("activated()"), self.visitPage)
         self.connect(self.ui.actionFetchAllFeeds, SIGNAL("activated()"), self.fetchAllFeeds)
+        self.connect(self.ui.actionFetchFeed, SIGNAL("activated()"), self.fetchFeed)
         self.connect(self.ui.actionUpVote, SIGNAL("activated()"), self.upVoteArticle)
         self.connect(self.ui.actionDownVote, SIGNAL("activated()"), self.downVoteArticle)
         self.connect(self.ui.actionUnread, SIGNAL("activated()"), self.markAsUnread)
@@ -165,9 +170,14 @@ class mainUI(QMainWindow):
 #            tip = purify.shorten(tipLong, 200)
 #            item.setToolTip(0, tip)
 
-            if article.isUnread:
+            if article.age is 0:
+                item.setFont(0, self.newFont)
+                item.setTextColor(0, self.newColor)
+
+            elif article.age is 1:
                 item.setFont(0, self.unreadFont)
                 item.setTextColor(0, self.unreadColor)
+
             else:
                 item.setFont(0, self.readFont)
                 item.setTextColor(0, self.readColor)
@@ -196,28 +206,26 @@ class mainUI(QMainWindow):
             windowTitle = selectedItem.title + " - " + selectedItem.feed.title + " - feedIO"
             self.setWindowTitle(windowTitle)
 
-            self.markAsRead()
+            if selectedItem.age == 0 or selectedItem.age == 1:
+                selected.setFont(0, self.readFont)
+                selected.setTextColor(0, self.readColor)
+                fm.setItemFlag(selectedItem, 2)
 
 
     def markAsRead(self):
-            # create font with normal weight to show the read articles
-            selected = self.ui.listUnread.currentItem()
-            selectedItem = selected.article
+        # create font with normal weight to show the read articles
+        selected = self.ui.listUnread.currentItem()
+        selected.setFont(0, self.readFont)
+        selected.setTextColor(0,self.readColor)
+        fm.setItemFlag(selected.article, 2)
 
-            selected.setFont(0, self.readFont)
-            selected.setTextColor(0,self.readColor)
-
-            fm.markItemRead(selectedItem)
 
     def markAsUnread(self):
-            # create font with heavy weight to show the unread articles
-            selected = self.ui.listUnread.currentItem()
-            selectedItem = selected.article
-
-            selected.setFont(0,self.unreadFont)
-            selected.setTextColor(0,self.unreadColor)
-
-            fm.markItemUnread(selectedItem)
+        # create font with heavy weight to show the unread articles
+        selected = self.ui.listUnread.currentItem()
+        selected.setFont(0, self.unreadFont)
+        selected.setTextColor(0, self.unreadColor)
+        fm.setItemFlag(selected.article, 1)
 
 
     def fetchAllFeeds(self):
@@ -227,8 +235,17 @@ class mainUI(QMainWindow):
 
         thread = threading.Thread(target=fm.updateAll, args=())
         thread.start()
-        thread.join()
-        self.displayItems()
+#        thread.join()
+#        self.displayItems()
+
+
+    def fetchFeed(self):
+        """
+        Fetch the selected feed.
+        """
+        selected = self.ui.listUnread.currentItem()
+        thread = threading.Thread(target=fm.updateFeed, args=(selected.article.feed,))
+        thread.start()
 
 
     def  visitPage(self):
@@ -561,6 +578,24 @@ class CreditsDialog(QDialog):
         self.connect(self.ui.btnClose, SIGNAL('clicked()'), SLOT('close()'))
 
 
+
+class FeedIO(QWidget):
+    def __init__(self, parent = None):
+        QWidget.__init__(self)
+        print "FeedIO instance created"
+
+
+    def closeEvent(self, event):
+        print "marking all new Items as old before exit"
+        newItems = fm.listNew()
+        for item in newItems:
+            fm.setItemFlag(item, 1, False)
+            print "marked %s new to unread" % item.title
+        #Move this commit to a better place
+        fm.session.commit()
+        event.accept()
+
+
 def initUI():
 
     app = QApplication(sys.argv)
@@ -576,7 +611,7 @@ def initUI():
 #    time.sleep(2)
 
     # create a feedIO QWidget instance
-    feedIO = QWidget()
+    feedIO = FeedIO()
 
     # pass feedIO as the parent for the mainWindow.
     mainWindow = mainUI(feedIO)
@@ -596,6 +631,7 @@ def initUI():
     mainWindow.show()
     splash.finish(mainWindow)
     sys.exit(app.exec_())
+
 
 
 if __name__ == "__main__":
