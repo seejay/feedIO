@@ -228,6 +228,29 @@ def listNew(i=-1):
     return itemList
 
 
+def listUnread(i=-1):
+    """
+    Function to return the List of fetched articles on the database.
+    Optional argument will define from wich feed the articles should be returned.
+    """
+#    # hack to commit less. find a better way if possible
+#    try:
+#        session.commit()
+#    except:
+#        sesrion.rollback()
+
+    itemList = []
+    if i is (-1):
+        itemList = Item.query.filter_by(age = 1).order_by(Item.updated).all()
+        itemList.reverse()
+    else:
+        q = Item.query.filter_by(feed = i, age = 1)
+        itemList = q.order_by(Item.updated).all()
+        itemList.reverse()
+    return itemList
+
+
+
 def listRead(i=-1):
     """
     Function to return the List of already read articles.
@@ -262,6 +285,9 @@ def setItemFlag(item, age = 2, commit = True):
     """
 
     item.age = age
+    if age is 2:
+        item.isUnread = False
+
     if commit is True:
         try:
             session.commit() # disabled individual commits to increse performance.

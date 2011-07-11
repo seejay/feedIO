@@ -54,6 +54,7 @@ from UI.credits_ui import Ui_Credits
 from UI.systray import SystemTrayIcon
 import feedmanager as fm
 import classifier
+import prioritizer
 import purify
 
 class mainUI(QMainWindow):
@@ -80,7 +81,7 @@ class mainUI(QMainWindow):
         self.feedList = []
         self.itemList = []
         self.topicList = []
-
+        self.updated = True
         self.displayTopics()
         self.displayFeeds()
         self.displayItems()
@@ -137,12 +138,22 @@ class mainUI(QMainWindow):
         else:
 
             if selectedFeedIndex == len(self.feedList):
-                self.itemList = fm.listItems()
+                self.itemList = fm.listNew()
+                self.itemList.extend(fm.listUnread())
+                pri = prioritizer.Prioritizer()
+
+                self.itemList = pri.prioritize(self.itemList)
+
                 windowTitle = "All Feeds - feedIO"
                 self.setWindowTitle(windowTitle)
             else:
                 selectedFeed = self.feedList[selectedFeedIndex]
-                self.itemList = fm.listItems(selectedFeed)
+
+                self.itemList = fm.listNew(selectedFeed)
+                self.itemList.extend(fm.listUnread(selectedFeed))
+                pri = prioritizer.Prioritizer()
+
+                self.itemList = pri.prioritize(self.itemList)
 
                 #Code to change the window title to the currently viewing feed's title
                 windowTitle = selectedFeed.title + " - feedIO"
@@ -233,10 +244,19 @@ class mainUI(QMainWindow):
         Fetch all action implementataion. Creates a new thread and fetches the updates for them in that thread.
         """
 
-        thread = threading.Thread(target=fm.updateAll, args=())
+        thread = threading.Thread(target=self.fetchAll, args=())
         thread.start()
 #        thread.join()
 #        self.displayItems()
+
+    def fetchAll(self):
+        print "fetching Updates..."
+        fm.updateAll()
+        newList = fm.listNew()
+        print "Calculating priority Scores"
+        pri = prioritizer.Prioritizer()
+        pri.setScores(newList)
+        print "Done!"
 
 
     def fetchFeed(self):
@@ -594,6 +614,9 @@ class FeedIO(QWidget):
     def fetchAllFeeds(self):
         print "fetching Updates..."
         fm.updateAll()
+        newList = fm.listNew()
+        pri = prioritizer.Prioritizer()
+        pri.setScores(newList)
 
 
     def closeEvent(self, event):
