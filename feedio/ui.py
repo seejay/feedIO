@@ -584,6 +584,17 @@ class FeedIO(QWidget):
         QWidget.__init__(self)
         print "FeedIO instance created"
 
+        self.updateInterval = 1800000 # time in miliseconds (30 minutes)
+
+        timer = QTimer(self) # timer to fetch feeds automatically
+        self.connect(timer, SIGNAL('timeout()'), self.fetchAllFeeds)
+        timer.start(self.updateInterval)
+
+
+    def fetchAllFeeds(self):
+        print "fetching Updates..."
+        fm.updateAll()
+
 
     def closeEvent(self, event):
         print "marking all new Items as old before exit"
@@ -591,7 +602,9 @@ class FeedIO(QWidget):
         for item in newItems:
             fm.setItemFlag(item, 1, False)
             print "marked %s new to unread" % item.title
-        #Move this commit to a better place
+
+        # Might need to move this commit to a better place.
+        # this is done to ruduce the number of commites to be performed when exiting, to one
         fm.session.commit()
         event.accept()
 
