@@ -17,7 +17,7 @@ class SystemTrayIcon(QtGui.QSystemTrayIcon):
         self.child = child
 
         self.connect(self.quitAction, QtCore.SIGNAL("activated()"), parent.close)
-        self.connect(self.updateAction, QtCore.SIGNAL("activated()"), child.fetchAllFeeds)
+        self.connect(self.updateAction, QtCore.SIGNAL("activated()"), parent.fetchAllFeeds)
         self.connect(self, QtCore.SIGNAL("activated(QSystemTrayIcon::ActivationReason)"), self.sysTrayActivated)
         self.connect(self.minimizeAction, QtCore.SIGNAL("activated()"), child.hide)
 

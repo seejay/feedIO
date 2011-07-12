@@ -56,6 +56,7 @@ import feedmanager as fm
 import classifier
 import prioritizer
 import purify
+import notifier
 
 class mainUI(QMainWindow):
     def __init__(self, parent=None):
@@ -92,7 +93,7 @@ class mainUI(QMainWindow):
         self.connect(self.ui.comboFeed, SIGNAL("currentIndexChanged(int)"), self.displayItems)
         self.connect(self.ui.listUnread, SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.displayArticle)
         self.connect(self.ui.actionVisitPage, SIGNAL("activated()"), self.visitPage)
-        self.connect(self.ui.actionFetchAllFeeds, SIGNAL("activated()"), self.fetchAllFeeds)
+        self.connect(self.ui.actionFetchAllFeeds, SIGNAL("activated()"), parent.fetchAllFeeds)
         self.connect(self.ui.actionFetchFeed, SIGNAL("activated()"), self.fetchFeed)
         self.connect(self.ui.actionUpVote, SIGNAL("activated()"), self.upVoteArticle)
         self.connect(self.ui.actionDownVote, SIGNAL("activated()"), self.downVoteArticle)
@@ -279,6 +280,10 @@ class mainUI(QMainWindow):
         else:
             self.ui.viewArticle.load(QUrl(selected.article.url))
 
+            self.parent.status = "Visiting %s in browser mode..." % selected.article.feed.title
+            self.parent.sendNotification()
+
+
 
     def upVoteArticle(self):
         """
@@ -299,6 +304,9 @@ class mainUI(QMainWindow):
             classifier.voteFeed("up", selected.article.feed)
             print "Up Voted %s" % selected.article.title
 
+            self.parent.status = "Up Voted %s" % selected.article.title
+            self.parent.sendNotification()
+
 
     def downVoteArticle(self):
         """
@@ -318,6 +326,9 @@ class mainUI(QMainWindow):
             #downVote the feed
             classifier.voteFeed("down", selected.article.feed)
             print "Down Voted %s" % selected.article.title
+
+            self.parent.status = "Down Voted %s" % selected.article.title
+            self.parent.sendNotification()
 
 
     def on_actionManageFeeds_activated(self, i = None):
@@ -604,6 +615,8 @@ class FeedIO(QWidget):
         QWidget.__init__(self)
         print "FeedIO instance created"
 
+        self.status = "Running..."
+
         self.updateInterval = 1800000 # time in miliseconds (30 minutes)
 
         timer = QTimer(self) # timer to fetch feeds automatically
@@ -611,13 +624,26 @@ class FeedIO(QWidget):
         timer.start(self.updateInterval)
 
 
+    def sendNotification(self, title = "feedIO"):
+        no = notifier.Notifier(title, self.status)
+        no.feedNotification()
+
     def fetchAllFeeds(self):
-        print "fetching Updates..."
+        thread = threading.Thread(target=self.fetchAll, args=())
+        thread.start()
+
+
+    def fetchAll(self):
+        self.status = "fetching Updates..."
+        self.sendNotification()
         fm.updateAll()
         newList = fm.listNew()
         pri = prioritizer.Prioritizer()
         pri.setScores(newList)
 
+        self.status = "All feeds updated."
+        print self.status
+        self.sendNotification()
 
     def closeEvent(self, event):
         print "marking all new Items as old before exit"
@@ -625,6 +651,7 @@ class FeedIO(QWidget):
         for item in newItems:
             fm.setItemFlag(item, 1, False)
             print "marked %s new to unread" % item.title
+
 
         # Might need to move this commit to a better place.
         # this is done to ruduce the number of commites to be performed when exiting, to one
