@@ -83,12 +83,12 @@ class Prioritizer:
         titleText = purify.cleanText(article.title)
 
         #Calculate the Score for the texual content of the article
-        (textTopic, textScore) = classifier.classifyArticle(self.topic, text)
+        (textTopic, textScore) = classifier.classifyArticleText(self.topic, text)
 
 #        print "text : %s, %s" % (textTopic, textScore)
 
         #Calculate the Score for the title of the article.
-        (titleTopic,titleScore) = classifier.classifyArticle(self.topic, titleText)
+        (titleTopic,titleScore) = classifier.classifyArticleTitle(self.topic, titleText)
 #        print "Title : %s, %s" % (titleTopic,titleScore)
 
         #Now set the textual scores to minus values if the article "notTopic"
@@ -103,7 +103,7 @@ class Prioritizer:
             titleScore = titleScore * (-100)
 
         #Get the Score for the feed from the db
-        feedScore = article.feed.numVotes * 100
+        feedScore = article.feed.numVotes * 200
 
         #updateFrequencyScore - score based on the feeds update frequncy.
         #less frequently updated content would get fairly better scores.
@@ -112,7 +112,7 @@ class Prioritizer:
         #TODO: Give an option for the user to set the weights of these scores from GUI.
 
         textScoreWeight = 0.55
-        titleScoreWeight = 0.25
+        titleScoreWeight = 0.35
         feedScoreWeight = 0.1
 #        updateFrequencyWeight = 0.1
 
@@ -128,7 +128,6 @@ class Prioritizer:
 
 def main():
     pass
-    
 
 if __name__ == "__main__":
     print __doc__

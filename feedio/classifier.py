@@ -61,8 +61,10 @@ def addTopic(topic):
         session.commit()
     except:
         session.rollback()
+        print "Error adding topic"
     else:
         c = Classifier(classifierDir, [topic, "not"+topic])
+        c2 = Classifier(classifierDir, [topic+"Title", "not"+topic+"Title"])
         print "Added new topic %s" % unicode(topic)
 
 
@@ -109,28 +111,35 @@ def voteArticle(upOrDown, item, topic="General"):
     and the text to vote for
     """
     text = purify.cleanText(item.description)
+    title = purify.cleanText(item.title)
 
     c = Classifier(classifierDir, [topic,"not"+topic])
+    c2 = Classifier(classifierDir, [topic+"Title", "not"+topic+"Title"])
     try:
         if upOrDown is "up":
             c.learn(topic, text)
+            c2.learn(topic+"Title", title)
 
         elif upOrDown is "down":
             c.learn("not"+topic, text)
+            c2.learn("not"+topic+"Title", title)
 
         if topic is not "General":
             #always add the upvote to the General interest category as well.
             d = Classifier(classifierDir, ["General","notGeneral"])
+            d2 = Classifier(classifierDir, ["GeneralTitle","notGeneralTitle"])
             if upOrDown is "up":
                 d.learn("General", text)
+                d2.learn("GeneralTitle", title)
 
             elif upOrDown is "down":
                 d.learn("notGeneral", text)
+                d2.learn("notGeneralTitle", title)
     except UnicodeEncodeError:
         print "Article content contains invalid characters!"
 
 
-def classifyArticle(topic,text):
+def classifyArticleText(topic,text):
     """
     function to calculate the matching probability of a given text to a
     specified topic. Add code to remove any tags in the code and generate a
@@ -148,6 +157,26 @@ def classifyArticle(topic,text):
 
     else:
         return (classification, probability)
+
+
+def classifyArticleTitle(topic,title):
+    """
+    function to calculate the matching probability of a given text to a
+    specified topic. Add code to remove any tags in the code and generate a
+    plain text string. Use the "markdown" module if needed.
+    """
+    c = Classifier(classifierDir, [topic+"Title", "not"+topic+"Title"])
+
+    try:
+        (classification, probability) = c.classify(title)
+
+    except UnicodeEncodeError:
+        # return a dummy value for articles with character Errors
+        #TODO: filter out the invalic characters
+            (classification, probability) = ("not"+topic+"Title", 0)
+    else:
+        return (classification, probability)
+
 
 
 def initTopics():
