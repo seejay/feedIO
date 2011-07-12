@@ -300,7 +300,14 @@
         </property>
         <column>
          <property name="text">
-          <string>Title</string>
+          <string>Important &amp; Unread</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Sans Serif</family>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
          </property>
         </column>
        </widget>
@@ -320,18 +327,28 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>80</height>
+          <height>200</height>
          </size>
         </property>
         <property name="baseSize">
          <size>
           <width>300</width>
-          <height>150</height>
+          <height>200</height>
          </size>
+        </property>
+        <property name="indentation">
+         <number>-10</number>
         </property>
         <column>
          <property name="text">
-          <string>Title</string>
+          <string>Everything else</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Sans Serif</family>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
          </property>
         </column>
        </widget>

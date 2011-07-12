@@ -82,6 +82,9 @@ class mainUI(QMainWindow):
         self.feedList = []
         self.itemList = []
         self.topicList = []
+        self.readList = []
+        self.currentItem = None
+
         self.updated = True
         self.displayTopics()
         self.displayFeeds()
@@ -91,7 +94,8 @@ class mainUI(QMainWindow):
         self.ui.comboFeed.setCurrentIndex(len(self.feedList))
 
         self.connect(self.ui.comboFeed, SIGNAL("currentIndexChanged(int)"), self.displayItems)
-        self.connect(self.ui.listUnread, SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.displayArticle)
+        self.connect(self.ui.listUnread, SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.setCurrentFromUnread)
+        self.connect(self.ui.listOld, SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.setCurrentFromOld)
         self.connect(self.ui.actionVisitPage, SIGNAL("activated()"), self.visitPage)
         self.connect(self.ui.actionFetchAllFeeds, SIGNAL("activated()"), parent.fetchAllFeeds)
         self.connect(self.ui.actionFetchFeed, SIGNAL("activated()"), self.fetchFeed)
@@ -129,7 +133,16 @@ class mainUI(QMainWindow):
 
     def displayItems(self):
         """
-        function to update the Articles list according to the selected feeds list.
+        Function to display unread and read article lists in the Two QTreeWidget
+        boxes using two seperate threads to keep the UI responsiveness.
+        """
+        self.displayUnread()
+        self.displayRead()
+
+
+    def displayUnread(self):
+        """
+        function to update the Unread Articles list according to the selected feeds list.
         """
 
         selectedFeedIndex = self.ui.comboFeed.currentIndex()
@@ -199,12 +212,63 @@ class mainUI(QMainWindow):
         self.ui.listUnread.setFocus()
 
 
+    def displayRead(self):
+        """
+        function to update the read Articles list according to the selected feeds list.
+        """
+
+        selectedFeedIndex = self.ui.comboFeed.currentIndex()
+
+        if len(self.feedList) == 0:
+            self.readList = []
+        else:
+
+            if selectedFeedIndex == len(self.feedList):
+                self.readList = fm.listRead()
+
+            else:
+                selectedFeed = self.feedList[selectedFeedIndex]
+
+                self.readList = fm.listRead(selectedFeed)
+
+        self.ui.listOld.clear()
+
+        itemIcon = QIcon()
+        itemIcon.addPixmap(QPixmap(":/images/article.png"), QIcon.Normal, QIcon.Off)
+
+        for article in self.readList:
+            item=QTreeWidgetItem([article.title,])
+            item.article = article
+
+            item.setIcon(0, itemIcon)
+
+            item.setFont(0, self.readFont)
+            item.setTextColor(0, self.readColor)
+
+            self.ui.listOld.addTopLevelItem(item)
+
+    def setCurrentFromUnread(self):
+        """
+        Function to set the currently selected Item in the Unread list as the self.currentItem
+        """
+        self.currentItem = self.ui.listUnread.currentItem()
+        self.displayArticle()
+
+
+    def setCurrentFromOld(self):
+        """
+        Function to set the currently selected Item in the Old list as the self.currentItem
+        """
+        self.currentItem = self.ui.listOld.currentItem()
+        self.displayArticle()
+
+
     def displayArticle(self):
         """
         displays the selected article on the viewer.
         """
         try:
-            selected = self.ui.listUnread.currentItem()
+            selected = self.currentItem
             selectedItem = selected.article
 
             text = "<font face=Georgia color =#444444 >" + "<H3>" + selectedItem.title + \
@@ -226,7 +290,7 @@ class mainUI(QMainWindow):
 
     def markAsRead(self):
         # create font with normal weight to show the read articles
-        selected = self.ui.listUnread.currentItem()
+        selected = self.currentItem
         selected.setFont(0, self.readFont)
         selected.setTextColor(0,self.readColor)
         fm.setItemFlag(selected.article, 2)
@@ -234,7 +298,7 @@ class mainUI(QMainWindow):
 
     def markAsUnread(self):
         # create font with heavy weight to show the unread articles
-        selected = self.ui.listUnread.currentItem()
+        selected = self.currentItem
         selected.setFont(0, self.unreadFont)
         selected.setTextColor(0, self.unreadColor)
         fm.setItemFlag(selected.article, 1)
@@ -264,7 +328,7 @@ class mainUI(QMainWindow):
         """
         Fetch the selected feed.
         """
-        selected = self.ui.listUnread.currentItem()
+        selected = self.currentItem
         thread = threading.Thread(target=fm.updateFeed, args=(selected.article.feed,))
         thread.start()
 
@@ -274,7 +338,7 @@ class mainUI(QMainWindow):
         function to visit the original web page of selected article from the built in web browser.
         """
         try:
-            selected = self.ui.listUnread.currentItem()
+            selected = self.currentItem
         except:
             text = "Not implemented yet."
         else:
@@ -289,7 +353,7 @@ class mainUI(QMainWindow):
         """
         Function to upvote the current article
         """
-        selected = self.ui.listUnread.currentItem()
+        selected = self.currentItem
 
         if selected == None:
             print "Nothing to vote!"
@@ -312,7 +376,7 @@ class mainUI(QMainWindow):
         """
         Function to Down Vote the current article
         """
-        selected = self.ui.listUnread.currentItem()
+        selected = self.currentItem
 
         if selected == None:
             print "Nothing to vote!"

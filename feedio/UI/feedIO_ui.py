@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'feedIO.ui'
 #
-# Created: Sun Jul 10 17:09:22 2011
+# Created: Tue Jul 12 19:52:06 2011
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -145,8 +145,9 @@ class Ui_feedIO(object):
         sizePolicy.setHeightForWidth(self.listOld.sizePolicy().hasHeightForWidth())
         self.listOld.setSizePolicy(sizePolicy)
         self.listOld.setMinimumSize(QtCore.QSize(0, 0))
-        self.listOld.setMaximumSize(QtCore.QSize(16777215, 80))
-        self.listOld.setBaseSize(QtCore.QSize(300, 150))
+        self.listOld.setMaximumSize(QtCore.QSize(16777215, 200))
+        self.listOld.setBaseSize(QtCore.QSize(300, 200))
+        self.listOld.setIndentation(-10)
         self.listOld.setObjectName("listOld")
         self.viewArticle = QtWebKit.QWebView(self.splitter_2)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
@@ -312,8 +313,8 @@ class Ui_feedIO(object):
         self.label_4.setText(QtGui.QApplication.translate("feedIO", "Interest", None, QtGui.QApplication.UnicodeUTF8))
         self.btnUp.setText(QtGui.QApplication.translate("feedIO", "&UP", None, QtGui.QApplication.UnicodeUTF8))
         self.btnDown.setText(QtGui.QApplication.translate("feedIO", "&DOWN", None, QtGui.QApplication.UnicodeUTF8))
-        self.listUnread.headerItem().setText(0, QtGui.QApplication.translate("feedIO", "Title", None, QtGui.QApplication.UnicodeUTF8))
-        self.listOld.headerItem().setText(0, QtGui.QApplication.translate("feedIO", "Title", None, QtGui.QApplication.UnicodeUTF8))
+        self.listUnread.headerItem().setText(0, QtGui.QApplication.translate("feedIO", "Important & Unread", None, QtGui.QApplication.UnicodeUTF8))
+        self.listOld.headerItem().setText(0, QtGui.QApplication.translate("feedIO", "Everything else", None, QtGui.QApplication.UnicodeUTF8))
         self.menuFile.setTitle(QtGui.QApplication.translate("feedIO", "&Feeds", None, QtGui.QApplication.UnicodeUTF8))
         self.menuTools.setTitle(QtGui.QApplication.translate("feedIO", "&Settings", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHelp.setTitle(QtGui.QApplication.translate("feedIO", "&Help", None, QtGui.QApplication.UnicodeUTF8))
