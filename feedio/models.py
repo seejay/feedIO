@@ -35,6 +35,7 @@ __developers__ = ["Chanaka Jayamal",
 
 import os
 from elixir import *
+from sqlalchemy.ext.associationproxy import AssociationProxy
 
 # path to the feedIO user profile
 USERDIR=os.path.join(os.path.expanduser("~"),".feedIO")
@@ -69,29 +70,38 @@ class Item(Entity):
     updated = Field(Float) # Stores the seconds since EPOCH
     author = Field(Unicode(100))
     generalScore = Field(Integer, default =1000)
+    numVotes = Field(Integer, default =1)
     isUnread = Field(Boolean, default=True)
     bookMarked = Field(Boolean, default=False)
     age = Field(Integer, default = 0)
     favourite = Field(Boolean,default=False)
     feed = ManyToOne('Feed')
-    topics = ManyToMany('Topic')
+    score_table = OneToMany('ScoreTable')
+    topics = AssociationProxy('score_table', 'topic',
+                            creator=lambda topic: ScoreTable(topic=topic))
     
     def __repr__(self):
         return '<Item "%s" - (%s)>' % (self.title, self.url)
 
 
 class Topic(Entity):
-    """
-    The Topic entity to store detils of a user interest topic
-    """
-    
     title = Field(Unicode(100), required=True, primary_key=True)
-    items = ManyToMany('Item')
     numVotes = Field(Integer, default =1)
-
+    score_table = OneToMany('ScoreTable')
+    items = AssociationProxy('score_table', 'item',
+                             creator=lambda item: ScoreTable(item=item))
 
     def __repr__(self):
         return '<Topic "%s">' % self.title
+
+
+class ScoreTable(Entity):
+    score = Field(Integer, default =1000)
+    topic = ManyToOne('Topic')
+    item = ManyToOne('Item')
+
+    def __repr__(self):
+        return '<Score "%s - %s">' % (self.topic.title, self.item.title)
 
 
 def initDB():
