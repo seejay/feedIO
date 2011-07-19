@@ -1,9 +1,7 @@
 #!/usr/bin/python
 """
-Author  : Chanaka Jayamal
-Date    : 20/05/2011
-
-feedManager for feedIO.
+feedManager for feedIO. provides functionality to add, remove and fetch updates
+ from feeds.
 """
 
 __version__ = "0.0.1"
@@ -27,9 +25,9 @@ __license__ = """
 
 __author__ = "Chanaka Jayamal <seejay@seejay.net>"
 
-__developers__ = ["Chanaka Jayamal", 
-                  "Lanka Amarasekara", 
-                  "Kolitha Gajanayake", 
+__developers__ = ["Chanaka Jayamal",
+                  "Lanka Amarasekara",
+                  "Kolitha Gajanayake",
                   "Chamika Viraj"]
 
 
@@ -48,32 +46,32 @@ def addFeed(feedUrl):
     """
     Function to add a new feed to the database.
     """
-    try:    
+    try:
         feedData = feedparser.parse(feedUrl)
     except:
         #this never occurs since parser does not raise any exceptions when invalid url is sent
         print "Invalid feed Url!"
-        
+
     else:
         try:
-            newFeed = Feed(url = unicode(feedUrl), title = feedData.feed.title, 
-                lastModified = time.mktime(feedData.modified), 
+            newFeed = Feed(url = unicode(feedUrl), title = feedData.feed.title,
+                lastModified = time.mktime(feedData.modified),
                 etag = unicode(feedData.etag))
-                
+
             session.commit()
-            
+
         except AttributeError:
             session.rollback()
             print "Error! Invalid feed URL"
         except:
             session.rollback()
             print "%s \t Feed already subscribed" % (feedData.feed.title)
-            
+
         else:
             print "Subscribed to \t %s " % (feedData.feed.title)
             fetchFeeds(newFeed, feedData)
-    
-    
+
+
 def fetchFeeds(feed,feedData):
     for item in feedData.entries:
         _addItem(feed, item)
@@ -84,11 +82,11 @@ def _addItem(feed, item):
     Function _addItem, adds a new article to the database.
     """
     try:
-        newItem = Item(title = item.title, 
-            url = item.link, 
-            description = item.summary, feed = feed, 
+        newItem = Item(title = item.title,
+            url = item.link,
+            description = item.summary, feed = feed,
             updated = time.mktime(item.updated_parsed))
-            
+
         session.commit()
     except:
         session.rollback()
@@ -99,9 +97,9 @@ def removeFeed(feed):
     Function to remove a subscribed feed from the database.
     """
     try:
-        
+
         itemList = listItems(feed)
-        
+
         for item in itemList:
             print "deleted %s" % item.title
             _removeItem(item)
@@ -121,9 +119,9 @@ def _removeItem(item):
 #        session.commit() #slows down the delete process when we commit each delete.
     except:
         print "Error deleting %s" % item.title
-        #session.rollback()
-        
-        
+#        session.rollback()
+
+
 def updateAll():
     """
     function to update the content of all the feeds in the subscribed list.
@@ -132,8 +130,10 @@ def updateAll():
         for feed in Feed.query.all():
             print "fetching updates for %s..." % feed.title
             updateFeed(feed)
+        session.commit()
     except:
-        "Error updating feeds"
+        session.commit()
+        print "Error updating feeds"
     else:
         print "all %d feeds are up to date" % len(Feed.query.all())
 
@@ -142,38 +142,44 @@ def updateFeed(feed):
     """
     function to update the content of a feed
     """
-    
+
     feedData = feedparser.parse(feed.url, etag = feed.etag, modified = time.localtime(feed.lastModified))
     try:
         if feedData.status == 301:
             print "feed url modified. trying the new url..."
             feedData = feedparser.parse(feedData.url, etag = feed.etag, modified = time.localtime(feed.lastModified))
-            
+
         if feedData.status == 304:
             print "No updates"
-            
+
         else:
             print feedData.status
-                    
+
             lastModified = time.localtime(feed.lastModified)
             feed.lastModified = time.mktime(feedData.modified)
-            
+
             for item in feedData.entries:
                 if item.updated_parsed > lastModified:
                     _addItem(feed, item)
                     print "Added %s to the database." % item.title #comment this later
     except AttributeError:
         print " Error fetching feeds, Network error???"
-    
+
     #if feedData.status == 200:
     #    print "Site content has not been updated."
-    #    pass    
-                
+    #    pass
+
 
 def listFeeds():
     """
     Function to return the List of subscribed feeds from the database.
     """
+#    # hack to commit less. find a better way if possible
+#    try:
+#        session.commit()
+#    except:
+#        sesrion.rollback()
+
     feedList = Feed.query.all()
     return feedList
 
@@ -183,6 +189,12 @@ def listItems(i=-1):
     Function to return the List of fetched articles on the database.
     Optional argument will define from wich feed the articles should be returned.
     """
+#    # hack to commit less. find a better way if possible
+#    try:
+#        session.commit()
+#    except:
+#        session.rollback()
+
     itemList = []
     if i is (-1):
         itemList = Item.query.order_by(Item.updated).all()
@@ -193,10 +205,100 @@ def listItems(i=-1):
         itemList.reverse()
     return itemList
 
-    
+
+def listNew(i=-1):
+    """
+    Function to return the List of fetched articles on the database.
+    Optional argument will define from wich feed the articles should be returned.
+    """
+#    # hack to commit less. find a better way if possible
+#    try:
+#        session.commit()
+#    except:
+#        sesrion.rollback()
+
+    itemList = []
+    if i is (-1):
+        itemList = Item.query.filter_by(age = 0).order_by(Item.updated).all()
+        itemList.reverse()
+    else:
+        q = Item.query.filter_by(feed = i, age = 0)
+        itemList = q.order_by(Item.updated).all()
+        itemList.reverse()
+    return itemList
+
+
+def listUnread(i=-1):
+    """
+    Function to return the List of fetched articles on the database.
+    Optional argument will define from wich feed the articles should be returned.
+    """
+#    # hack to commit less. find a better way if possible
+#    try:
+#        session.commit()
+#    except:
+#        sesrion.rollback()
+
+    itemList = []
+    if i is (-1):
+        itemList = Item.query.filter_by(age = 1).order_by(Item.updated).all()
+        itemList.reverse()
+    else:
+        q = Item.query.filter_by(feed = i, age = 1)
+        itemList = q.order_by(Item.updated).all()
+        itemList.reverse()
+    return itemList
+
+
+
+def listRead(i=-1):
+    """
+    Function to return the List of already read articles.
+    Optional argument will define from wich feed the articles should be returned.
+    """
+#    # hack to commit less. find a better way if possible
+#    try:
+#        session.commit()
+#    except:
+#        sesrion.rollback()
+
+    itemList = []
+    if i is (-1):
+        itemList = Item.query.filter_by(age = 2).order_by(Item.updated).all()
+        itemList.reverse()
+    else:
+        q = Item.query.filter_by(feed = i, age = 2)
+        itemList = q.order_by(Item.updated).all()
+        itemList.reverse()
+    return itemList
+
+
+def setItemFlag(item, age = 2, commit = True):
+    """
+    Function to set an article as new unred or old. set the flag as 0, 1, or 2
+    as follows,
+
+    new         0
+    unread      1
+    read        2
+
+    """
+
+    item.age = age
+    if age is 2:
+        item.isUnread = False
+
+    if commit is True:
+        try:
+            session.commit() # disabled individual commits to increse performance.
+        except:
+            session.rollback()
+            print "Error in setItemFlags"
+
+
 def main():
     initDB()
-    
+
 if __name__ == "__main__":
     main()
-    
+

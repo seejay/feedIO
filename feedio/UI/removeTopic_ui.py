@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'removeTopic.ui'
 #
-# Created: Thu Jun 30 09:35:02 2011
+# Created: Mon Jul  4 22:26:07 2011
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -20,10 +20,10 @@ class Ui_removeTopic(object):
         self.gridLayout.setObjectName("gridLayout")
         self.verticalLayout = QtGui.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
-        self.comboBox = QtGui.QComboBox(removeTopic)
-        self.comboBox.setMinimumSize(QtCore.QSize(291, 0))
-        self.comboBox.setObjectName("comboBox")
-        self.verticalLayout.addWidget(self.comboBox)
+        self.topicListCombo = QtGui.QComboBox(removeTopic)
+        self.topicListCombo.setMinimumSize(QtCore.QSize(291, 0))
+        self.topicListCombo.setObjectName("topicListCombo")
+        self.verticalLayout.addWidget(self.topicListCombo)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)

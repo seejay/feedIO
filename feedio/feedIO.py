@@ -43,6 +43,7 @@ DBFILE = os.path.join(USERDIR,"feedIO.sqlite")
 
 import ui
 import models
+import classifier
 
 
 def main():
@@ -53,6 +54,7 @@ def main():
     if not os.path.isdir(USERDIR):
         os.mkdir(USERDIR)
     models.initDB()
+    classifier.initTopics()
     ui.initUI()
 
 
