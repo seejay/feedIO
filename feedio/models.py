@@ -97,8 +97,8 @@ class Topic(Entity):
 
 class ScoreTable(Entity):
     score = Field(Integer, default =1000)
-    topic = ManyToOne('Topic')
-    item = ManyToOne('Item')
+    topic = ManyToOne('Topic', primary_key=True)
+    item = ManyToOne('Item', primary_key=True)
 
     def __repr__(self):
         return '<ScoreItem "%s - %s - %d">' % (self.topic.title, self.item.title, self.score)

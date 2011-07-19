@@ -488,6 +488,7 @@ class AddFeedDialog(QDialog):
         thread.join()
 
         itemList = fm.listNew()
+        classifier.assignToAllTopics(itemList)
         self.parent.parent.calcScores(itemList)
         self.close()
 
@@ -517,7 +518,10 @@ class RemoveFeedDialog(QDialog):
     def removeFeed(self):
         selectedIndex = self.ui.feedList.currentIndex()
         selectedFeed = self.feedList[selectedIndex]
+
+        classifier.removefromScoreTable(selectedFeed)
         fm.removeFeed(selectedFeed)
+
         self.close()
 
 
@@ -544,6 +548,7 @@ class ManageFeedsDialog(QDialog):
     def removeFeed(self):
         selectedItemIndex = self.ui.feedList.currentRow()
         selectedFeed = self.feedList[selectedItemIndex]
+        classifier.removefromScoreTable(selectedFeed)
         fm.removeFeed(selectedFeed)
         self.displayFeeds()
 
@@ -555,6 +560,11 @@ class ManageFeedsDialog(QDialog):
         thread.setDaemon(True)
         thread.start()
         thread.join()
+
+        itemList = fm.listNew()
+        classifier.assignToAllTopics(itemList)
+        self.parent.parent.calcScores(itemList)
+
         self.ui.urlLine.clear()
         self.displayFeeds()
 
@@ -715,6 +725,10 @@ class FeedIO(QWidget):
         self.sendNotification()
         fm.updateAll()
         newList = fm.listNew()
+        #assign the newly fetched articles to the topics
+        classifier.assignToAllTopics(newList)
+        #calculate the priority scores of the new articles for each topic.
+
         pri = prioritizer.Prioritizer()
         pri.setScores(newList)
 

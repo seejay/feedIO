@@ -42,6 +42,7 @@ classifierDir=os.path.join(USERDIR,"classifier")
 
 from lib.crm import *
 from models import *
+import feedmanager as fm
 
 
 def listTopics():
@@ -70,8 +71,8 @@ def addTopic(topic):
         #Now append the topic to every article in the db
         try:
             allItems = Item.query.all()
-            for i in allItems:
-                i.topics.append(newTopic)
+            for item in allItems:
+                setItemTopic(item, newTopic, False)
             session.commit()
         except:
             session.rollback()
@@ -95,8 +96,38 @@ def removeTopic(topic):
         print "Removed topic %s" % unicode(topic)
 
 
-def assignTopic(topic,itemList):
-    pass
+
+def assignToAllTopics(itemList):
+    """
+    Assigns a list of items to all the topics available.
+    """
+    allTopics = Topic.query.all()
+    print "assigning the new articles to topics.."
+
+    for item in itemList:
+        for topic in allTopics:
+            setItemTopic(item, topic, False)
+    try:
+        session.commit()
+    except:
+        session.rollback()
+        print "Error Assigning Topics"
+
+
+def setItemTopic(item, topic, commit=True):
+    """
+    Assigns an Item to the given Topic.
+    """
+    if item.topics.count(topic) == 0:
+        item.topics.append(topic)
+        print "Added %s to %s" % (topic.title, item.title)
+
+        if commit is True:
+            try:
+                session.commit() # disable individual commits to increse performance.
+            except:
+                session.rollback()
+                print "Error in setItemTopic"
 
 
 def getTopic(topicTitle):
@@ -120,6 +151,29 @@ def voteFeed(upOrDown, feed):
             session.commit()
     except:
         session.rollback()
+
+
+def removefromScoreTable(feed):
+    """
+    Functtion to remove the Scores of all the Items in a particular feed
+    """
+    itemsList = fm.listItems(feed)
+    for item in itemsList:
+        removeItemScores(item)
+
+
+def removeItemScores(itemToRemove):
+    """
+    Functtion to remove the Scores of a particular article Item.
+    """
+    itemsInTopics = ScoreTable.query.filter_by(item = itemToRemove).all()
+    for item in itemsInTopics:
+        item.delete()
+    try:
+        session.commit()
+        print "removed from Scores"
+    except:
+        print "Error removing Scores"
 
 
 def voteArticle(upOrDown, item, topic="General"):
