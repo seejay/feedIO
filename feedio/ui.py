@@ -726,6 +726,11 @@ class FeedIO(QWidget):
 def initUI():
 
     app = QApplication(sys.argv)
+# add following 3 lines to enable sinhala
+#   translator = QTranslator(app)
+#   translator.load("UI/feedio_sinhala")
+#   app.installTranslator(translator)
+
     #Splash screen implementation
     splash_pix = QPixmap(":/images/splash.png")
 #    splash_pix = QPixmap('./images/feedIO-splash.png')
