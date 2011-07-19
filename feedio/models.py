@@ -101,7 +101,7 @@ class ScoreTable(Entity):
     item = ManyToOne('Item')
 
     def __repr__(self):
-        return '<Score "%s - %s">' % (self.topic.title, self.item.title)
+        return '<ScoreItem "%s - %s - %d">' % (self.topic.title, self.item.title, self.score)
 
 
 def initDB():

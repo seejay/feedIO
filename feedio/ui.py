@@ -471,6 +471,7 @@ class AddFeedDialog(QDialog):
         QDialog.__init__(self, parent)
         self.ui = Ui_addFeed()
         self.ui.setupUi(self)
+        self.parent = parent
 
         self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
         self.connect(self.ui.btnAdd, SIGNAL("clicked()"), self.addFeed)
@@ -485,6 +486,9 @@ class AddFeedDialog(QDialog):
         thread.start()
 
         thread.join()
+
+        itemList = fm.listNew()
+        self.parent.parent.calcScores(itemList)
         self.close()
 
 
@@ -695,6 +699,15 @@ class FeedIO(QWidget):
     def fetchAllFeeds(self):
         thread = threading.Thread(target=self.fetchAll, args=())
         thread.start()
+
+    def calAllScores(self):
+        itemList = fm.listNew()
+        itemList.extend(fm.listUnread())
+        self.calcScores(itemList)
+
+    def calcScores(self, articleList):
+        pri = prioritizer.Prioritizer()
+        pri.setScores(articleList)
 
 
     def fetchAll(self):

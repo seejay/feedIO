@@ -67,12 +67,25 @@ def addTopic(topic):
         c2 = Classifier(classifierDir, [topic+"Title", "not"+topic+"Title"])
         print "Added new topic %s" % unicode(topic)
 
+        #Now append the topic to every article in the db
+        try:
+            allItems = Item.query.all()
+            for i in allItems:
+                i.topics.append(newTopic)
+            session.commit()
+        except:
+            session.rollback()
+            print "Error Assignning new topic to all Items!"
+
 
 def removeTopic(topic):
     """
     function to remove topic from the database.
     """
     try:
+        allItems = Item.query.all()
+        for item in allItems:
+            item.topics.remove(topic)
         topic.delete()
         session.commit()
     except:
@@ -80,6 +93,10 @@ def removeTopic(topic):
         print "Error removing topic!"
     else:
         print "Removed topic %s" % unicode(topic)
+
+
+def assignTopic(topic,itemList):
+    pass
 
 
 def getTopic(topicTitle):
