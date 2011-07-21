@@ -83,18 +83,20 @@ def removeTopic(topic):
     """
     function to remove topic from the database.
     """
+    topicTitle = topic.title
     try:
-        allItems = Item.query.all()
-        for item in allItems:
-            item.topics.remove(topic)
+        scoreItems = ScoreTable.query.filter_by(topic = topic).all()
+        # First remove all the scoreItems from the ScoreItem table.
+        for item in scoreItems:
+            item.delete()
+        #Now delete the topic object
         topic.delete()
         session.commit()
     except:
         session.rollback()
-        print "Error removing topic!"
+        print "Error removing Items"
     else:
-        print "Removed topic %s" % unicode(topic)
-
+        print "removed Topic %s" % topicTitle
 
 
 def assignToAllTopics(itemList):

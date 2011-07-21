@@ -287,6 +287,8 @@ def setItemFlag(item, age = 2, commit = True):
     item.age = age
     if age is 2:
         item.isUnread = False
+    elif age is (0 or 1):
+        item.isUnread = True
 
     if commit is True:
         try:

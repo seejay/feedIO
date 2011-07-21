@@ -84,16 +84,18 @@ class mainUI(QMainWindow):
         self.topicList = []
         self.readList = []
         self.currentItem = None
+        self.currentTopic = classifier.getTopic("General")
 
         self.updated = True
         self.displayTopics()
         self.displayFeeds()
         self.displayItems()
 
-        self.ui.listUnread.setFocus()
+        self.ui.listOld.setFocus()
         self.ui.comboFeed.setCurrentIndex(len(self.feedList))
 
         self.connect(self.ui.comboFeed, SIGNAL("currentIndexChanged(int)"), self.displayItems)
+        self.connect(self.ui.comboTopic, SIGNAL("currentIndexChanged(int)"), self.displayItems)
         self.connect(self.ui.listUnread, SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.setCurrentFromUnread)
         self.connect(self.ui.listOld, SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.setCurrentFromOld)
         self.connect(self.ui.actionVisitPage, SIGNAL("activated()"), self.visitPage)
@@ -147,27 +149,34 @@ class mainUI(QMainWindow):
 
         selectedFeedIndex = self.ui.comboFeed.currentIndex()
 
+        selectedTopicIndex = self.ui.comboTopic.currentIndex()
+        self.currentTopic = self.topicList[selectedTopicIndex]
+        print self.currentTopic
+
         if len(self.feedList) == 0:
-            self.itemList = []
+            self.scoreItemList = []
         else:
 
             if selectedFeedIndex == len(self.feedList):
-                self.itemList = fm.listNew()
-                self.itemList.extend(fm.listUnread())
-                pri = prioritizer.Prioritizer()
+                pri = prioritizer.Prioritizer(self.currentTopic)
+                self.scoreItemList = pri.listScoreItems()
+                # Now filter out the Old items using a generator
 
-                self.itemList = pri.prioritize(self.itemList)
+                self.scoreItemList = [scoreItem for scoreItem in self.scoreItemList if scoreItem.item.isUnread is True]
+                # prioritize the list according to the scores
+                self.scoreItemList = pri.prioritize(self.scoreItemList)
 
                 windowTitle = "All Feeds - feedIO"
                 self.setWindowTitle(windowTitle)
             else:
                 selectedFeed = self.feedList[selectedFeedIndex]
 
-                self.itemList = fm.listNew(selectedFeed)
-                self.itemList.extend(fm.listUnread(selectedFeed))
-                pri = prioritizer.Prioritizer()
+                pri = prioritizer.Prioritizer(self.currentTopic)
+                self.scoreItemList = pri.listScoreItems()
+                # Now filter out the items for the current Feed using a generator
+                self.scoreItemList = [scoreItem for scoreItem in self.scoreItemList if (scoreItem.item.feed is selectedFeed and scoreItem.item.isUnread is True)]
 
-                self.itemList = pri.prioritize(self.itemList)
+                self.scoreItemList = pri.prioritize(self.scoreItemList)
 
                 #Code to change the window title to the currently viewing feed's title
                 windowTitle = selectedFeed.title + " - feedIO"
@@ -178,44 +187,45 @@ class mainUI(QMainWindow):
         itemIcon = QIcon()
         itemIcon.addPixmap(QPixmap(":/images/article.png"), QIcon.Normal, QIcon.Off)
 
-        # Sort self.itemList according to "isNew" property as primary
+        # Sort self.scoreItemList according to "isNew" property as primary
         # Secondary sort it by isUnread
         # Then sort it according to Score
         # then sort it according to the Article date.
 
-        for article in self.itemList:
-#            item=QTreeWidgetItem([article.title, str(time.ctime(article.updated))])
-            item=QTreeWidgetItem([article.title,])
-            item.article = article
+        for scoreItem in self.scoreItemList:
+#           treeItem=QTreeWidgetItem([scoreItem.item.title, str(time.ctime(scoreItem.item.updated))])
+            treeItem=QTreeWidgetItem([scoreItem.item.title,])
+            treeItem.article = scoreItem.item
 
-            item.setIcon(0, itemIcon)
+            treeItem.setIcon(0, itemIcon)
 
 #            # Set a part of the article text as the tooltip of Items
 #            tipLong = purify.cleanText(item.article.description)
 #            tip = purify.shorten(tipLong, 200)
-#            item.setToolTip(0, tip)
+#            treeItem.setToolTip(0, tip)
 
-            if article.age is 0:
-                item.setFont(0, self.newFont)
-                item.setTextColor(0, self.newColor)
+            if scoreItem.item.age is 0:
+                treeItem.setFont(0, self.newFont)
+                treeItem.setTextColor(0, self.newColor)
 
-            elif article.age is 1:
-                item.setFont(0, self.unreadFont)
-                item.setTextColor(0, self.unreadColor)
+            elif scoreItem.item.age is 1:
+                treeItem.setFont(0, self.unreadFont)
+                treeItem.setTextColor(0, self.unreadColor)
 
             else:
-                item.setFont(0, self.readFont)
-                item.setTextColor(0, self.readColor)
+                treeItem.setFont(0, self.readFont)
+                treeItem.setTextColor(0, self.readColor)
 
-            self.ui.listUnread.addTopLevelItem(item)
+            self.ui.listUnread.addTopLevelItem(treeItem)
 
-        self.ui.listUnread.setFocus()
+        self.ui.listOld.setFocus()
 
 
     def displayRead(self):
         """
         function to update the read Articles list according to the selected feeds list.
         """
+        pass
 
         selectedFeedIndex = self.ui.comboFeed.currentIndex()
 
@@ -237,15 +247,15 @@ class mainUI(QMainWindow):
         itemIcon.addPixmap(QPixmap(":/images/article.png"), QIcon.Normal, QIcon.Off)
 
         for article in self.readList:
-            item=QTreeWidgetItem([article.title,])
-            item.article = article
+            treeItem=QTreeWidgetItem([article.title,])
+            treeItem.article = article
 
-            item.setIcon(0, itemIcon)
+            treeItem.setIcon(0, itemIcon)
 
-            item.setFont(0, self.readFont)
-            item.setTextColor(0, self.readColor)
+            treeItem.setFont(0, self.readFont)
+            treeItem.setTextColor(0, self.readColor)
 
-            self.ui.listOld.addTopLevelItem(item)
+            self.ui.listOld.addTopLevelItem(treeItem)
 
     def setCurrentFromUnread(self):
         """
@@ -317,11 +327,9 @@ class mainUI(QMainWindow):
     def fetchAll(self):
         print "fetching Updates..."
         fm.updateAll()
-        newList = fm.listNew()
+
         print "Calculating priority Scores"
-        pri = prioritizer.Prioritizer()
-        pri.setScores(newList)
-        print "Done!"
+        self.parent.setNewItemScores()
 
 
     def fetchFeed(self):
@@ -362,13 +370,13 @@ class mainUI(QMainWindow):
             selectedTopic = self.topicList[selectedTopicIndex]
 
             #call the classifier module
-            classifier.voteArticle("up",selected.article)
+            classifier.voteArticle("up",selected.article, selectedTopic.title)
 
             #upVote the feed
             classifier.voteFeed("up", selected.article.feed)
             print "Up Voted %s" % selected.article.title
 
-            self.parent.status = "Up Voted %s" % selected.article.title
+            self.parent.status = "Up Voted %s under %s" % (selected.article.title, selectedTopic.title)
             self.parent.sendNotification()
 
 
@@ -385,13 +393,13 @@ class mainUI(QMainWindow):
             selectedTopic = self.topicList[selectedTopicIndex]
 
             #call the classifier module
-            classifier.voteArticle("down", selected.article)
+            classifier.voteArticle("down", selected.article, selectedTopic.title)
 
             #downVote the feed
             classifier.voteFeed("down", selected.article.feed)
             print "Down Voted %s" % selected.article.title
 
-            self.parent.status = "Down Voted %s" % selected.article.title
+            self.parent.status = "Down Voted %s under %s" % (selected.article.title, selectedTopic.title)
             self.parent.sendNotification()
 
 
@@ -489,7 +497,7 @@ class AddFeedDialog(QDialog):
 
         itemList = fm.listNew()
         classifier.assignToAllTopics(itemList)
-        self.parent.parent.calcScores(itemList)
+        self.parent.parent.setNewItemScores()
         self.close()
 
 
@@ -532,6 +540,7 @@ class ManageFeedsDialog(QDialog):
         self.ui.setupUi(self)
         self.feedList = []
         self.displayFeeds()
+        self.parent = parent
 
         self.connect(self.ui.btnExit, SIGNAL('clicked()'), SLOT('close()'))
         self.connect(self.ui.btnRemove, SIGNAL('clicked()'), self.removeFeed)
@@ -563,7 +572,7 @@ class ManageFeedsDialog(QDialog):
 
         itemList = fm.listNew()
         classifier.assignToAllTopics(itemList)
-        self.parent.parent.calcScores(itemList)
+        self.parent.parent.setNewItemScores()
 
         self.ui.urlLine.clear()
         self.displayFeeds()
@@ -574,12 +583,14 @@ class AddTopicDialog(QDialog):
         QDialog.__init__(self, parent)
         self.ui = Ui_addTopic()
         self.ui.setupUi(self)
+        self.parent = parent
 
         self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
         self.connect(self.ui.btnAdd, SIGNAL('clicked()'), self.addTopic)
 
     def addTopic(self):
         topic = unicode(self.ui.addTopicLinedit.text())
+        topic = purify.cleanText(topic)
         classifier.addTopic(topic)
         self.close()
 
@@ -710,31 +721,48 @@ class FeedIO(QWidget):
         thread = threading.Thread(target=self.fetchAll, args=())
         thread.start()
 
-    def calAllScores(self):
-        itemList = fm.listNew()
-        itemList.extend(fm.listUnread())
-        self.calcScores(itemList)
+##    def calAllScores(self):
+##        itemList = fm.listNew()
+##        itemList.extend(fm.listUnread())
+##        self.calcScores(itemList)
 
-    def calcScores(self, articleList):
-        pri = prioritizer.Prioritizer()
-        pri.setScores(articleList)
+#    def calcScores(self, articleList):
+#        pass
+##        pri = prioritizer.Prioritizer()
+##        pri.setScores(articleList)
 
 
     def fetchAll(self):
         self.status = "fetching Updates..."
         self.sendNotification()
         fm.updateAll()
-        newList = fm.listNew()
-        #assign the newly fetched articles to the topics
-        classifier.assignToAllTopics(newList)
-        #calculate the priority scores of the new articles for each topic.
 
-        pri = prioritizer.Prioritizer()
-        pri.setScores(newList)
+        #assign the newly fetched articles to the topics
+        newList = fm.listNew()
+        classifier.assignToAllTopics(newList)
+        print "Assigned the new articles to topics"
+        #calculate the priority scores of the new articles for each topic.
+        self.setNewItemScores()
 
         self.status = "All feeds updated."
         print self.status
         self.sendNotification()
+
+
+    def setNewItemScores(self):
+        """
+        Function to get the New Articles and calculate their scores under all the topics
+        """
+        #get all the topics
+        topicsList = classifier.listTopics()
+
+        for topic in topicsList:
+            pri = prioritizer.Prioritizer(topic)
+            scoreItemsList = pri.listScoreItems()
+            scoreItemList = [scoreItem for scoreItem in scoreItemsList if scoreItem.item.age is 0]
+            pri.setScores(scoreItemList)
+            print "calculated New article scores for %s" % topic.title
+
 
     def closeEvent(self, event):
         print "marking all new Items as old before exit"
@@ -742,7 +770,6 @@ class FeedIO(QWidget):
         for item in newItems:
             fm.setItemFlag(item, 1, False)
             print "marked %s new to unread" % item.title
-
 
         # Might need to move this commit to a better place.
         # this is done to ruduce the number of commites to be performed when exiting, to one

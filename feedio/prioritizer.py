@@ -41,27 +41,46 @@ from operator import itemgetter, attrgetter
 
 
 class Prioritizer:
-    def __init__( self, topic = "General" ):
-        self.topic = topic
+    def __init__(self, topic="General"):
+            self.topic = topic
 
 
-    def prioritize(self, articleList):
+    def prioritize(self, scoreItemsList):
+        """
+        Sorts the ScoreItemList according to the article scores under the self.topic of the Prioritizer instance.
+        """
         priorityList = []
-        
-        if articleList is not None:
-            priorityList = sorted(articleList, key=attrgetter('generalScore'), reverse=True)
+
+        if scoreItemsList is not None:
+            priorityList = sorted(scoreItemsList, key=attrgetter('score'), reverse=True)
 #           priorityList = sorted(priorityList, key=attrgetter('age'))
 
         return priorityList
 
 
-    def setScores(self, articleList):
+    def listScoreItems(self, feed=-1):
         """
-        prioritizes the feedList
+        Lists all the ScoreItem objects under the self.topic of the Prioritizer instance.
+        """
+        ScoreItemList = []
+
+        if feed is (-1):
+            ScoreItemList = ScoreTable.query.filter_by(topic = self.topic).all()
+
+        else:
+            ScoreItemList = ScoreTable.query.filter_by(topic = self.topic).all()
+            # Implement a generator here to get only the feeds of the "feed"
+
+        return ScoreItemList
+
+
+    def setScores(self, scoreItemsList):
+        """
+        Sets the priority score under the self.topic for a given set of ScoreItems.
         """
 
-        for article in articleList:
-            self.calcScore(article)
+        for scoreObject in scoreItemsList:
+            scoreObject.score = self.calcScore(scoreObject.item)
 
         try:
             session.commit()
@@ -69,6 +88,7 @@ class Prioritizer:
         except:
             session.rollback()
             print "Error Commiting scores to the db"
+
 
     def calcScore(self, article):
         """
@@ -83,21 +103,21 @@ class Prioritizer:
         titleText = purify.cleanText(article.title)
 
         #Calculate the Score for the texual content of the article
-        (textTopic, textScore) = classifier.classifyArticleText(self.topic, text)
+        (textTopic, textScore) = classifier.classifyArticleText(self.topic.title, text)
 
 #        print "text : %s, %s" % (textTopic, textScore)
 
         #Calculate the Score for the title of the article.
-        (titleTopic,titleScore) = classifier.classifyArticleTitle(self.topic, titleText)
+        (titleTopic,titleScore) = classifier.classifyArticleTitle(self.topic.title, titleText)
 #        print "Title : %s, %s" % (titleTopic,titleScore)
 
         #Now set the textual scores to minus values if the article "notTopic"
-        if textTopic ==self.topic:
+        if textTopic ==self.topic.title:
             textScore = textScore * 10000
         else:
             textScore = textScore * (-100)
 
-        if titleTopic ==self.topic:
+        if titleTopic ==self.topic.title+"Title":
             titleScore = titleScore * 10000
         else:
             titleScore = titleScore * (-100)
@@ -119,12 +139,11 @@ class Prioritizer:
         finalScore = ( ( textScoreWeight * textScore ) +
                         ( titleScoreWeight * titleScore ) +
                         ( feedScoreWeight * feedScore ) )
-                        
+
 #                        ( updateFrequencyWeight * updateFrequencyScore ) )
 
-        article.generalScore = finalScore
 
-        return article.generalScore
+        return finalScore
 
 def main():
     pass
