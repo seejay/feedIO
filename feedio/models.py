@@ -6,7 +6,7 @@ database models for feedIO, uses python elixir. Currently has Entties for
 
 """
 
-__version__ = "0.0.1"
+__version__ = "0.0.3"
 
 __license__ = """
     Copyright (C) 2011 Sri Lanka Institute of Information Technology.

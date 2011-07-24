@@ -4,7 +4,7 @@ feedManager for feedIO. provides functionality to add, remove and fetch updates
  from feeds.
 """
 
-__version__ = "0.0.1"
+__version__ = "0.0.3"
 
 __license__ = """
     Copyright (C) 2011 Sri Lanka Institute of Information Technology.

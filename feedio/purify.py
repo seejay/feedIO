@@ -11,7 +11,7 @@ To be used with the feedIO tts feature and for classification of the article tex
 TODO: find better ways to do this.
 """
 
-__version__ = "0.0.1"
+__version__ = "0.0.3"
 
 __license__ = """
     Copyright (C) 2011 Sri Lanka Institute of Information Technology.
