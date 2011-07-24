@@ -1,15 +1,12 @@
 #!/usr/bin/python
 
 """
-Author  : Chanaka Jayamal
-Date    : 20/05/2011
-
-Classifier module for feedIO.
-Provides necessary text classification capabilities needed to prioritize the articles.
+Classifier module for feedIO. Provides necessary text classification capabilities
+ that are needed to prioritize the articles fetched from web feeds.
 """
 
 
-__version__ = "0.0.1"
+__version__ = "0.0.3"
 
 __license__ = """
     Copyright (C) 2011 Sri Lanka Institute of Information Technology.
@@ -30,92 +27,244 @@ __license__ = """
 
 __author__ = "Chanaka Jayamal <seejay@seejay.net>"
 
-__developers__ = ["Chanaka Jayamal", 
-                  "Lanka Amarasekara", 
-                  "Kolitha Gajanayake", 
+__developers__ = ["Chanaka Jayamal",
+                  "Lanka Amarasekara",
+                  "Kolitha Gajanayake",
                   "Chamika Viraj"]
 
 
 import sys
 import os
+import purify
 
 USERDIR=os.path.join(os.path.expanduser("~"),".feedIO")
 classifierDir=os.path.join(USERDIR,"classifier")
 
-sys.path.append("./lib")
-sys.path.append("./UI")
+from lib.crm import *
+from models import *
+import feedmanager as fm
 
-from crm import *
-from models import Topic
+
+def listTopics():
+    topicsList = Topic.query.all()
+    return topicsList
+
 
 def addTopic(topic):
     """
     function to add a new topic, creates required classifier files and database entries.
     """
-    c = Classifier(classifierDir, [topic, "not"+topic])
-    
-    newTopic = Topic(title = topic)
-    
-       
+    if topic is unicode(""):
+        return None
+
+    try:
+        newTopic = Topic(title = unicode(topic))
+        session.commit()
+    except:
+        session.rollback()
+        print "Error adding topic"
+    else:
+        c = Classifier(classifierDir, [topic, "not"+topic])
+        c2 = Classifier(classifierDir, [topic+"Title", "not"+topic+"Title"])
+        print "Added new topic %s" % unicode(topic)
+
+        #Now append the topic to every article in the db
+        try:
+            allItems = Item.query.all()
+            for item in allItems:
+                setItemTopic(item, newTopic, False)
+            session.commit()
+        except:
+            session.rollback()
+            print "Error Assignning new topic to all Items!"
+
+
 def removeTopic(topic):
     """
     function to remove topic from the database.
     """
-    pass
-    #add code to remove the topic passed to the function
-    
-def voteFeed(feed):
-    feed.numVotes += 1
-    
-    
-def voteArticle(upOrDown, text, topic="Good"):
+    topicTitle = topic.title
+    try:
+        scoreItems = ScoreTable.query.filter_by(topic = topic).all()
+        # First remove all the scoreItems from the ScoreItem table.
+        for item in scoreItems:
+            item.delete()
+        #Now delete the topic object
+        topic.delete()
+        session.commit()
+    except:
+        session.rollback()
+        print "Error removing Items"
+    else:
+        print "removed Topic %s" % topicTitle
+
+
+def assignToAllTopics(itemList):
     """
-    voteArticle function, takes arguments upOrDown vote, topic to vote, 
-    and text to vote for
+    Assigns a list of items to all the topics available.
     """
-        
-    c = Classifier(classifierDir, [topic,"not"+topic])
-    
-    if upOrDown is "up":
-        c.learn(topic, text)
-                
-    elif upOrDown is "down":
-        c.learn("not"+topic, text)
-    
-    if topic is not "Good":
-        d = Classifier(classifierDir, ["Good","notGood"])
+    allTopics = Topic.query.all()
+    print "assigning the new articles to topics.."
+
+    for item in itemList:
+        for topic in allTopics:
+            setItemTopic(item, topic, False)
+    try:
+        session.commit()
+    except:
+        session.rollback()
+        print "Error Assigning Topics"
+
+
+def setItemTopic(item, topic, commit=True):
+    """
+    Assigns an Item to the given Topic.
+    """
+    if item.topics.count(topic) == 0:
+        item.topics.append(topic)
+        print "Added %s to %s" % (topic.title, item.title)
+
+        if commit is True:
+            try:
+                session.commit() # disable individual commits to increse performance.
+            except:
+                session.rollback()
+                print "Error in setItemTopic"
+
+
+def getTopic(topicTitle):
+    """
+    returns the Topic object when the Topics title is passed.
+    """
+    try:
+        topic = Topic.query.filter_by(title = unicode(topicTitle))[0]
+        return topic
+    except:
+        return None
+
+
+def voteFeed(upOrDown, feed):
+    try:
         if upOrDown is "up":
-            d.learn("Good", text)
-                    
-        elif upOrDown is "down":
-            d.learn("notGood"+topic, text)
-            
-            
-def classifyArticle(topic,text):
+            feed.numVotes += 1
+            session.commit()
+        elif upOrDown is "down" and feed.numVotes > 1:
+            feed.numVotes -= 1
+            session.commit()
+    except:
+        session.rollback()
+
+
+def removefromScoreTable(feed):
     """
-    function to calculate the matching probability of a given text to a 
-    specified topic. Add code to remove any tags in the code and generate a 
+    Functtion to remove the Scores of all the Items in a particular feed
+    """
+    itemsList = fm.listItems(feed)
+    for item in itemsList:
+        removeItemScores(item)
+
+
+def removeItemScores(itemToRemove):
+    """
+    Functtion to remove the Scores of a particular article Item.
+    """
+    itemsInTopics = ScoreTable.query.filter_by(item = itemToRemove).all()
+    for item in itemsInTopics:
+        item.delete()
+    try:
+        session.commit()
+        print "removed from Scores"
+    except:
+        print "Error removing Scores"
+
+
+def voteArticle(upOrDown, item, topic="General"):
+    """
+    voteArticle function, takes arguments upOrDown vote, topic to vote,
+    and the text to vote for
+    """
+    text = purify.cleanText(item.description)
+    title = purify.cleanText(item.title)
+
+    c = Classifier(classifierDir, [topic,"not"+topic])
+    c2 = Classifier(classifierDir, [topic+"Title", "not"+topic+"Title"])
+    try:
+        if upOrDown is "up":
+            c.learn(topic, text)
+            c2.learn(topic+"Title", title)
+
+        elif upOrDown is "down":
+            c.learn("not"+topic, text)
+            c2.learn("not"+topic+"Title", title)
+
+        if topic is not "General":
+            #always add the upvote to the General interest category as well.
+            d = Classifier(classifierDir, ["General","notGeneral"])
+            d2 = Classifier(classifierDir, ["GeneralTitle","notGeneralTitle"])
+            if upOrDown is "up":
+                d.learn("General", text)
+                d2.learn("GeneralTitle", title)
+
+            elif upOrDown is "down":
+                d.learn("notGeneral", text)
+                d2.learn("notGeneralTitle", title)
+    except UnicodeEncodeError:
+        print "Article content contains invalid characters!"
+
+
+def classifyArticleText(topic,text):
+    """
+    function to calculate the matching probability of a given text to a
+    specified topic. Add code to remove any tags in the code and generate a
     plain text string. Use the "markdown" module if needed.
     """
     c = Classifier(classifierDir, [topic,"not"+topic])
-    
-    (classification, probability) = c.classify(text)
-    
-    return (classification, probability)
+
+    try:
+        (classification, probability) = c.classify(text)
+
+    except UnicodeEncodeError:
+        # return a dummy value for articles with character Errors
+        #TODO: filter out the invalic characters
+            (classification, probability) = ("not"+topic, 0)
+
+    else:
+        return (classification, probability)
 
 
-def calculateScore(item, topic="Good"):
+def classifyArticleTitle(topic,title):
     """
-    when an item is passed this function calculates its overall score, by 
-    adding content score + feed score + feed update frequency(should be 
-    caluculated by taking the deviation from the mean update friquency.)
-        
+    function to calculate the matching probability of a given text to a
+    specified topic. Add code to remove any tags in the code and generate a
+    plain text string. Use the "markdown" module if needed.
     """
-    pass
-    text = textifyFunction(item.description) # get only the plain text.
-    
-    classificationScore = classifyArticle(topic,text)
-    feedScore = item.feed.numVotes
-    #updateFrequencyScore - score based on the feeds update frequncy. 
-    #less frequently updated content would get fairly better scores.
-    
+    c = Classifier(classifierDir, [topic+"Title", "not"+topic+"Title"])
+
+    try:
+        (classification, probability) = c.classify(title)
+
+    except UnicodeEncodeError:
+        # return a dummy value for articles with character Errors
+        #TODO: filter out the invalic characters
+            (classification, probability) = ("not"+topic+"Title", 0)
+    else:
+        return (classification, probability)
+
+
+
+def initTopics():
+    """
+    function to create the initial user interest profile.
+    """
+
+    #Add the "General" interest topic by default
+    if not getTopic("General"):
+        addTopic(unicode("General"))
+
+
+def main():
+    initTopics()
+
+if __name__ == "__main__":
+    print __doc__
+    main()

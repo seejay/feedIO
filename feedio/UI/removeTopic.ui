@@ -21,7 +21,7 @@
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="topicListCombo">
        <property name="minimumSize">
         <size>
          <width>291</width>

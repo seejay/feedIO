@@ -1,15 +1,12 @@
 #!/usr/bin/python
 
 """
-Author  : Chanaka Jayamal
-Date    : 20/05/2011
-
-database models for teh feedIO reader, uses Elixir.
-Currently has Entties for "Feed" and "Item" 
+database models for feedIO, uses python elixir. Currently has Entties for
+ "Feed", "Item" and "Topic"
 
 """
 
-__version__ = "0.0.1"
+__version__ = "0.0.3"
 
 __license__ = """
     Copyright (C) 2011 Sri Lanka Institute of Information Technology.
@@ -38,6 +35,7 @@ __developers__ = ["Chanaka Jayamal",
 
 import os
 from elixir import *
+from sqlalchemy.ext.associationproxy import AssociationProxy
 
 # path to the feedIO user profile
 USERDIR=os.path.join(os.path.expanduser("~"),".feedIO")
@@ -53,10 +51,13 @@ class Feed(Entity):
     etag = Field(Unicode(100))
     lastModified = Field(Float)
     numVotes = Field(Integer, default =1)
+    frequency = Field(Integer, default =1) # calculated by the duration between articles publish times
+    fetchInterval = Field(Integer, default =1) # user defined interval to fetch.
     items = OneToMany('Item')
     
     def __repr__(self):
         return '<Feed "%s" - (%s)>' % (self.title, self.url)
+
 
 class Item(Entity):
     """
@@ -64,38 +65,54 @@ class Item(Entity):
     """
     
     title = Field(Unicode(100))
-    url = Field(Unicode(255),  primary_key=True)
+    url = Field(Unicode(255), primary_key=True)
     description = Field(UnicodeText)
     updated = Field(Float) # Stores the seconds since EPOCH
+    author = Field(Unicode(100))
     generalScore = Field(Integer, default =1000)
-    isUnread = Field(Boolean,default=True)
+    numVotes = Field(Integer, default =1)
+    isUnread = Field(Boolean, default=True)
+    bookMarked = Field(Boolean, default=False)
+    age = Field(Integer, default = 0)
+    favourite = Field(Boolean,default=False)
     feed = ManyToOne('Feed')
-    topics = ManyToMany('Topic')
+    score_table = OneToMany('ScoreTable')
+    topics = AssociationProxy('score_table', 'topic',
+                            creator=lambda topic: ScoreTable(topic=topic))
     
     def __repr__(self):
         return '<Item "%s" - (%s)>' % (self.title, self.url)
 
+
 class Topic(Entity):
-    """
-    The Topic entity to store detils of a user interest topic
-    """
-    
-    title = Field(Unicode(100))
-    items = ManyToMany('Item')
+    title = Field(Unicode(100), required=True, primary_key=True)
+    numVotes = Field(Integer, default =1)
+    score_table = OneToMany('ScoreTable')
+    items = AssociationProxy('score_table', 'item',
+                             creator=lambda item: ScoreTable(item=item))
 
     def __repr__(self):
         return '<Topic "%s">' % self.title
+
+
+class ScoreTable(Entity):
+    score = Field(Integer, default =1000)
+    topic = ManyToOne('Topic', primary_key=True)
+    item = ManyToOne('Item', primary_key=True)
+
+    def __repr__(self):
+        return '<ScoreItem "%s - %s - %d">' % (self.topic.title, self.item.title, self.score)
 
 
 def initDB():
     # code to make sure that the user profile dirctory ~/.feedIO exists
     if not os.path.isdir(USERDIR):
         os.mkdir(USERDIR)
-    
+
     # exilir code to set things up
     metadata.bind = "sqlite:///%s" % DBFILE
     setup_all()
-    
+
     # And if the database doesn't exist: create it.
     if not os.path.exists(DBFILE):
         create_all()

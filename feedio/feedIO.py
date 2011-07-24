@@ -6,7 +6,7 @@ Written in Python and Qt.
 
 """
 
-__version__ = "0.0.1"
+__version__ = "0.0.3"
 
 __license__ = """
     Copyright (C) 2011 Sri Lanka Institute of Information Technology.
@@ -43,6 +43,7 @@ DBFILE = os.path.join(USERDIR,"feedIO.sqlite")
 
 import ui
 import models
+import classifier
 
 
 def main():
@@ -53,6 +54,7 @@ def main():
     if not os.path.isdir(USERDIR):
         os.mkdir(USERDIR)
     models.initDB()
+    classifier.initTopics()
     ui.initUI()
 
 
