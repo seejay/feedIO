@@ -100,6 +100,7 @@ class mainUI(QMainWindow):
         self.connect(self.ui.listOld, SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.setCurrentFromOld)
         self.connect(self.ui.actionVisitPage, SIGNAL("activated()"), self.visitPage)
         self.connect(self.ui.actionFetchAllFeeds, SIGNAL("activated()"), parent.fetchAllFeeds)
+        self.connect(self.ui.actionReCalculateScores, SIGNAL("activated()"), self.reCalculateAllScores)
         self.connect(self.ui.actionFetchFeed, SIGNAL("activated()"), self.fetchFeed)
         self.connect(self.ui.actionUpVote, SIGNAL("activated()"), self.upVoteArticle)
         self.connect(self.ui.actionDownVote, SIGNAL("activated()"), self.downVoteArticle)
@@ -193,16 +194,17 @@ class mainUI(QMainWindow):
         # then sort it according to the Article date.
 
         for scoreItem in self.scoreItemList:
-#           treeItem=QTreeWidgetItem([scoreItem.item.title, str(time.ctime(scoreItem.item.updated))])
+#            treeItem=QTreeWidgetItem([ str(scoreItem.score), scoreItem.item.title])
             treeItem=QTreeWidgetItem([scoreItem.item.title,])
             treeItem.article = scoreItem.item
 
             treeItem.setIcon(0, itemIcon)
 
 #            # Set a part of the article text as the tooltip of Items
-#            tipLong = purify.cleanText(item.article.description)
-#            tip = purify.shorten(tipLong, 200)
-#            treeItem.setToolTip(0, tip)
+#            itemTip = purify.cleanText(str(scoreItem.score))
+            itemTip = str(scoreItem.score)
+#            tip = purify.shorten(itemTip, 200)
+            treeItem.setToolTip(0, itemTip)
 
             if scoreItem.item.age is 0:
                 treeItem.setFont(0, self.newFont)
@@ -401,6 +403,16 @@ class mainUI(QMainWindow):
 
             self.parent.status = "Down Voted %s under %s" % (selected.article.title, selectedTopic.title)
             self.parent.sendNotification()
+
+    def reCalculateAllScores(self):
+        """
+        calls the parent.reCalculateAllScores inside a thread.
+        """
+        print "reCalculateAllScores called"
+        thread = threading.Thread(target=self.parent.reCalculateAllScores, args=())
+#        thread.setDaemon(True)
+        thread.start()
+
 
 
     def on_actionManageFeeds_activated(self, i = None):
@@ -762,6 +774,32 @@ class FeedIO(QWidget):
             scoreItemList = [scoreItem for scoreItem in scoreItemsList if scoreItem.item.age is 0]
             pri.setScores(scoreItemList)
             print "calculated New article scores for %s" % topic.title
+
+    def reCalculateAllScores(self):
+        """
+        Function to get all the Unread Articles and calculate their scores under all the topics.
+        """
+        #get all the topics
+        print "reCalculating All Scores"
+        topicsList = classifier.listTopics()
+
+        for topic in topicsList:
+            self.reCalculateScores(topic)
+
+
+    def reCalculateScores(self, topic):
+        """
+        Function to get all the Unread Articles and calculate their scores under the given topic.
+        """
+        print "calculating New article scores for %s" % topic.title
+        pri = prioritizer.Prioritizer(topic)
+        scoreItemsList = pri.listScoreItems()
+        scoreItemList = [scoreItem for scoreItem in scoreItemsList if scoreItem.item.age is (0 or 1)]
+        pri.setScores(scoreItemList)
+        print "calculated New article scores for %s" % topic.title
+        self.status = "Calculated New article scores for %s" % topic.title
+        self.sendNotification()
+
 
 
     def closeEvent(self, event):
