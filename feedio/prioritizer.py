@@ -40,6 +40,13 @@ from models import *
 from operator import itemgetter, attrgetter
 
 
+TEXT_SCORE_WEIGHT = 0.45
+TITLE_SCORE_WEIGHT = 0.45
+FEED_SCORE_WEIGHT = 0.1
+UPDATE_FREQUENCY_WEIGHT = 0.1
+
+
+
 class Prioritizer:
     def __init__(self, topic="General"):
             self.topic = topic
@@ -65,10 +72,10 @@ class Prioritizer:
         ScoreItemList = []
 
         if feed is (-1):
-            ScoreItemList = ScoreTable.query.filter_by(topic = self.topic).all()
+            ScoreItemList = ScoreItem.query.filter_by(topic = self.topic).all()
 
         else:
-            ScoreItemList = ScoreTable.query.filter_by(topic = self.topic).all()
+            ScoreItemList = ScoreItem.query.filter_by(topic = self.topic).all()
             # Implement a generator here to get only the feeds of the "feed"
 
         return ScoreItemList
@@ -131,10 +138,10 @@ class Prioritizer:
         # Set weights to be given for the calculated individual scores.
         #TODO: Give an option for the user to set the weights of these scores from GUI.
 
-        textScoreWeight = 0.55
-        titleScoreWeight = 0.35
-        feedScoreWeight = 0.1
-#        updateFrequencyWeight = 0.1
+        textScoreWeight = TEXT_SCORE_WEIGHT
+        titleScoreWeight = TITLE_SCORE_WEIGHT
+        feedScoreWeight = FEED_SCORE_WEIGHT
+#        updateFrequencyWeight = UPDATE_FREQUENCY_WEIGHT
 
         finalScore = ( ( textScoreWeight * textScore ) +
                         ( titleScoreWeight * titleScore ) +

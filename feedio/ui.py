@@ -508,7 +508,7 @@ class AddFeedDialog(QDialog):
         thread.join()
 
         itemList = fm.listNew()
-        classifier.assignToAllTopics(itemList)
+        classifier.assignItemsToTopics(itemList)
         self.parent.parent.setNewItemScores()
         self.close()
 
@@ -583,7 +583,7 @@ class ManageFeedsDialog(QDialog):
         thread.join()
 
         itemList = fm.listNew()
-        classifier.assignToAllTopics(itemList)
+        classifier.assignItemsToTopics(itemList)
         self.parent.parent.setNewItemScores()
 
         self.ui.urlLine.clear()
@@ -602,7 +602,7 @@ class AddTopicDialog(QDialog):
 
     def addTopic(self):
         topic = unicode(self.ui.addTopicLinedit.text())
-        topic = purify.cleanText(topic)
+        #topic = purify.cleanText(topic) # gave an error when adding
         classifier.addTopic(topic)
         self.close()
 
@@ -751,7 +751,7 @@ class FeedIO(QWidget):
 
         #assign the newly fetched articles to the topics
         newList = fm.listNew()
-        classifier.assignToAllTopics(newList)
+        classifier.assignItemsToTopics(newList)
         print "Assigned the new articles to topics"
         #calculate the priority scores of the new articles for each topic.
         self.setNewItemScores()
