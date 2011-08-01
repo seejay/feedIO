@@ -162,8 +162,9 @@ class mainUI(QMainWindow):
                 pri = prioritizer.Prioritizer(self.currentTopic)
                 self.scoreItemList = pri.listScoreItems()
                 # Now filter out the Old items using a generator
+                #this is being done in the prioritizer now
+#                self.scoreItemList = [scoreItem for scoreItem in self.scoreItemList if scoreItem.item.isUnread is True]
 
-                self.scoreItemList = [scoreItem for scoreItem in self.scoreItemList if scoreItem.item.isUnread is True]
                 # prioritize the list according to the scores
                 self.scoreItemList = pri.prioritize(self.scoreItemList)
 
@@ -173,9 +174,10 @@ class mainUI(QMainWindow):
                 selectedFeed = self.feedList[selectedFeedIndex]
 
                 pri = prioritizer.Prioritizer(self.currentTopic)
-                self.scoreItemList = pri.listScoreItems()
+                self.scoreItemList = pri.listScoreItems(selectedFeed)
                 # Now filter out the items for the current Feed using a generator
-                self.scoreItemList = [scoreItem for scoreItem in self.scoreItemList if (scoreItem.item.feed is selectedFeed and scoreItem.item.isUnread is True)]
+                #this is being done in the prioritizer now
+#                self.scoreItemList = [scoreItem for scoreItem in self.scoreItemList if (scoreItem.item.feed is selectedFeed and scoreItem.item.isUnread is True)]
 
                 self.scoreItemList = pri.prioritize(self.scoreItemList)
 
@@ -372,11 +374,11 @@ class mainUI(QMainWindow):
             selectedTopic = self.topicList[selectedTopicIndex]
 
             #call the classifier module
-            classifier.voteArticle("up",selected.article, selectedTopic.title)
+            classifier.voteArticle("up",selected.article, selectedTopic)
 
-            #upVote the feed
-            classifier.voteFeed("up", selected.article.feed)
-            print "Up Voted %s" % selected.article.title
+#            #upVote the feed
+#            classifier.voteFeed("up", selected.article.feed)
+#            print "Up Voted %s" % selected.article.title
 
             self.parent.status = "Up Voted %s under %s" % (selected.article.title, selectedTopic.title)
             self.parent.sendNotification()
@@ -395,11 +397,11 @@ class mainUI(QMainWindow):
             selectedTopic = self.topicList[selectedTopicIndex]
 
             #call the classifier module
-            classifier.voteArticle("down", selected.article, selectedTopic.title)
+            classifier.voteArticle("down", selected.article, selectedTopic)
 
-            #downVote the feed
-            classifier.voteFeed("down", selected.article.feed)
-            print "Down Voted %s" % selected.article.title
+#            #downVote the feed
+#            classifier.voteFeed("down", selected.article.feed)
+#            print "Down Voted %s" % selected.article.title
 
             self.parent.status = "Down Voted %s under %s" % (selected.article.title, selectedTopic.title)
             self.parent.sendNotification()
@@ -794,7 +796,7 @@ class FeedIO(QWidget):
         print "calculating New article scores for %s" % topic.title
         pri = prioritizer.Prioritizer(topic)
         scoreItemsList = pri.listScoreItems()
-        scoreItemList = [scoreItem for scoreItem in scoreItemsList if scoreItem.item.age is (0 or 1)]
+#        scoreItemList = [scoreItem for scoreItem in scoreItemsList if scoreItem.item.isUnread is True]
         pri.setScores(scoreItemList)
         print "calculated New article scores for %s" % topic.title
         self.status = "Calculated New article scores for %s" % topic.title

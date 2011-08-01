@@ -191,14 +191,21 @@ def getTopic(topicTitle):
         return None
 
 
-def voteFeed(upOrDown, feed):
+def _voteFeed(upOrDown, feed, topic):
+    """
+    Function to add of reduce marks for a feed.
+    """
+    scoreFeed = ScoreFeed.query.filter_by(feed = feed, topic = topic).first()
     try:
         if upOrDown is "up":
-            feed.numVotes += 1
-            session.commit()
-        elif upOrDown is "down" and feed.numVotes > 1:
-            feed.numVotes -= 1
-            session.commit()
+            scoreFeed.score += 1
+            print "Up voted %s under %s new score is  %d" % (feed.title, topic.title, scoreFeed.score)
+
+        elif upOrDown is "down":
+            scoreFeed.score -= 1
+            print "Down voted %s under %s new score is  %d" % (feed.title, topic.title, scoreFeed.score)
+
+        session.commit()
     except:
         session.rollback()
 
@@ -247,11 +254,17 @@ def removeFeedScores(feedToRemove):
         print "Error removing Scores"
 
 
-def voteArticle(upOrDown, item, topic="General"):
+def voteArticle(upOrDown, item, topic):
     """
     voteArticle function, takes arguments upOrDown vote, topic to vote,
     and the text to vote for
     """
+    # vote for the feed that the article belongs.
+    _voteFeed(upOrDown, item.feed, topic)
+
+    # we'll be working with strings so get the topic title.
+    topic = topic.title
+
     text = purify.cleanText(item.description)
     title = purify.cleanText(item.title)
 
@@ -318,7 +331,6 @@ def classifyArticleTitle(topic,title):
             (classification, probability) = ("not"+topic+"Title", 0)
     else:
         return (classification, probability)
-
 
 
 def initTopics():

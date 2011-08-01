@@ -69,16 +69,19 @@ class Prioritizer:
         """
         Lists all the ScoreItem objects under the self.topic of the Prioritizer instance.
         """
-        ScoreItemList = []
+        scoreItemList = []
 
         if feed is (-1):
-            ScoreItemList = ScoreItem.query.filter_by(topic = self.topic).all()
+            scoreItemList = ScoreItem.query.filter_by(topic = self.topic).all()
+            # Generator to return only the unread Items.
+            scoreItemList = [scoreItem for scoreItem in scoreItemList if scoreItem.item.isUnread is True]
 
         else:
-            ScoreItemList = ScoreItem.query.filter_by(topic = self.topic).all()
+            scoreItemList = ScoreItem.query.filter_by(topic = self.topic).all()
             # Implement a generator here to get only the feeds of the "feed"
+            scoreItemList = [scoreItem for scoreItem in scoreItemList if (scoreItem.item.feed is feed and scoreItem.item.isUnread is True)]
 
-        return ScoreItemList
+        return scoreItemList
 
 
     def setScores(self, scoreItemsList):
@@ -130,7 +133,8 @@ class Prioritizer:
             titleScore = titleScore * (-100)
 
         #Get the Score for the feed from the db
-        feedScore = article.feed.numVotes * 200
+        scoreFeed = ScoreFeed.query.filter_by(feed = article.feed, topic = self.topic).first()
+        feedScore = scoreFeed.score * 100
 
         #updateFrequencyScore - score based on the feeds update frequncy.
         #less frequently updated content would get fairly better scores.
