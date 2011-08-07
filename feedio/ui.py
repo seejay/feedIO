@@ -857,7 +857,7 @@ class FeedIO(QWidget):
         pri = prioritizer.Prioritizer(topic)
         scoreItemsList = pri.listScoreItems()
 #        scoreItemList = [scoreItem for scoreItem in scoreItemsList if scoreItem.item.isUnread is True]
-        pri.setScores(scoreItemList)
+        pri.setScores(scoreItemsList)
         print "calculated New article scores for %s" % topic.title
         self.status = "Calculated New article scores for %s" % topic.title
         self.sendNotification()
