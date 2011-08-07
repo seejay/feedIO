@@ -114,11 +114,13 @@ class Prioritizer:
 
         #Calculate the Score for the texual content of the article
         (textTopic, textScore) = classifier.classifyArticleText(self.topic.title, text)
-
+        textTopic = textTopic.replace("_", " ")
 #        print "text : %s, %s" % (textTopic, textScore)
 
         #Calculate the Score for the title of the article.
         (titleTopic,titleScore) = classifier.classifyArticleTitle(self.topic.title, titleText)
+        titleTopic = titleTopic.replace("_", " ")
+
 #        print "Title : %s, %s" % (titleTopic,titleScore)
 
         #Now set the textual scores to minus values if the article "notTopic"
