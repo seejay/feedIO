@@ -353,7 +353,7 @@
         </column>
        </widget>
       </widget>
-      <widget class="QWebView" name="viewArticle" native="true">
+      <widget class="QWebView" name="viewArticle">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -372,9 +372,9 @@
          <height>0</height>
         </size>
        </property>
-       <property name="url" stdset="0">
+       <property name="url">
         <url>
-         <string>http://feedio.org</string>
+         <string>http://www.feedio.org/</string>
         </url>
        </property>
       </widget>
@@ -428,6 +428,7 @@
     <addaction name="actionRead"/>
     <addaction name="actionVisitPage"/>
     <addaction name="actionUnread"/>
+    <addaction name="actionPostToTwitter"/>
    </widget>
    <widget class="QMenu" name="menuFeedIO">
     <property name="title">
@@ -443,6 +444,7 @@
     <addaction name="actionAddTopic"/>
     <addaction name="actionRemoveTopic"/>
     <addaction name="actionManageTopics"/>
+    <addaction name="actionReCalculateScores"/>
    </widget>
    <addaction name="menuFeedIO"/>
    <addaction name="menuFile"/>
@@ -508,7 +510,7 @@
     <string>&amp;Add Feed</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+1</string>
+    <string>Ins</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -578,6 +580,9 @@
    <property name="text">
     <string>&amp;Up vote </string>
    </property>
+   <property name="shortcut">
+    <string>U</string>
+   </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>
@@ -589,6 +594,9 @@
    </property>
    <property name="text">
     <string>&amp;Down Vote</string>
+   </property>
+   <property name="shortcut">
+    <string>D</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -626,6 +634,9 @@
    <property name="text">
     <string>Fetch &amp;All Feeds</string>
    </property>
+   <property name="shortcut">
+    <string>F</string>
+   </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>
@@ -637,6 +648,9 @@
    </property>
    <property name="text">
     <string>&amp;Visit Page</string>
+   </property>
+   <property name="shortcut">
+    <string>V</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -672,7 +686,17 @@
     <string>&amp;Mark as Unread</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+M</string>
+    <string>M</string>
+   </property>
+  </action>
+  <action name="actionReCalculateScores">
+   <property name="text">
+    <string>Recalculate &amp;Scores</string>
+   </property>
+  </action>
+  <action name="actionPostToTwitter">
+   <property name="text">
+    <string>Post to &amp;Twitter</string>
    </property>
   </action>
  </widget>

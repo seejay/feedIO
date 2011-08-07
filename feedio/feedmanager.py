@@ -68,8 +68,37 @@ def addFeed(feedUrl):
             print "%s \t Feed already subscribed" % (feedData.feed.title)
 
         else:
+            try:
+                # Get the topics list and assign the feed to all the available topics.
+                topicsList = Topic.query.all()
+                for topic in topicsList:
+                    setFeedTopic(newFeed, topic, False)
+                session.commit()
+                print "Added %s to all topics" % newFeed.title
+            except:
+                session.rollback()
+                print "Error setting up topics to the Feed"
+
             print "Subscribed to \t %s " % (feedData.feed.title)
             fetchFeeds(newFeed, feedData)
+            topicsList = Topic.query.all()
+
+
+def setFeedTopic(feed, topic, commit=True):
+    """
+    Assigns a feed to the given Topic.
+    """
+    if feed.topics.count(topic) == 0:
+        feed.topics.append(topic)
+        print "Added %s to %s" % (topic.title, feed.title)
+
+        if commit is True:
+            try:
+                session.commit() # disable individual commits to increse performance.
+            except:
+                session.rollback()
+                print "Error in setItemTopic"
+                return None
 
 
 def fetchFeeds(feed,feedData):
@@ -103,9 +132,17 @@ def removeFeed(feed):
         for item in itemList:
             print "deleted %s" % item.title
             _removeItem(item)
-        print "deleted %s" % feed.title
+
+        # First delete all the scoreFeeds from the ScoreFeed table
+        scoreFeeds = ScoreFeed.query.filter_by(feed = feed).all()
+        for scoreFeed in scoreFeeds:
+            scoreFeed.delete()
+
+        # Now remove the feed from the database
         feed.delete()
         session.commit()
+        print "deleted %s" % feed.title
+
     except:
         session.rollback()
         print "error deleting feed!"
@@ -115,6 +152,12 @@ def _removeItem(item):
     Function _removeItem, removes an article from the database.
     """
     try:
+        # First remove all the scoreItems from the ScoreItem table.
+        scoreItems = ScoreItem.query.filter_by(item = item).all()
+        for scoreItem in scoreItems:
+                item.delete()
+
+        #then delete the item
         item.delete()
 #        session.commit() #slows down the delete process when we commit each delete.
     except:

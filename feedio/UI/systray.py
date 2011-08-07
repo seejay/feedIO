@@ -1,6 +1,7 @@
 import sys
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+import threading
 
 class SystemTrayIcon(QtGui.QSystemTrayIcon):
 
@@ -10,6 +11,7 @@ class SystemTrayIcon(QtGui.QSystemTrayIcon):
         menu = QtGui.QMenu(parent)
         self.updateAction = menu.addAction("&Update feeds")
         self.ConfigAction = menu.addAction("&Configure feedIO")
+        self.reCalculateAction = menu.addAction("&ReCalculate Scores")
         self.minimizeAction = menu.addAction("Mi&nimize to tray")
         self.quitAction = menu.addAction("&Quit")
         self.setContextMenu(menu)
@@ -18,6 +20,7 @@ class SystemTrayIcon(QtGui.QSystemTrayIcon):
 
         self.connect(self.quitAction, QtCore.SIGNAL("activated()"), parent.close)
         self.connect(self.updateAction, QtCore.SIGNAL("activated()"), parent.fetchAllFeeds)
+        self.connect(self.reCalculateAction, QtCore.SIGNAL("activated()"), self.reCalculateAllScores)
         self.connect(self, QtCore.SIGNAL("activated(QSystemTrayIcon::ActivationReason)"), self.sysTrayActivated)
         self.connect(self.minimizeAction, QtCore.SIGNAL("activated()"), child.hide)
 
@@ -40,4 +43,15 @@ class SystemTrayIcon(QtGui.QSystemTrayIcon):
         else:
             self.child.show()
             self.child.ui.listUnread.setFocus()
+
+
+    def reCalculateAllScores(self):
+        """
+        calls the parent.reCalculateAllScores inside a thread.
+        """
+        print "reCalculateAllScores called"
+        thread = threading.Thread(target=self.parent.reCalculateAllScores, args=())
+        #        thread.setDaemon(True)
+        thread.start()
+    
 
