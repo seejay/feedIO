@@ -504,7 +504,16 @@ class mainUI(QMainWindow):
         if i is None: return
 
         selected = self.currentItem
-        message = selected.article.url + selected.article.title
+        shortUrl = purify.shortenUrl(selected.article.url)
+
+#        # Dirty hack to make the tweet limit to 140 chars.
+#        urlWidth = len(selected.article.url)
+#        articleTitle = purify.shorten(selected.article.title, (135-urlWidth))
+
+        message = selected.article.title +" "+ shortUrl
+
+#        message = selected.article.url + selected.article.title
+
         if twitterPlugin.ACCESS_KEY is '':
             try:
                 print "signing into twitter using the browser..."
