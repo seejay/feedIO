@@ -428,6 +428,7 @@
     <addaction name="actionRead"/>
     <addaction name="actionVisitPage"/>
     <addaction name="actionUnread"/>
+    <addaction name="actionPostToTwitter"/>
    </widget>
    <widget class="QMenu" name="menuFeedIO">
     <property name="title">
@@ -691,6 +692,11 @@
   <action name="actionReCalculateScores">
    <property name="text">
     <string>Recalculate &amp;Scores</string>
+   </property>
+  </action>
+  <action name="actionPostToTwitter">
+   <property name="text">
+    <string>Post to &amp;Twitter</string>
    </property>
   </action>
  </widget>

@@ -47,6 +47,7 @@ from UI.removeFeed_ui import Ui_removeFeed
 from UI.addTopic_ui import Ui_addTopic
 from UI.removeTopic_ui import Ui_removeTopic
 from UI.manageTopics_ui import Ui_manageTopics
+from UI.twitterPIN_ui import Ui_twitterPIN
 from UI.about_ui import Ui_About
 from UI.license_ui import Ui_License
 from UI.credits_ui import Ui_Credits
@@ -57,6 +58,10 @@ import classifier
 import prioritizer
 import purify
 import notifier
+import twitterPlugin
+import tweepy
+import webbrowser
+
 
 class mainUI(QMainWindow):
     def __init__(self, parent=None):
@@ -93,6 +98,10 @@ class mainUI(QMainWindow):
 
         self.ui.listOld.setFocus()
         self.ui.comboFeed.setCurrentIndex(len(self.feedList))
+        # Twitter authentication details.
+#        self.twitterAuthenticated = False
+#        self.twitterAuthKey = ''
+#        self.twitterAuthSecret = ''
 
         self.connect(self.ui.comboFeed, SIGNAL("currentIndexChanged(int)"), self.displayItems)
         self.connect(self.ui.comboTopic, SIGNAL("currentIndexChanged(int)"), self.displayItems)
@@ -488,6 +497,44 @@ class mainUI(QMainWindow):
         AboutDialog(self).exec_()
 
 
+    def on_actionPostToTwitter_activated(self, i = None):
+        """
+        post to twitter action implementataion.
+        """
+        if i is None: return
+
+        selected = self.currentItem
+        message = selected.article.url + selected.article.title
+        if twitterPlugin.ACCESS_KEY is '':
+            try:
+                print "signing into twitter using the browser..."
+                tp = twitterPlugin.TwitterPlugin()
+
+                auth_url = tp.authenticate()
+
+                webbrowser.open_new(auth_url)
+
+                TwitterPinDialog(self).exec_()
+                (twitterPlugin.ACCESS_KEY, twitterPlugin.ACCESS_SECRET) = tp.verify()
+
+            except tweepy.TweepError:
+                print "Not authenticated properly. check the PIN number"
+            else:
+                tp.tweet(message)
+                self.parent.status = message + " posted to twitter."
+                self.parent.sendNotification()
+
+        else:
+            try:
+                tp = twitterPlugin.TwitterPlugin()
+                tp.tweet(message)
+            except:
+                print "Error in tweeting"
+            else:
+                self.parent.status = message + " posted to twitter."
+                self.parent.sendNotification()
+
+
 class AddFeedDialog(QDialog):
     def __init__(self, parent):
         QDialog.__init__(self, parent)
@@ -673,6 +720,19 @@ class ManageTopicsDialog(QDialog):
         classifier.addTopic(topic)
         self.ui.topicLine.clear()
         self.displayTopics()
+
+
+class TwitterPinDialog(QDialog):
+    def __init__(self, parent):
+        QDialog.__init__(self, parent)
+        self.ui = Ui_twitterPIN()
+        self.ui.setupUi(self)
+        self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
+        self.connect(self.ui.btnOK, SIGNAL('clicked()'), self.getPin)
+
+    def getPin(self):
+        twitterPlugin.VERIFIER = self.ui.pinLineEdit.text()
+        self.close()
 
 
 class AboutDialog(QDialog):

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'feedIO.ui'
 #
-# Created: Mon Jul 25 18:02:57 2011
+# Created: Fri Aug  5 23:18:22 2011
 #      by: PyQt4 UI code generator 4.8.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -274,6 +274,8 @@ class Ui_feedIO(object):
         self.actionUnread.setObjectName(_fromUtf8("actionUnread"))
         self.actionReCalculateScores = QtGui.QAction(feedIO)
         self.actionReCalculateScores.setObjectName(_fromUtf8("actionReCalculateScores"))
+        self.actionPostToTwitter = QtGui.QAction(feedIO)
+        self.actionPostToTwitter.setObjectName(_fromUtf8("actionPostToTwitter"))
         self.menuFile.addAction(self.actionAddFeed)
         self.menuFile.addAction(self.actionRemoveFeed)
         self.menuFile.addAction(self.actionFetchFeed)
@@ -287,6 +289,7 @@ class Ui_feedIO(object):
         self.menuArticle.addAction(self.actionRead)
         self.menuArticle.addAction(self.actionVisitPage)
         self.menuArticle.addAction(self.actionUnread)
+        self.menuArticle.addAction(self.actionPostToTwitter)
         self.menuFeedIO.addAction(self.actionMinimizeToTray)
         self.menuFeedIO.addAction(self.actionExit)
         self.menuTopics.addAction(self.actionAddTopic)
@@ -356,6 +359,7 @@ class Ui_feedIO(object):
         self.actionUnread.setText(QtGui.QApplication.translate("feedIO", "&Mark as Unread", None, QtGui.QApplication.UnicodeUTF8))
         self.actionUnread.setShortcut(QtGui.QApplication.translate("feedIO", "M", None, QtGui.QApplication.UnicodeUTF8))
         self.actionReCalculateScores.setText(QtGui.QApplication.translate("feedIO", "Recalculate &Scores", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionPostToTwitter.setText(QtGui.QApplication.translate("feedIO", "Post to &Twitter", None, QtGui.QApplication.UnicodeUTF8))
 
 from PyQt4 import QtWebKit
 import feedIOicons_rc
