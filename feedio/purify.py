@@ -39,6 +39,7 @@ __developers__ = ["Chanaka Jayamal",
 
 
 import HTMLParser
+import tinyurl
 
 SHORTEN_LENGTH = 100
 
@@ -52,7 +53,7 @@ class Purify(HTMLParser.HTMLParser):
         return ''.join(self.fed)
 
 
-# Function to clen an article text.        
+# Function to clen an article text.
 def cleanText(text):
     """
     function to clear any tags and make a text readable.
@@ -63,10 +64,10 @@ def cleanText(text):
     data = data.strip()
     # remove the trailing "More" link appears in some feeds.
     stripped = data.strip("\tMore")
-    
+
     #to fix the UnicodeEncodeError exception that occurs in some texts
     stripped = stripped.encode('utf8')
-    
+
     return stripped
 
 #function to summarize a text to be given a sneak peak.
@@ -76,3 +77,11 @@ def shorten(text, numChars=SHORTEN_LENGTH):
     """
     info = (text[:numChars] + '..') if len(text) > numChars else text
     return info
+
+
+def shortenUrl(url):
+    """
+    function to shorten a long Url.
+    """
+    shortUrl = tinyurl.create_one(url)
+    return shortUrl
