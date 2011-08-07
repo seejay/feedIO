@@ -213,7 +213,7 @@ class mainUI(QMainWindow):
 
 #            # Set a part of the article text as the tooltip of Items
 #            itemTip = purify.cleanText(str(scoreItem.score))
-            itemTip = str(scoreItem.score)
+            itemTip = "Score: <b>" + str(scoreItem.score) + "</b> &nbsp; &nbsp;&nbsp;" + "<br>Topic: " + "<i>" + scoreItem.topic.title + "</i>" + "<br>Via: " + "<i>" + scoreItem.item.feed.title + "</i>"
 #            tip = purify.shorten(itemTip, 200)
             treeItem.setToolTip(0, itemTip)
 
