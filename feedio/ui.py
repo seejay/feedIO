@@ -48,6 +48,7 @@ from UI.addTopic_ui import Ui_addTopic
 from UI.removeTopic_ui import Ui_removeTopic
 from UI.manageTopics_ui import Ui_manageTopics
 from UI.twitterPIN_ui import Ui_twitterPIN
+from UI.rilLogin_ui import Ui_rilLogin
 from UI.about_ui import Ui_About
 from UI.license_ui import Ui_License
 from UI.credits_ui import Ui_Credits
@@ -59,6 +60,7 @@ import prioritizer
 import purify
 import notifier
 import twitterPlugin
+import rilPlugin
 import tweepy
 import webbrowser
 
@@ -544,6 +546,40 @@ class mainUI(QMainWindow):
                 self.parent.sendNotification()
 
 
+    def on_actionReadItLater_activated(self, i = None):
+        """
+        Read It Later, action implementataion.
+        """
+        if i is None: return
+
+        selected = self.currentItem
+
+        if rilPlugin.SESSION is None:
+            print "Asking to Sign into RIL..."
+            RilLoginDialog(self).exec_()
+
+            if rilPlugin.SESSION is not None:
+                print rilPlugin.SESSION
+                try:
+                    rilPlugin.SESSION.submitItem(selected.article)
+                except:
+                    print "Error in Submitting to RIL"
+                else:
+                    # TODO: do something like bookmarking the selected article.
+                    self.parent.status = selected.article.title + "Added to Read It Later List."
+                    self.parent.sendNotification()
+        else:
+            try:
+                rilPlugin.SESSION.submitItem(selected.article)
+            except:
+                print "Error in Submitting to RIL"
+            else:
+                # TODO: do something like bookmarking the selected article.
+                self.parent.status = selected.article.title + "Added to Read It Later List."
+                self.parent.sendNotification()
+
+
+
 class AddFeedDialog(QDialog):
     def __init__(self, parent):
         QDialog.__init__(self, parent)
@@ -742,6 +778,30 @@ class TwitterPinDialog(QDialog):
     def getPin(self):
         twitterPlugin.VERIFIER = self.ui.pinLineEdit.text()
         self.close()
+
+
+class RilLoginDialog(QDialog):
+    def __init__(self, parent):
+        QDialog.__init__(self, parent)
+        self.ui = Ui_rilLogin()
+        self.ui.setupUi(self)
+        self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
+        self.connect(self.ui.btnOk, SIGNAL('clicked()'), self.login)
+
+    def login(self):
+        """
+        """
+        username = self.ui.userNameLineEdit.text()
+        password = self.ui.passwordLineEdit.text()
+
+        try:
+             rilPlugin.SESSION = rilPlugin.RilSession(username, password)
+        except rilPlugin.LogInError:
+            self.ui.lblStatus.setText("Invalid username/password!. Please retry.")
+            print "LoginError! invalid username/password."
+
+        else:
+            self.close()
 
 
 class AboutDialog(QDialog):
