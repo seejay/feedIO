@@ -64,6 +64,7 @@ def addTopic(topic):
         session.rollback()
         print "Error adding topic"
     else:
+        topic = topic.replace(" ", "_")
         c = Classifier(classifierDir, [topic, "not"+topic])
         c2 = Classifier(classifierDir, [topic+"Title", "not"+topic+"Title"])
         print "Added new topic %s" % unicode(topic)
@@ -264,6 +265,7 @@ def voteArticle(upOrDown, item, topic):
 
     # we'll be working with strings so get the topic title.
     topic = topic.title
+    topic = topic.replace(" ", "_")
 
     text = purify.cleanText(item.description)
     title = purify.cleanText(item.title)
@@ -300,6 +302,8 @@ def classifyArticleText(topic,text):
     specified topic. Add code to remove any tags in the code and generate a
     plain text string. Use the "markdown" module if needed.
     """
+    topic = topic.replace(" ", "_")
+
     c = Classifier(classifierDir, [topic,"not"+topic])
 
     try:
@@ -320,6 +324,8 @@ def classifyArticleTitle(topic,title):
     specified topic. Add code to remove any tags in the code and generate a
     plain text string. Use the "markdown" module if needed.
     """
+    topic = topic.replace(" ", "_")
+
     c = Classifier(classifierDir, [topic+"Title", "not"+topic+"Title"])
 
     try:
