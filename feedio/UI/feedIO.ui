@@ -427,8 +427,12 @@
     <addaction name="actionDownVote"/>
     <addaction name="actionRead"/>
     <addaction name="actionVisitPage"/>
+    <addaction name="separator"/>
     <addaction name="actionUnread"/>
+    <addaction name="actionFavorite"/>
+    <addaction name="separator"/>
     <addaction name="actionPostToTwitter"/>
+    <addaction name="actionReadItLater"/>
    </widget>
    <widget class="QMenu" name="menuFeedIO">
     <property name="title">
@@ -444,7 +448,9 @@
     <addaction name="actionAddTopic"/>
     <addaction name="actionRemoveTopic"/>
     <addaction name="actionManageTopics"/>
+    <addaction name="separator"/>
     <addaction name="actionReCalculateScores"/>
+    <addaction name="actionReCalculateTopicScores"/>
    </widget>
    <addaction name="menuFeedIO"/>
    <addaction name="menuFile"/>
@@ -691,12 +697,27 @@
   </action>
   <action name="actionReCalculateScores">
    <property name="text">
-    <string>Recalculate &amp;Scores</string>
+    <string>Recalculate All &amp;Scores</string>
    </property>
   </action>
   <action name="actionPostToTwitter">
    <property name="text">
-    <string>Post to &amp;Twitter</string>
+    <string>Share on &amp;Twitter</string>
+   </property>
+  </action>
+  <action name="actionReCalculateTopicScores">
+   <property name="text">
+    <string>Recalculate &amp;Current Topic Scores</string>
+   </property>
+  </action>
+  <action name="actionReadItLater">
+   <property name="text">
+    <string>Mark to Read It Later</string>
+   </property>
+  </action>
+  <action name="actionFavorite">
+   <property name="text">
+    <string>Mark as &amp;Favorite</string>
    </property>
   </action>
  </widget>
