@@ -1,0 +1,95 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module feedio.classifier</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="feedio.html"><font color="#ffffff">feedio</font></a>.classifier</strong></big></big> (version 0.0.3)</font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/ceevee/play ground/feedIO/feedio/classifier.py">/home/ceevee/play ground/feedIO/feedio/classifier.py</a></font></td></tr></table>
+    <p><tt>Classifier&nbsp;module&nbsp;for&nbsp;feedIO.&nbsp;Provides&nbsp;necessary&nbsp;text&nbsp;classification&nbsp;capabilities<br>
+&nbsp;that&nbsp;are&nbsp;needed&nbsp;to&nbsp;prioritize&nbsp;the&nbsp;articles&nbsp;fetched&nbsp;from&nbsp;web&nbsp;feeds.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="feedio.feedmanager.html">feedio.feedmanager</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="feedio.purify.html">feedio.purify</a><br>
+<a href="string.html">string</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-addTopic"><strong>addTopic</strong></a>(topic)</dt><dd><tt>function&nbsp;to&nbsp;add&nbsp;a&nbsp;new&nbsp;topic,&nbsp;creates&nbsp;required&nbsp;classifier&nbsp;files&nbsp;and&nbsp;database&nbsp;entries.</tt></dd></dl>
+ <dl><dt><a name="-assignFeedsToTopics"><strong>assignFeedsToTopics</strong></a>(feedList)</dt><dd><tt>Assigns&nbsp;a&nbsp;list&nbsp;of&nbsp;feeds&nbsp;to&nbsp;all&nbsp;the&nbsp;topics&nbsp;available.</tt></dd></dl>
+ <dl><dt><a name="-assignItemsToTopics"><strong>assignItemsToTopics</strong></a>(itemList)</dt><dd><tt>Assigns&nbsp;a&nbsp;list&nbsp;of&nbsp;items&nbsp;to&nbsp;all&nbsp;the&nbsp;topics&nbsp;available.</tt></dd></dl>
+ <dl><dt><a name="-classifyArticleText"><strong>classifyArticleText</strong></a>(topic, text)</dt><dd><tt>function&nbsp;to&nbsp;calculate&nbsp;the&nbsp;matching&nbsp;probability&nbsp;of&nbsp;a&nbsp;given&nbsp;text&nbsp;to&nbsp;a<br>
+specified&nbsp;topic.&nbsp;Add&nbsp;code&nbsp;to&nbsp;remove&nbsp;any&nbsp;tags&nbsp;in&nbsp;the&nbsp;code&nbsp;and&nbsp;generate&nbsp;a<br>
+plain&nbsp;text&nbsp;string.&nbsp;Use&nbsp;the&nbsp;"markdown"&nbsp;module&nbsp;if&nbsp;needed.</tt></dd></dl>
+ <dl><dt><a name="-classifyArticleTitle"><strong>classifyArticleTitle</strong></a>(topic, title)</dt><dd><tt>function&nbsp;to&nbsp;calculate&nbsp;the&nbsp;matching&nbsp;probability&nbsp;of&nbsp;a&nbsp;given&nbsp;text&nbsp;to&nbsp;a<br>
+specified&nbsp;topic.&nbsp;Add&nbsp;code&nbsp;to&nbsp;remove&nbsp;any&nbsp;tags&nbsp;in&nbsp;the&nbsp;code&nbsp;and&nbsp;generate&nbsp;a<br>
+plain&nbsp;text&nbsp;string.&nbsp;Use&nbsp;the&nbsp;"markdown"&nbsp;module&nbsp;if&nbsp;needed.</tt></dd></dl>
+ <dl><dt><a name="-getTopic"><strong>getTopic</strong></a>(topicTitle)</dt><dd><tt>returns&nbsp;the&nbsp;Topic&nbsp;object&nbsp;when&nbsp;the&nbsp;Topics&nbsp;title&nbsp;is&nbsp;passed.</tt></dd></dl>
+ <dl><dt><a name="-initTopics"><strong>initTopics</strong></a>()</dt><dd><tt>function&nbsp;to&nbsp;create&nbsp;the&nbsp;initial&nbsp;user&nbsp;interest&nbsp;profile.</tt></dd></dl>
+ <dl><dt><a name="-listTopics"><strong>listTopics</strong></a>()</dt></dl>
+ <dl><dt><a name="-main"><strong>main</strong></a>()</dt></dl>
+ <dl><dt><a name="-removeFeedScores"><strong>removeFeedScores</strong></a>(feedToRemove)</dt><dd><tt>Function&nbsp;to&nbsp;remove&nbsp;the&nbsp;Scores&nbsp;of&nbsp;a&nbsp;particular&nbsp;article&nbsp;Item.</tt></dd></dl>
+ <dl><dt><a name="-removeItemScores"><strong>removeItemScores</strong></a>(itemToRemove)</dt><dd><tt>Function&nbsp;to&nbsp;remove&nbsp;the&nbsp;Scores&nbsp;of&nbsp;a&nbsp;particular&nbsp;article&nbsp;Item.</tt></dd></dl>
+ <dl><dt><a name="-removeTopic"><strong>removeTopic</strong></a>(topic)</dt><dd><tt>function&nbsp;to&nbsp;remove&nbsp;topic&nbsp;from&nbsp;the&nbsp;database.</tt></dd></dl>
+ <dl><dt><a name="-removefromScoreFeeds"><strong>removefromScoreFeeds</strong></a>(feed)</dt><dd><tt>Function&nbsp;to&nbsp;remove&nbsp;the&nbsp;all&nbsp;Scores&nbsp;particular&nbsp;feed.</tt></dd></dl>
+ <dl><dt><a name="-removefromScoreTable"><strong>removefromScoreTable</strong></a>(feed)</dt><dd><tt>Function&nbsp;to&nbsp;remove&nbsp;the&nbsp;Scores&nbsp;of&nbsp;all&nbsp;the&nbsp;Items&nbsp;in&nbsp;a&nbsp;particular&nbsp;feed</tt></dd></dl>
+ <dl><dt><a name="-setFeedTopic"><strong>setFeedTopic</strong></a>(feed, topic, commit<font color="#909090">=True</font>)</dt><dd><tt>Assigns&nbsp;a&nbsp;feed&nbsp;to&nbsp;the&nbsp;given&nbsp;Topic.</tt></dd></dl>
+ <dl><dt><a name="-setItemTopic"><strong>setItemTopic</strong></a>(item, topic, commit<font color="#909090">=True</font>)</dt><dd><tt>Assigns&nbsp;an&nbsp;Item&nbsp;to&nbsp;the&nbsp;given&nbsp;Topic.</tt></dd></dl>
+ <dl><dt><a name="-voteArticle"><strong>voteArticle</strong></a>(upOrDown, item, topic)</dt><dd><tt>voteArticle&nbsp;function,&nbsp;takes&nbsp;arguments&nbsp;upOrDown&nbsp;vote,&nbsp;topic&nbsp;to&nbsp;vote,<br>
+and&nbsp;the&nbsp;text&nbsp;to&nbsp;vote&nbsp;for</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>DBFILE</strong> = '/home/ceevee/.feedIO/feedIO.sqlite'<br>
+<strong>USERDIR</strong> = '/home/ceevee/.feedIO'<br>
+<strong>__author__</strong> = 'Chanaka Jayamal &lt;seejay@seejay.net&gt;'<br>
+<strong>__developers__</strong> = ['Chanaka Jayamal', 'Lanka Amarasekara', 'Kolitha Gajanayake', 'Chamika Viraj']<br>
+<strong>__license__</strong> = '<font color="#c040c0">\n</font>    Copyright (C) 2011 Sri Lanka Institute of I...IO.  If not, see &lt;http://www.gnu.org/licenses/&gt;.<font color="#c040c0">\n</font>'<br>
+<strong>__version__</strong> = '0.0.3'<br>
+<strong>belongs_to</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>classifierDir</strong> = '/home/ceevee/.feedIO/classifier'<br>
+<strong>entities</strong> = [&lt;class 'feedio.models.Feed'&gt;, &lt;class 'feedio.mo...s.ScoreItem'&gt;, &lt;class 'feedio.models.ScoreFeed'&gt;]<br>
+<strong>has_and_belongs_to_many</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>has_field</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>has_many</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>has_one</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>has_property</strong> = &lt;elixir.statements.PropertyStatement object&gt;<br>
+<strong>kClassificationExtension</strong> = '.css'<br>
+<strong>kClassificationType</strong> = '&lt;osb unique microgroom&gt;'<br>
+<strong>kClassifyCommand</strong> = r" '-{ isolate (:stats:); classify %s ( %s ) (:sta... prob: ([0-9.]+)/; output /:*:best:\t:*:prob:/ }'"<br>
+<strong>kCrmPath</strong> = 'crm'<br>
+<strong>kLearnCommand</strong> = " '-{ learn %s ( %s ) }'"<br>
+<strong>metadata</strong> = MetaData(None)<br>
+<strong>options_defaults</strong> = {'abstract': False, 'allowcoloverride': False, 'auto_primarykey': True, 'autoload': False, 'autosetup': False, 'identity': None, 'inheritance': 'single', 'mapper_options': {}, 'order_by': None, 'polymorphic': True, ...}<br>
+<strong>session</strong> = &lt;sqlalchemy.orm.scoping.ScopedSession object&gt;<br>
+<strong>using_mapper_options</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>using_options</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>using_options_defaults</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>using_table_options</strong> = &lt;elixir.statements.ClassMutator object&gt;</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Chanaka&nbsp;Jayamal&nbsp;&lt;seejay@seejay.net&gt;</td></tr></table>
+</body></html>
