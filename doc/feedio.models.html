@@ -1,0 +1,581 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module feedio.models</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="feedio.html"><font color="#ffffff">feedio</font></a>.models</strong></big></big> (version 0.0.3)</font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/ceevee/play ground/feedIO/feedio/models.py">/home/ceevee/play ground/feedIO/feedio/models.py</a></font></td></tr></table>
+    <p><tt>database&nbsp;models&nbsp;for&nbsp;feedIO,&nbsp;uses&nbsp;python&nbsp;elixir.&nbsp;Currently&nbsp;has&nbsp;Entties&nbsp;for<br>
+&nbsp;"<a href="#Feed">Feed</a>",&nbsp;"<a href="#Item">Item</a>"&nbsp;and&nbsp;"<a href="#Topic">Topic</a>"</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="elixir.entity.html#Entity">elixir.entity.Entity</a>(<a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="feedio.models.html#Feed">Feed</a>
+</font></dt><dt><font face="helvetica, arial"><a href="feedio.models.html#Item">Item</a>
+</font></dt><dt><font face="helvetica, arial"><a href="feedio.models.html#ScoreFeed">ScoreFeed</a>
+</font></dt><dt><font face="helvetica, arial"><a href="feedio.models.html#ScoreItem">ScoreItem</a>
+</font></dt><dt><font face="helvetica, arial"><a href="feedio.models.html#Topic">Topic</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Feed">class <strong>Feed</strong></a>(<a href="elixir.entity.html#Entity">elixir.entity.Entity</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#Feed">Feed</a>&nbsp;entity&nbsp;to&nbsp;store&nbsp;the&nbsp;meta&nbsp;data&nbsp;of&nbsp;a&nbsp;web&nbsp;feed<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.models.html#Feed">Feed</a></dd>
+<dd><a href="elixir.entity.html#Entity">elixir.entity.Entity</a></dd>
+<dd><a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Feed-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>topics</strong></dt>
+<dd><tt>A&nbsp;descriptor&nbsp;that&nbsp;presents&nbsp;a&nbsp;read/write&nbsp;view&nbsp;of&nbsp;an&nbsp;object&nbsp;attribute.</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>description</strong> = Property(description, &lt;class 'feedio.models.Feed'&gt;)</dl>
+
+<dl><dt><strong>etag</strong> = Property(etag, &lt;class 'feedio.models.Feed'&gt;)</dl>
+
+<dl><dt><strong>fetchInterval</strong> = Property(fetchInterval, &lt;class 'feedio.models.Feed'&gt;)</dl>
+
+<dl><dt><strong>frequency</strong> = Property(frequency, &lt;class 'feedio.models.Feed'&gt;)</dl>
+
+<dl><dt><strong>items</strong> = Property(items, &lt;class 'feedio.models.Feed'&gt;)</dl>
+
+<dl><dt><strong>lastModified</strong> = Property(lastModified, &lt;class 'feedio.models.Feed'&gt;)</dl>
+
+<dl><dt><strong>mapper</strong> = None</dl>
+
+<dl><dt><strong>numVotes</strong> = Property(numVotes, &lt;class 'feedio.models.Feed'&gt;)</dl>
+
+<dl><dt><strong>score_feed</strong> = Property(score_feed, &lt;class 'feedio.models.Feed'&gt;)</dl>
+
+<dl><dt><strong>table</strong> = None</dl>
+
+<dl><dt><strong>title</strong> = Property(title, &lt;class 'feedio.models.Feed'&gt;)</dl>
+
+<dl><dt><strong>url</strong> = Property(url, &lt;class 'feedio.models.Feed'&gt;)</dl>
+
+<hr>
+Data and other attributes inherited from <a href="elixir.entity.html#Entity">elixir.entity.Entity</a>:<br>
+<dl><dt><strong>__metaclass__</strong> = &lt;class 'elixir.entity.EntityMeta'&gt;<dd><tt><a href="elixir.entity.html#Entity">Entity</a>&nbsp;meta&nbsp;class.<br>
+You&nbsp;should&nbsp;only&nbsp;use&nbsp;it&nbsp;directly&nbsp;if&nbsp;you&nbsp;want&nbsp;to&nbsp;define&nbsp;your&nbsp;own&nbsp;base&nbsp;class<br>
+for&nbsp;your&nbsp;entities&nbsp;(ie&nbsp;you&nbsp;don't&nbsp;want&nbsp;to&nbsp;use&nbsp;the&nbsp;provided&nbsp;'<a href="elixir.entity.html#Entity">Entity</a>'&nbsp;class).</tt></dl>
+
+<hr>
+Methods inherited from <a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a>:<br>
+<dl><dt><a name="Feed-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt></dl>
+
+<dl><dt><a name="Feed-delete"><strong>delete</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Feed-expire"><strong>expire</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Feed-expunge"><strong>expunge</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Feed-flush"><strong>flush</strong></a>(self, *args, **kwargs)</dt><dd><tt>#&nbsp;session&nbsp;methods</tt></dd></dl>
+
+<dl><dt><a name="Feed-from_dict"><strong>from_dict</strong></a>(self, data)</dt><dd><tt>Update&nbsp;a&nbsp;mapped&nbsp;class&nbsp;with&nbsp;data&nbsp;from&nbsp;a&nbsp;JSON-style&nbsp;nested&nbsp;dict/list<br>
+structure.</tt></dd></dl>
+
+<dl><dt><a name="Feed-merge"><strong>merge</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Feed-refresh"><strong>refresh</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Feed-save"><strong>save</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Feed-save_or_update"><strong>save_or_update</strong></a>(self, *args, **kwargs)</dt><dd><tt>#&nbsp;only&nbsp;exist&nbsp;in&nbsp;SA&nbsp;&lt;&nbsp;0.5<br>
+#&nbsp;IMO,&nbsp;the&nbsp;replacement&nbsp;(session.add)&nbsp;doesn't&nbsp;sound&nbsp;good&nbsp;enough&nbsp;to&nbsp;be&nbsp;added<br>
+#&nbsp;here.&nbsp;For&nbsp;example:&nbsp;"o&nbsp;=&nbsp;Order();&nbsp;o.add()"&nbsp;is&nbsp;not&nbsp;very&nbsp;telling.&nbsp;It's<br>
+#&nbsp;better&nbsp;to&nbsp;leave&nbsp;it&nbsp;as&nbsp;"session.add(o)"</tt></dd></dl>
+
+<dl><dt><a name="Feed-set"><strong>set</strong></a>(self, **kwargs)</dt></dl>
+
+<dl><dt><a name="Feed-to_dict"><strong>to_dict</strong></a>(self, deep<font color="#909090">={}</font>, exclude<font color="#909090">=[]</font>)</dt><dd><tt>Generate&nbsp;a&nbsp;JSON-style&nbsp;nested&nbsp;dict/list&nbsp;structure&nbsp;from&nbsp;an&nbsp;object.</tt></dd></dl>
+
+<dl><dt><a name="Feed-update"><strong>update</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<hr>
+Class methods inherited from <a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a>:<br>
+<dl><dt><a name="Feed-get"><strong>get</strong></a>(cls, *args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="elixir.entity.html#EntityMeta">elixir.entity.EntityMeta</a></font></font></dt><dd><tt>Return&nbsp;the&nbsp;instance&nbsp;of&nbsp;this&nbsp;class&nbsp;based&nbsp;on&nbsp;the&nbsp;given&nbsp;identifier,<br>
+or&nbsp;None&nbsp;if&nbsp;not&nbsp;found.&nbsp;This&nbsp;is&nbsp;equivalent&nbsp;to:<br>
+session.query(MyClass).<a href="#Feed-get">get</a>(...)</tt></dd></dl>
+
+<dl><dt><a name="Feed-get_by"><strong>get_by</strong></a>(cls, *args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="elixir.entity.html#EntityMeta">elixir.entity.EntityMeta</a></font></font></dt><dd><tt>Returns&nbsp;the&nbsp;first&nbsp;instance&nbsp;of&nbsp;this&nbsp;class&nbsp;matching&nbsp;the&nbsp;given&nbsp;criteria.<br>
+This&nbsp;is&nbsp;equivalent&nbsp;to:<br>
+session.query(MyClass).filter_by(...).first()</tt></dd></dl>
+
+<dl><dt><a name="Feed-update_or_create"><strong>update_or_create</strong></a>(cls, data, surrogate<font color="#909090">=True</font>)<font color="#909090"><font face="helvetica, arial"> from <a href="elixir.entity.html#EntityMeta">elixir.entity.EntityMeta</a></font></font></dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Item">class <strong>Item</strong></a>(<a href="elixir.entity.html#Entity">elixir.entity.Entity</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#Item">Item</a>&nbsp;entity&nbsp;to&nbsp;store&nbsp;a&nbsp;fetched&nbsp;article&nbsp;(a&nbsp;feed&nbsp;item)<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.models.html#Item">Item</a></dd>
+<dd><a href="elixir.entity.html#Entity">elixir.entity.Entity</a></dd>
+<dd><a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Item-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>topics</strong></dt>
+<dd><tt>A&nbsp;descriptor&nbsp;that&nbsp;presents&nbsp;a&nbsp;read/write&nbsp;view&nbsp;of&nbsp;an&nbsp;object&nbsp;attribute.</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>age</strong> = Property(age, &lt;class 'feedio.models.Item'&gt;)</dl>
+
+<dl><dt><strong>author</strong> = Property(author, &lt;class 'feedio.models.Item'&gt;)</dl>
+
+<dl><dt><strong>bookMarked</strong> = Property(bookMarked, &lt;class 'feedio.models.Item'&gt;)</dl>
+
+<dl><dt><strong>description</strong> = Property(description, &lt;class 'feedio.models.Item'&gt;)</dl>
+
+<dl><dt><strong>favourite</strong> = Property(favourite, &lt;class 'feedio.models.Item'&gt;)</dl>
+
+<dl><dt><strong>feed</strong> = Property(feed, &lt;class 'feedio.models.Item'&gt;)</dl>
+
+<dl><dt><strong>generalScore</strong> = Property(generalScore, &lt;class 'feedio.models.Item'&gt;)</dl>
+
+<dl><dt><strong>isUnread</strong> = Property(isUnread, &lt;class 'feedio.models.Item'&gt;)</dl>
+
+<dl><dt><strong>mapper</strong> = None</dl>
+
+<dl><dt><strong>numVotes</strong> = Property(numVotes, &lt;class 'feedio.models.Item'&gt;)</dl>
+
+<dl><dt><strong>score_item</strong> = Property(score_item, &lt;class 'feedio.models.Item'&gt;)</dl>
+
+<dl><dt><strong>table</strong> = None</dl>
+
+<dl><dt><strong>title</strong> = Property(title, &lt;class 'feedio.models.Item'&gt;)</dl>
+
+<dl><dt><strong>updated</strong> = Property(updated, &lt;class 'feedio.models.Item'&gt;)</dl>
+
+<dl><dt><strong>url</strong> = Property(url, &lt;class 'feedio.models.Item'&gt;)</dl>
+
+<hr>
+Data and other attributes inherited from <a href="elixir.entity.html#Entity">elixir.entity.Entity</a>:<br>
+<dl><dt><strong>__metaclass__</strong> = &lt;class 'elixir.entity.EntityMeta'&gt;<dd><tt><a href="elixir.entity.html#Entity">Entity</a>&nbsp;meta&nbsp;class.<br>
+You&nbsp;should&nbsp;only&nbsp;use&nbsp;it&nbsp;directly&nbsp;if&nbsp;you&nbsp;want&nbsp;to&nbsp;define&nbsp;your&nbsp;own&nbsp;base&nbsp;class<br>
+for&nbsp;your&nbsp;entities&nbsp;(ie&nbsp;you&nbsp;don't&nbsp;want&nbsp;to&nbsp;use&nbsp;the&nbsp;provided&nbsp;'<a href="elixir.entity.html#Entity">Entity</a>'&nbsp;class).</tt></dl>
+
+<hr>
+Methods inherited from <a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a>:<br>
+<dl><dt><a name="Item-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt></dl>
+
+<dl><dt><a name="Item-delete"><strong>delete</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Item-expire"><strong>expire</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Item-expunge"><strong>expunge</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Item-flush"><strong>flush</strong></a>(self, *args, **kwargs)</dt><dd><tt>#&nbsp;session&nbsp;methods</tt></dd></dl>
+
+<dl><dt><a name="Item-from_dict"><strong>from_dict</strong></a>(self, data)</dt><dd><tt>Update&nbsp;a&nbsp;mapped&nbsp;class&nbsp;with&nbsp;data&nbsp;from&nbsp;a&nbsp;JSON-style&nbsp;nested&nbsp;dict/list<br>
+structure.</tt></dd></dl>
+
+<dl><dt><a name="Item-merge"><strong>merge</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Item-refresh"><strong>refresh</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Item-save"><strong>save</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Item-save_or_update"><strong>save_or_update</strong></a>(self, *args, **kwargs)</dt><dd><tt>#&nbsp;only&nbsp;exist&nbsp;in&nbsp;SA&nbsp;&lt;&nbsp;0.5<br>
+#&nbsp;IMO,&nbsp;the&nbsp;replacement&nbsp;(session.add)&nbsp;doesn't&nbsp;sound&nbsp;good&nbsp;enough&nbsp;to&nbsp;be&nbsp;added<br>
+#&nbsp;here.&nbsp;For&nbsp;example:&nbsp;"o&nbsp;=&nbsp;Order();&nbsp;o.add()"&nbsp;is&nbsp;not&nbsp;very&nbsp;telling.&nbsp;It's<br>
+#&nbsp;better&nbsp;to&nbsp;leave&nbsp;it&nbsp;as&nbsp;"session.add(o)"</tt></dd></dl>
+
+<dl><dt><a name="Item-set"><strong>set</strong></a>(self, **kwargs)</dt></dl>
+
+<dl><dt><a name="Item-to_dict"><strong>to_dict</strong></a>(self, deep<font color="#909090">={}</font>, exclude<font color="#909090">=[]</font>)</dt><dd><tt>Generate&nbsp;a&nbsp;JSON-style&nbsp;nested&nbsp;dict/list&nbsp;structure&nbsp;from&nbsp;an&nbsp;object.</tt></dd></dl>
+
+<dl><dt><a name="Item-update"><strong>update</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<hr>
+Class methods inherited from <a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a>:<br>
+<dl><dt><a name="Item-get"><strong>get</strong></a>(cls, *args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="elixir.entity.html#EntityMeta">elixir.entity.EntityMeta</a></font></font></dt><dd><tt>Return&nbsp;the&nbsp;instance&nbsp;of&nbsp;this&nbsp;class&nbsp;based&nbsp;on&nbsp;the&nbsp;given&nbsp;identifier,<br>
+or&nbsp;None&nbsp;if&nbsp;not&nbsp;found.&nbsp;This&nbsp;is&nbsp;equivalent&nbsp;to:<br>
+session.query(MyClass).<a href="#Item-get">get</a>(...)</tt></dd></dl>
+
+<dl><dt><a name="Item-get_by"><strong>get_by</strong></a>(cls, *args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="elixir.entity.html#EntityMeta">elixir.entity.EntityMeta</a></font></font></dt><dd><tt>Returns&nbsp;the&nbsp;first&nbsp;instance&nbsp;of&nbsp;this&nbsp;class&nbsp;matching&nbsp;the&nbsp;given&nbsp;criteria.<br>
+This&nbsp;is&nbsp;equivalent&nbsp;to:<br>
+session.query(MyClass).filter_by(...).first()</tt></dd></dl>
+
+<dl><dt><a name="Item-update_or_create"><strong>update_or_create</strong></a>(cls, data, surrogate<font color="#909090">=True</font>)<font color="#909090"><font face="helvetica, arial"> from <a href="elixir.entity.html#EntityMeta">elixir.entity.EntityMeta</a></font></font></dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ScoreFeed">class <strong>ScoreFeed</strong></a>(<a href="elixir.entity.html#Entity">elixir.entity.Entity</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#ScoreFeed">ScoreFeed</a>&nbsp;entity&nbsp;to&nbsp;store&nbsp;the&nbsp;particular&nbsp;scores&nbsp;for&nbsp;a&nbsp;feed&nbsp;under&nbsp;each&nbsp;topic.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.models.html#ScoreFeed">ScoreFeed</a></dd>
+<dd><a href="elixir.entity.html#Entity">elixir.entity.Entity</a></dd>
+<dd><a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="ScoreFeed-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>feed</strong> = Property(feed, &lt;class 'feedio.models.ScoreFeed'&gt;)</dl>
+
+<dl><dt><strong>mapper</strong> = None</dl>
+
+<dl><dt><strong>score</strong> = Property(score, &lt;class 'feedio.models.ScoreFeed'&gt;)</dl>
+
+<dl><dt><strong>table</strong> = None</dl>
+
+<dl><dt><strong>topic</strong> = Property(topic, &lt;class 'feedio.models.ScoreFeed'&gt;)</dl>
+
+<hr>
+Data and other attributes inherited from <a href="elixir.entity.html#Entity">elixir.entity.Entity</a>:<br>
+<dl><dt><strong>__metaclass__</strong> = &lt;class 'elixir.entity.EntityMeta'&gt;<dd><tt><a href="elixir.entity.html#Entity">Entity</a>&nbsp;meta&nbsp;class.<br>
+You&nbsp;should&nbsp;only&nbsp;use&nbsp;it&nbsp;directly&nbsp;if&nbsp;you&nbsp;want&nbsp;to&nbsp;define&nbsp;your&nbsp;own&nbsp;base&nbsp;class<br>
+for&nbsp;your&nbsp;entities&nbsp;(ie&nbsp;you&nbsp;don't&nbsp;want&nbsp;to&nbsp;use&nbsp;the&nbsp;provided&nbsp;'<a href="elixir.entity.html#Entity">Entity</a>'&nbsp;class).</tt></dl>
+
+<hr>
+Methods inherited from <a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a>:<br>
+<dl><dt><a name="ScoreFeed-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt></dl>
+
+<dl><dt><a name="ScoreFeed-delete"><strong>delete</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="ScoreFeed-expire"><strong>expire</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="ScoreFeed-expunge"><strong>expunge</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="ScoreFeed-flush"><strong>flush</strong></a>(self, *args, **kwargs)</dt><dd><tt>#&nbsp;session&nbsp;methods</tt></dd></dl>
+
+<dl><dt><a name="ScoreFeed-from_dict"><strong>from_dict</strong></a>(self, data)</dt><dd><tt>Update&nbsp;a&nbsp;mapped&nbsp;class&nbsp;with&nbsp;data&nbsp;from&nbsp;a&nbsp;JSON-style&nbsp;nested&nbsp;dict/list<br>
+structure.</tt></dd></dl>
+
+<dl><dt><a name="ScoreFeed-merge"><strong>merge</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="ScoreFeed-refresh"><strong>refresh</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="ScoreFeed-save"><strong>save</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="ScoreFeed-save_or_update"><strong>save_or_update</strong></a>(self, *args, **kwargs)</dt><dd><tt>#&nbsp;only&nbsp;exist&nbsp;in&nbsp;SA&nbsp;&lt;&nbsp;0.5<br>
+#&nbsp;IMO,&nbsp;the&nbsp;replacement&nbsp;(session.add)&nbsp;doesn't&nbsp;sound&nbsp;good&nbsp;enough&nbsp;to&nbsp;be&nbsp;added<br>
+#&nbsp;here.&nbsp;For&nbsp;example:&nbsp;"o&nbsp;=&nbsp;Order();&nbsp;o.add()"&nbsp;is&nbsp;not&nbsp;very&nbsp;telling.&nbsp;It's<br>
+#&nbsp;better&nbsp;to&nbsp;leave&nbsp;it&nbsp;as&nbsp;"session.add(o)"</tt></dd></dl>
+
+<dl><dt><a name="ScoreFeed-set"><strong>set</strong></a>(self, **kwargs)</dt></dl>
+
+<dl><dt><a name="ScoreFeed-to_dict"><strong>to_dict</strong></a>(self, deep<font color="#909090">={}</font>, exclude<font color="#909090">=[]</font>)</dt><dd><tt>Generate&nbsp;a&nbsp;JSON-style&nbsp;nested&nbsp;dict/list&nbsp;structure&nbsp;from&nbsp;an&nbsp;object.</tt></dd></dl>
+
+<dl><dt><a name="ScoreFeed-update"><strong>update</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<hr>
+Class methods inherited from <a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a>:<br>
+<dl><dt><a name="ScoreFeed-get"><strong>get</strong></a>(cls, *args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="elixir.entity.html#EntityMeta">elixir.entity.EntityMeta</a></font></font></dt><dd><tt>Return&nbsp;the&nbsp;instance&nbsp;of&nbsp;this&nbsp;class&nbsp;based&nbsp;on&nbsp;the&nbsp;given&nbsp;identifier,<br>
+or&nbsp;None&nbsp;if&nbsp;not&nbsp;found.&nbsp;This&nbsp;is&nbsp;equivalent&nbsp;to:<br>
+session.query(MyClass).<a href="#ScoreFeed-get">get</a>(...)</tt></dd></dl>
+
+<dl><dt><a name="ScoreFeed-get_by"><strong>get_by</strong></a>(cls, *args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="elixir.entity.html#EntityMeta">elixir.entity.EntityMeta</a></font></font></dt><dd><tt>Returns&nbsp;the&nbsp;first&nbsp;instance&nbsp;of&nbsp;this&nbsp;class&nbsp;matching&nbsp;the&nbsp;given&nbsp;criteria.<br>
+This&nbsp;is&nbsp;equivalent&nbsp;to:<br>
+session.query(MyClass).filter_by(...).first()</tt></dd></dl>
+
+<dl><dt><a name="ScoreFeed-update_or_create"><strong>update_or_create</strong></a>(cls, data, surrogate<font color="#909090">=True</font>)<font color="#909090"><font face="helvetica, arial"> from <a href="elixir.entity.html#EntityMeta">elixir.entity.EntityMeta</a></font></font></dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ScoreItem">class <strong>ScoreItem</strong></a>(<a href="elixir.entity.html#Entity">elixir.entity.Entity</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="#ScoreItem">ScoreItem</a>&nbsp;entity&nbsp;to&nbsp;store&nbsp;the&nbsp;particular&nbsp;scores&nbsp;for&nbsp;an&nbsp;article&nbsp;under&nbsp;each&nbsp;topic.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.models.html#ScoreItem">ScoreItem</a></dd>
+<dd><a href="elixir.entity.html#Entity">elixir.entity.Entity</a></dd>
+<dd><a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="ScoreItem-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>item</strong> = Property(item, &lt;class 'feedio.models.ScoreItem'&gt;)</dl>
+
+<dl><dt><strong>mapper</strong> = None</dl>
+
+<dl><dt><strong>score</strong> = Property(score, &lt;class 'feedio.models.ScoreItem'&gt;)</dl>
+
+<dl><dt><strong>table</strong> = None</dl>
+
+<dl><dt><strong>topic</strong> = Property(topic, &lt;class 'feedio.models.ScoreItem'&gt;)</dl>
+
+<hr>
+Data and other attributes inherited from <a href="elixir.entity.html#Entity">elixir.entity.Entity</a>:<br>
+<dl><dt><strong>__metaclass__</strong> = &lt;class 'elixir.entity.EntityMeta'&gt;<dd><tt><a href="elixir.entity.html#Entity">Entity</a>&nbsp;meta&nbsp;class.<br>
+You&nbsp;should&nbsp;only&nbsp;use&nbsp;it&nbsp;directly&nbsp;if&nbsp;you&nbsp;want&nbsp;to&nbsp;define&nbsp;your&nbsp;own&nbsp;base&nbsp;class<br>
+for&nbsp;your&nbsp;entities&nbsp;(ie&nbsp;you&nbsp;don't&nbsp;want&nbsp;to&nbsp;use&nbsp;the&nbsp;provided&nbsp;'<a href="elixir.entity.html#Entity">Entity</a>'&nbsp;class).</tt></dl>
+
+<hr>
+Methods inherited from <a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a>:<br>
+<dl><dt><a name="ScoreItem-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt></dl>
+
+<dl><dt><a name="ScoreItem-delete"><strong>delete</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="ScoreItem-expire"><strong>expire</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="ScoreItem-expunge"><strong>expunge</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="ScoreItem-flush"><strong>flush</strong></a>(self, *args, **kwargs)</dt><dd><tt>#&nbsp;session&nbsp;methods</tt></dd></dl>
+
+<dl><dt><a name="ScoreItem-from_dict"><strong>from_dict</strong></a>(self, data)</dt><dd><tt>Update&nbsp;a&nbsp;mapped&nbsp;class&nbsp;with&nbsp;data&nbsp;from&nbsp;a&nbsp;JSON-style&nbsp;nested&nbsp;dict/list<br>
+structure.</tt></dd></dl>
+
+<dl><dt><a name="ScoreItem-merge"><strong>merge</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="ScoreItem-refresh"><strong>refresh</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="ScoreItem-save"><strong>save</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="ScoreItem-save_or_update"><strong>save_or_update</strong></a>(self, *args, **kwargs)</dt><dd><tt>#&nbsp;only&nbsp;exist&nbsp;in&nbsp;SA&nbsp;&lt;&nbsp;0.5<br>
+#&nbsp;IMO,&nbsp;the&nbsp;replacement&nbsp;(session.add)&nbsp;doesn't&nbsp;sound&nbsp;good&nbsp;enough&nbsp;to&nbsp;be&nbsp;added<br>
+#&nbsp;here.&nbsp;For&nbsp;example:&nbsp;"o&nbsp;=&nbsp;Order();&nbsp;o.add()"&nbsp;is&nbsp;not&nbsp;very&nbsp;telling.&nbsp;It's<br>
+#&nbsp;better&nbsp;to&nbsp;leave&nbsp;it&nbsp;as&nbsp;"session.add(o)"</tt></dd></dl>
+
+<dl><dt><a name="ScoreItem-set"><strong>set</strong></a>(self, **kwargs)</dt></dl>
+
+<dl><dt><a name="ScoreItem-to_dict"><strong>to_dict</strong></a>(self, deep<font color="#909090">={}</font>, exclude<font color="#909090">=[]</font>)</dt><dd><tt>Generate&nbsp;a&nbsp;JSON-style&nbsp;nested&nbsp;dict/list&nbsp;structure&nbsp;from&nbsp;an&nbsp;object.</tt></dd></dl>
+
+<dl><dt><a name="ScoreItem-update"><strong>update</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<hr>
+Class methods inherited from <a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a>:<br>
+<dl><dt><a name="ScoreItem-get"><strong>get</strong></a>(cls, *args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="elixir.entity.html#EntityMeta">elixir.entity.EntityMeta</a></font></font></dt><dd><tt>Return&nbsp;the&nbsp;instance&nbsp;of&nbsp;this&nbsp;class&nbsp;based&nbsp;on&nbsp;the&nbsp;given&nbsp;identifier,<br>
+or&nbsp;None&nbsp;if&nbsp;not&nbsp;found.&nbsp;This&nbsp;is&nbsp;equivalent&nbsp;to:<br>
+session.query(MyClass).<a href="#ScoreItem-get">get</a>(...)</tt></dd></dl>
+
+<dl><dt><a name="ScoreItem-get_by"><strong>get_by</strong></a>(cls, *args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="elixir.entity.html#EntityMeta">elixir.entity.EntityMeta</a></font></font></dt><dd><tt>Returns&nbsp;the&nbsp;first&nbsp;instance&nbsp;of&nbsp;this&nbsp;class&nbsp;matching&nbsp;the&nbsp;given&nbsp;criteria.<br>
+This&nbsp;is&nbsp;equivalent&nbsp;to:<br>
+session.query(MyClass).filter_by(...).first()</tt></dd></dl>
+
+<dl><dt><a name="ScoreItem-update_or_create"><strong>update_or_create</strong></a>(cls, data, surrogate<font color="#909090">=True</font>)<font color="#909090"><font face="helvetica, arial"> from <a href="elixir.entity.html#EntityMeta">elixir.entity.EntityMeta</a></font></font></dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Topic">class <strong>Topic</strong></a>(<a href="elixir.entity.html#Entity">elixir.entity.Entity</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.models.html#Topic">Topic</a></dd>
+<dd><a href="elixir.entity.html#Entity">elixir.entity.Entity</a></dd>
+<dd><a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Topic-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>feeds</strong></dt>
+<dd><tt>A&nbsp;descriptor&nbsp;that&nbsp;presents&nbsp;a&nbsp;read/write&nbsp;view&nbsp;of&nbsp;an&nbsp;object&nbsp;attribute.</tt></dd>
+</dl>
+<dl><dt><strong>items</strong></dt>
+<dd><tt>A&nbsp;descriptor&nbsp;that&nbsp;presents&nbsp;a&nbsp;read/write&nbsp;view&nbsp;of&nbsp;an&nbsp;object&nbsp;attribute.</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>mapper</strong> = None</dl>
+
+<dl><dt><strong>numVotes</strong> = Property(numVotes, &lt;class 'feedio.models.Topic'&gt;)</dl>
+
+<dl><dt><strong>score_feed</strong> = Property(score_feed, &lt;class 'feedio.models.Topic'&gt;)</dl>
+
+<dl><dt><strong>score_item</strong> = Property(score_item, &lt;class 'feedio.models.Topic'&gt;)</dl>
+
+<dl><dt><strong>table</strong> = None</dl>
+
+<dl><dt><strong>title</strong> = Property(title, &lt;class 'feedio.models.Topic'&gt;)</dl>
+
+<hr>
+Data and other attributes inherited from <a href="elixir.entity.html#Entity">elixir.entity.Entity</a>:<br>
+<dl><dt><strong>__metaclass__</strong> = &lt;class 'elixir.entity.EntityMeta'&gt;<dd><tt><a href="elixir.entity.html#Entity">Entity</a>&nbsp;meta&nbsp;class.<br>
+You&nbsp;should&nbsp;only&nbsp;use&nbsp;it&nbsp;directly&nbsp;if&nbsp;you&nbsp;want&nbsp;to&nbsp;define&nbsp;your&nbsp;own&nbsp;base&nbsp;class<br>
+for&nbsp;your&nbsp;entities&nbsp;(ie&nbsp;you&nbsp;don't&nbsp;want&nbsp;to&nbsp;use&nbsp;the&nbsp;provided&nbsp;'<a href="elixir.entity.html#Entity">Entity</a>'&nbsp;class).</tt></dl>
+
+<hr>
+Methods inherited from <a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a>:<br>
+<dl><dt><a name="Topic-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt></dl>
+
+<dl><dt><a name="Topic-delete"><strong>delete</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Topic-expire"><strong>expire</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Topic-expunge"><strong>expunge</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Topic-flush"><strong>flush</strong></a>(self, *args, **kwargs)</dt><dd><tt>#&nbsp;session&nbsp;methods</tt></dd></dl>
+
+<dl><dt><a name="Topic-from_dict"><strong>from_dict</strong></a>(self, data)</dt><dd><tt>Update&nbsp;a&nbsp;mapped&nbsp;class&nbsp;with&nbsp;data&nbsp;from&nbsp;a&nbsp;JSON-style&nbsp;nested&nbsp;dict/list<br>
+structure.</tt></dd></dl>
+
+<dl><dt><a name="Topic-merge"><strong>merge</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Topic-refresh"><strong>refresh</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Topic-save"><strong>save</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="Topic-save_or_update"><strong>save_or_update</strong></a>(self, *args, **kwargs)</dt><dd><tt>#&nbsp;only&nbsp;exist&nbsp;in&nbsp;SA&nbsp;&lt;&nbsp;0.5<br>
+#&nbsp;IMO,&nbsp;the&nbsp;replacement&nbsp;(session.add)&nbsp;doesn't&nbsp;sound&nbsp;good&nbsp;enough&nbsp;to&nbsp;be&nbsp;added<br>
+#&nbsp;here.&nbsp;For&nbsp;example:&nbsp;"o&nbsp;=&nbsp;Order();&nbsp;o.add()"&nbsp;is&nbsp;not&nbsp;very&nbsp;telling.&nbsp;It's<br>
+#&nbsp;better&nbsp;to&nbsp;leave&nbsp;it&nbsp;as&nbsp;"session.add(o)"</tt></dd></dl>
+
+<dl><dt><a name="Topic-set"><strong>set</strong></a>(self, **kwargs)</dt></dl>
+
+<dl><dt><a name="Topic-to_dict"><strong>to_dict</strong></a>(self, deep<font color="#909090">={}</font>, exclude<font color="#909090">=[]</font>)</dt><dd><tt>Generate&nbsp;a&nbsp;JSON-style&nbsp;nested&nbsp;dict/list&nbsp;structure&nbsp;from&nbsp;an&nbsp;object.</tt></dd></dl>
+
+<dl><dt><a name="Topic-update"><strong>update</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<hr>
+Class methods inherited from <a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a>:<br>
+<dl><dt><a name="Topic-get"><strong>get</strong></a>(cls, *args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="elixir.entity.html#EntityMeta">elixir.entity.EntityMeta</a></font></font></dt><dd><tt>Return&nbsp;the&nbsp;instance&nbsp;of&nbsp;this&nbsp;class&nbsp;based&nbsp;on&nbsp;the&nbsp;given&nbsp;identifier,<br>
+or&nbsp;None&nbsp;if&nbsp;not&nbsp;found.&nbsp;This&nbsp;is&nbsp;equivalent&nbsp;to:<br>
+session.query(MyClass).<a href="#Topic-get">get</a>(...)</tt></dd></dl>
+
+<dl><dt><a name="Topic-get_by"><strong>get_by</strong></a>(cls, *args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="elixir.entity.html#EntityMeta">elixir.entity.EntityMeta</a></font></font></dt><dd><tt>Returns&nbsp;the&nbsp;first&nbsp;instance&nbsp;of&nbsp;this&nbsp;class&nbsp;matching&nbsp;the&nbsp;given&nbsp;criteria.<br>
+This&nbsp;is&nbsp;equivalent&nbsp;to:<br>
+session.query(MyClass).filter_by(...).first()</tt></dd></dl>
+
+<dl><dt><a name="Topic-update_or_create"><strong>update_or_create</strong></a>(cls, data, surrogate<font color="#909090">=True</font>)<font color="#909090"><font face="helvetica, arial"> from <a href="elixir.entity.html#EntityMeta">elixir.entity.EntityMeta</a></font></font></dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="elixir.entity.html#EntityBase">elixir.entity.EntityBase</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-initDB"><strong>initDB</strong></a>()</dt></dl>
+ <dl><dt><a name="-main"><strong>main</strong></a>()</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>DBFILE</strong> = '/home/ceevee/.feedIO/feedIO.sqlite'<br>
+<strong>USERDIR</strong> = '/home/ceevee/.feedIO'<br>
+<strong>__author__</strong> = 'Chanaka Jayamal &lt;seejay@seejay.net&gt;'<br>
+<strong>__developers__</strong> = ['Chanaka Jayamal', 'Lanka Amarasekara', 'Kolitha Gajanayake', 'Chamika Viraj']<br>
+<strong>__license__</strong> = '<font color="#c040c0">\n</font>    Copyright (C) 2011 Sri Lanka Institute of I...IO.  If not, see &lt;http://www.gnu.org/licenses/&gt;.<font color="#c040c0">\n</font>'<br>
+<strong>__version__</strong> = '0.0.3'<br>
+<strong>belongs_to</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>entities</strong> = [&lt;class 'feedio.models.Feed'&gt;, &lt;class 'feedio.mo...s.ScoreItem'&gt;, &lt;class 'feedio.models.ScoreFeed'&gt;]<br>
+<strong>has_and_belongs_to_many</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>has_field</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>has_many</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>has_one</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>has_property</strong> = &lt;elixir.statements.PropertyStatement object&gt;<br>
+<strong>metadata</strong> = MetaData(None)<br>
+<strong>options_defaults</strong> = {'abstract': False, 'allowcoloverride': False, 'auto_primarykey': True, 'autoload': False, 'autosetup': False, 'identity': None, 'inheritance': 'single', 'mapper_options': {}, 'order_by': None, 'polymorphic': True, ...}<br>
+<strong>session</strong> = &lt;sqlalchemy.orm.scoping.ScopedSession object&gt;<br>
+<strong>using_mapper_options</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>using_options</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>using_options_defaults</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>using_table_options</strong> = &lt;elixir.statements.ClassMutator object&gt;</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Chanaka&nbsp;Jayamal&nbsp;&lt;seejay@seejay.net&gt;</td></tr></table>
+</body></html>

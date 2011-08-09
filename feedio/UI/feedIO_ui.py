@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'feedIO.ui'
 #
-# Created: Fri Aug  5 23:18:22 2011
+# Created: Mon Aug  8 23:09:31 2011
 #      by: PyQt4 UI code generator 4.8.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -276,6 +276,12 @@ class Ui_feedIO(object):
         self.actionReCalculateScores.setObjectName(_fromUtf8("actionReCalculateScores"))
         self.actionPostToTwitter = QtGui.QAction(feedIO)
         self.actionPostToTwitter.setObjectName(_fromUtf8("actionPostToTwitter"))
+        self.actionReCalculateTopicScores = QtGui.QAction(feedIO)
+        self.actionReCalculateTopicScores.setObjectName(_fromUtf8("actionReCalculateTopicScores"))
+        self.actionReadItLater = QtGui.QAction(feedIO)
+        self.actionReadItLater.setObjectName(_fromUtf8("actionReadItLater"))
+        self.actionFavorite = QtGui.QAction(feedIO)
+        self.actionFavorite.setObjectName(_fromUtf8("actionFavorite"))
         self.menuFile.addAction(self.actionAddFeed)
         self.menuFile.addAction(self.actionRemoveFeed)
         self.menuFile.addAction(self.actionFetchFeed)
@@ -288,14 +294,20 @@ class Ui_feedIO(object):
         self.menuArticle.addAction(self.actionDownVote)
         self.menuArticle.addAction(self.actionRead)
         self.menuArticle.addAction(self.actionVisitPage)
+        self.menuArticle.addSeparator()
         self.menuArticle.addAction(self.actionUnread)
+        self.menuArticle.addAction(self.actionFavorite)
+        self.menuArticle.addSeparator()
         self.menuArticle.addAction(self.actionPostToTwitter)
+        self.menuArticle.addAction(self.actionReadItLater)
         self.menuFeedIO.addAction(self.actionMinimizeToTray)
         self.menuFeedIO.addAction(self.actionExit)
         self.menuTopics.addAction(self.actionAddTopic)
         self.menuTopics.addAction(self.actionRemoveTopic)
         self.menuTopics.addAction(self.actionManageTopics)
+        self.menuTopics.addSeparator()
         self.menuTopics.addAction(self.actionReCalculateScores)
+        self.menuTopics.addAction(self.actionReCalculateTopicScores)
         self.menubar.addAction(self.menuFeedIO.menuAction())
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuTopics.menuAction())
@@ -358,8 +370,11 @@ class Ui_feedIO(object):
         self.actionMinimizeToTray.setText(QtGui.QApplication.translate("feedIO", "Mi&nimize to tray", None, QtGui.QApplication.UnicodeUTF8))
         self.actionUnread.setText(QtGui.QApplication.translate("feedIO", "&Mark as Unread", None, QtGui.QApplication.UnicodeUTF8))
         self.actionUnread.setShortcut(QtGui.QApplication.translate("feedIO", "M", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionReCalculateScores.setText(QtGui.QApplication.translate("feedIO", "Recalculate &Scores", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionPostToTwitter.setText(QtGui.QApplication.translate("feedIO", "Post to &Twitter", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionReCalculateScores.setText(QtGui.QApplication.translate("feedIO", "Recalculate All &Scores", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionPostToTwitter.setText(QtGui.QApplication.translate("feedIO", "Share on &Twitter", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionReCalculateTopicScores.setText(QtGui.QApplication.translate("feedIO", "Recalculate &Current Topic Scores", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionReadItLater.setText(QtGui.QApplication.translate("feedIO", "Mark to Read It Later", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionFavorite.setText(QtGui.QApplication.translate("feedIO", "Mark as &Favorite", None, QtGui.QApplication.UnicodeUTF8))
 
 from PyQt4 import QtWebKit
 import feedIOicons_rc

@@ -36,10 +36,15 @@ import os
 import time
 from lib import feedparser
 from models import *
+from lib import autorss
 
 
 USERDIR=os.path.join(os.path.expanduser("~"),".feedIO")
 DBFILE=os.path.join(USERDIR,"feedIO.sqlite")
+
+
+class FeedIOError(Exception): pass
+class FeedError(FeedIOError): pass
 
 
 def addFeed(feedUrl):
@@ -47,10 +52,12 @@ def addFeed(feedUrl):
     Function to add a new feed to the database.
     """
     try:
+        feedUrl = autorss.getRSSLink(feedUrl)
         feedData = feedparser.parse(feedUrl)
     except:
         #this never occurs since parser does not raise any exceptions when invalid url is sent
         print "Invalid feed Url!"
+        #raise FeedError
 
     else:
         try:

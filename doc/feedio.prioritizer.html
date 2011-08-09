@@ -1,0 +1,102 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module feedio.prioritizer</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="feedio.html"><font color="#ffffff">feedio</font></a>.prioritizer</strong></big></big> (version 0.0.3)</font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/ceevee/play ground/feedIO/feedio/prioritizer.py">/home/ceevee/play ground/feedIO/feedio/prioritizer.py</a></font></td></tr></table>
+    <p><tt>prioritizer&nbsp;module&nbsp;for&nbsp;feedIO.&nbsp;Provides&nbsp;functionality&nbsp;to&nbsp;calculate&nbsp;the&nbsp;score&nbsp;of<br>
+&nbsp;an&nbsp;article&nbsp;under&nbsp;a&nbsp;user&nbsp;interest&nbsp;topic&nbsp;and&nbsp;prioritizes&nbsp;the&nbsp;articles&nbsp;list<br>
+&nbsp;according&nbsp;to&nbsp;their&nbsp;scores.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="feedio.classifier.html">feedio.classifier</a><br>
+</td><td width="25%" valign=top><a href="feedio.feedmanager.html">feedio.feedmanager</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="feedio.purify.html">feedio.purify</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="feedio.prioritizer.html#Prioritizer">Prioritizer</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Prioritizer">class <strong>Prioritizer</strong></a></font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Prioritizer-__init__"><strong>__init__</strong></a>(self, topic<font color="#909090">='General'</font>)</dt></dl>
+
+<dl><dt><a name="Prioritizer-calcScore"><strong>calcScore</strong></a>(self, article)</dt><dd><tt>when&nbsp;an&nbsp;article&nbsp;is&nbsp;passed&nbsp;this&nbsp;function&nbsp;calculates&nbsp;its&nbsp;overall&nbsp;score,&nbsp;by<br>
+adding&nbsp;content&nbsp;score&nbsp;+&nbsp;feed&nbsp;score&nbsp;+&nbsp;feed&nbsp;update&nbsp;frequency(should&nbsp;be<br>
+caluculated&nbsp;by&nbsp;taking&nbsp;the&nbsp;deviation&nbsp;from&nbsp;the&nbsp;mean&nbsp;update&nbsp;friquency.)</tt></dd></dl>
+
+<dl><dt><a name="Prioritizer-listScoreItems"><strong>listScoreItems</strong></a>(self, feed<font color="#909090">=-1</font>)</dt><dd><tt>Lists&nbsp;all&nbsp;the&nbsp;ScoreItem&nbsp;objects&nbsp;under&nbsp;the&nbsp;self.<strong>topic</strong>&nbsp;of&nbsp;the&nbsp;<a href="#Prioritizer">Prioritizer</a>&nbsp;instance.</tt></dd></dl>
+
+<dl><dt><a name="Prioritizer-prioritize"><strong>prioritize</strong></a>(self, scoreItemsList)</dt><dd><tt>Sorts&nbsp;the&nbsp;ScoreItemList&nbsp;according&nbsp;to&nbsp;the&nbsp;article&nbsp;scores&nbsp;under&nbsp;the&nbsp;self.<strong>topic</strong>&nbsp;of&nbsp;the&nbsp;<a href="#Prioritizer">Prioritizer</a>&nbsp;instance.</tt></dd></dl>
+
+<dl><dt><a name="Prioritizer-setScores"><strong>setScores</strong></a>(self, scoreItemsList)</dt><dd><tt>Sets&nbsp;the&nbsp;priority&nbsp;score&nbsp;under&nbsp;the&nbsp;self.<strong>topic</strong>&nbsp;for&nbsp;a&nbsp;given&nbsp;set&nbsp;of&nbsp;ScoreItems.</tt></dd></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-main"><strong>main</strong></a>()</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>DBFILE</strong> = '/home/ceevee/.feedIO/feedIO.sqlite'<br>
+<strong>FEED_SCORE_WEIGHT</strong> = 0.1<br>
+<strong>TEXT_SCORE_WEIGHT</strong> = 0.45<br>
+<strong>TITLE_SCORE_WEIGHT</strong> = 0.45<br>
+<strong>UPDATE_FREQUENCY_WEIGHT</strong> = 0.1<br>
+<strong>USERDIR</strong> = '/home/ceevee/.feedIO'<br>
+<strong>__author__</strong> = 'Chanaka Jayamal &lt;seejay@seejay.net&gt;'<br>
+<strong>__developers__</strong> = ['Chanaka Jayamal', 'Lanka Amarasekara', 'Kolitha Gajanayake', 'Chamika Viraj']<br>
+<strong>__license__</strong> = '<font color="#c040c0">\n</font>    Copyright (C) 2011 Sri Lanka Institute of I...IO.  If not, see &lt;http://www.gnu.org/licenses/&gt;.<font color="#c040c0">\n</font>'<br>
+<strong>__version__</strong> = '0.0.3'<br>
+<strong>belongs_to</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>entities</strong> = [&lt;class 'feedio.models.Feed'&gt;, &lt;class 'feedio.mo...s.ScoreItem'&gt;, &lt;class 'feedio.models.ScoreFeed'&gt;]<br>
+<strong>has_and_belongs_to_many</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>has_field</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>has_many</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>has_one</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>has_property</strong> = &lt;elixir.statements.PropertyStatement object&gt;<br>
+<strong>metadata</strong> = MetaData(None)<br>
+<strong>options_defaults</strong> = {'abstract': False, 'allowcoloverride': False, 'auto_primarykey': True, 'autoload': False, 'autosetup': False, 'identity': None, 'inheritance': 'single', 'mapper_options': {}, 'order_by': None, 'polymorphic': True, ...}<br>
+<strong>session</strong> = &lt;sqlalchemy.orm.scoping.ScopedSession object&gt;<br>
+<strong>using_mapper_options</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>using_options</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>using_options_defaults</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>using_table_options</strong> = &lt;elixir.statements.ClassMutator object&gt;</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Chanaka&nbsp;Jayamal&nbsp;&lt;seejay@seejay.net&gt;</td></tr></table>
+</body></html>
