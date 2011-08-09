@@ -1,0 +1,959 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module feedio.lib.feedparsertest</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="feedio.html"><font color="#ffffff">feedio</font></a>.<a href="feedio.lib.html"><font color="#ffffff">lib</font></a>.feedparsertest</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/ceevee/play ground/feedIO/feedio/lib/feedparsertest.py">/home/ceevee/play ground/feedIO/feedio/lib/feedparsertest.py</a></font></td></tr></table>
+    <p><tt>$Id$</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="BaseHTTPServer.html">BaseHTTPServer</a><br>
+<a href="SimpleHTTPServer.html">SimpleHTTPServer</a><br>
+<a href="codecs.html">codecs</a><br>
+<a href="feedio.lib.feedparser.html">feedio.lib.feedparser</a><br>
+</td><td width="25%" valign=top><a href="glob.html">glob</a><br>
+<a href="new.html">new</a><br>
+<a href="os.html">os</a><br>
+<a href="posixpath.html">posixpath</a><br>
+</td><td width="25%" valign=top><a href="pprint.html">pprint</a><br>
+<a href="re.html">re</a><br>
+<a href="string.html">string</a><br>
+<a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="time.html">time</a><br>
+<a href="unittest.html">unittest</a><br>
+<a href="urllib.html">urllib</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="SimpleHTTPServer.html#SimpleHTTPRequestHandler">SimpleHTTPServer.SimpleHTTPRequestHandler</a>(<a href="BaseHTTPServer.html#BaseHTTPRequestHandler">BaseHTTPServer.BaseHTTPRequestHandler</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="feedio.lib.feedparsertest.html#FeedParserTestRequestHandler">FeedParserTestRequestHandler</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="threading.html#Thread">threading.Thread</a>(<a href="threading.html#_Verbose">threading._Verbose</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="feedio.lib.feedparsertest.html#FeedParserTestServer">FeedParserTestServer</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="unittest.case.html#TestCase">unittest.case.TestCase</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="feedio.lib.feedparsertest.html#TestBuildRequest">TestBuildRequest</a>
+</font></dt><dt><font face="helvetica, arial"><a href="feedio.lib.feedparsertest.html#TestCase">TestCase</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="FeedParserTestRequestHandler">class <strong>FeedParserTestRequestHandler</strong></a>(<a href="SimpleHTTPServer.html#SimpleHTTPRequestHandler">SimpleHTTPServer.SimpleHTTPRequestHandler</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.feedparsertest.html#FeedParserTestRequestHandler">FeedParserTestRequestHandler</a></dd>
+<dd><a href="SimpleHTTPServer.html#SimpleHTTPRequestHandler">SimpleHTTPServer.SimpleHTTPRequestHandler</a></dd>
+<dd><a href="BaseHTTPServer.html#BaseHTTPRequestHandler">BaseHTTPServer.BaseHTTPRequestHandler</a></dd>
+<dd><a href="SocketServer.html#StreamRequestHandler">SocketServer.StreamRequestHandler</a></dd>
+<dd><a href="SocketServer.html#BaseRequestHandler">SocketServer.BaseRequestHandler</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="FeedParserTestRequestHandler-log_request"><strong>log_request</strong></a>(self, *args)</dt></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-send_head"><strong>send_head</strong></a>(self)</dt><dd><tt>Send&nbsp;custom&nbsp;headers&nbsp;defined&nbsp;in&nbsp;test&nbsp;case<br>
+&nbsp;<br>
+Example:<br>
+&lt;!--<br>
+Header:&nbsp;&nbsp;&nbsp;Content-type:&nbsp;application/atom+xml<br>
+Header:&nbsp;&nbsp;&nbsp;X-Foo:&nbsp;bar<br>
+--&gt;</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>headers_re</strong> = &lt;_sre.SRE_Pattern object&gt;</dl>
+
+<hr>
+Methods inherited from <a href="SimpleHTTPServer.html#SimpleHTTPRequestHandler">SimpleHTTPServer.SimpleHTTPRequestHandler</a>:<br>
+<dl><dt><a name="FeedParserTestRequestHandler-copyfile"><strong>copyfile</strong></a>(self, source, outputfile)</dt><dd><tt>Copy&nbsp;all&nbsp;data&nbsp;between&nbsp;two&nbsp;file&nbsp;objects.<br>
+&nbsp;<br>
+The&nbsp;SOURCE&nbsp;argument&nbsp;is&nbsp;a&nbsp;file&nbsp;object&nbsp;open&nbsp;for&nbsp;reading<br>
+(or&nbsp;anything&nbsp;with&nbsp;a&nbsp;read()&nbsp;method)&nbsp;and&nbsp;the&nbsp;DESTINATION<br>
+argument&nbsp;is&nbsp;a&nbsp;file&nbsp;object&nbsp;open&nbsp;for&nbsp;writing&nbsp;(or<br>
+anything&nbsp;with&nbsp;a&nbsp;write()&nbsp;method).<br>
+&nbsp;<br>
+The&nbsp;only&nbsp;reason&nbsp;for&nbsp;overriding&nbsp;this&nbsp;would&nbsp;be&nbsp;to&nbsp;change<br>
+the&nbsp;block&nbsp;size&nbsp;or&nbsp;perhaps&nbsp;to&nbsp;replace&nbsp;newlines&nbsp;by&nbsp;CRLF<br>
+--&nbsp;note&nbsp;however&nbsp;that&nbsp;this&nbsp;the&nbsp;default&nbsp;server&nbsp;uses&nbsp;this<br>
+to&nbsp;copy&nbsp;binary&nbsp;data&nbsp;as&nbsp;well.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-do_GET"><strong>do_GET</strong></a>(self)</dt><dd><tt>Serve&nbsp;a&nbsp;GET&nbsp;request.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-do_HEAD"><strong>do_HEAD</strong></a>(self)</dt><dd><tt>Serve&nbsp;a&nbsp;HEAD&nbsp;request.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-guess_type"><strong>guess_type</strong></a>(self, path)</dt><dd><tt>Guess&nbsp;the&nbsp;type&nbsp;of&nbsp;a&nbsp;file.<br>
+&nbsp;<br>
+Argument&nbsp;is&nbsp;a&nbsp;PATH&nbsp;(a&nbsp;filename).<br>
+&nbsp;<br>
+Return&nbsp;value&nbsp;is&nbsp;a&nbsp;string&nbsp;of&nbsp;the&nbsp;form&nbsp;type/subtype,<br>
+usable&nbsp;for&nbsp;a&nbsp;MIME&nbsp;Content-type&nbsp;header.<br>
+&nbsp;<br>
+The&nbsp;default&nbsp;implementation&nbsp;looks&nbsp;the&nbsp;file's&nbsp;extension<br>
+up&nbsp;in&nbsp;the&nbsp;table&nbsp;self.<strong>extensions_map</strong>,&nbsp;using&nbsp;application/octet-stream<br>
+as&nbsp;a&nbsp;default;&nbsp;however&nbsp;it&nbsp;would&nbsp;be&nbsp;permissible&nbsp;(if<br>
+slow)&nbsp;to&nbsp;look&nbsp;inside&nbsp;the&nbsp;data&nbsp;to&nbsp;make&nbsp;a&nbsp;better&nbsp;guess.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-list_directory"><strong>list_directory</strong></a>(self, path)</dt><dd><tt>Helper&nbsp;to&nbsp;produce&nbsp;a&nbsp;directory&nbsp;listing&nbsp;(absent&nbsp;index.html).<br>
+&nbsp;<br>
+Return&nbsp;value&nbsp;is&nbsp;either&nbsp;a&nbsp;file&nbsp;object,&nbsp;or&nbsp;None&nbsp;(indicating&nbsp;an<br>
+error).&nbsp;&nbsp;In&nbsp;either&nbsp;case,&nbsp;the&nbsp;headers&nbsp;are&nbsp;sent,&nbsp;making&nbsp;the<br>
+interface&nbsp;the&nbsp;same&nbsp;as&nbsp;for&nbsp;<a href="#FeedParserTestRequestHandler-send_head">send_head</a>().</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-translate_path"><strong>translate_path</strong></a>(self, path)</dt><dd><tt>Translate&nbsp;a&nbsp;/-separated&nbsp;PATH&nbsp;to&nbsp;the&nbsp;local&nbsp;filename&nbsp;syntax.<br>
+&nbsp;<br>
+Components&nbsp;that&nbsp;mean&nbsp;special&nbsp;things&nbsp;to&nbsp;the&nbsp;local&nbsp;file&nbsp;system<br>
+(e.g.&nbsp;drive&nbsp;or&nbsp;directory&nbsp;names)&nbsp;are&nbsp;ignored.&nbsp;&nbsp;(XXX&nbsp;They&nbsp;should<br>
+probably&nbsp;be&nbsp;diagnosed.)</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="SimpleHTTPServer.html#SimpleHTTPRequestHandler">SimpleHTTPServer.SimpleHTTPRequestHandler</a>:<br>
+<dl><dt><strong>extensions_map</strong> = {'': 'application/octet-stream', '.%': 'application/x-trash', '.323': 'text/h323', '.3gp': 'video/3gpp', '.7z': 'application/x-7z-compressed', '.a': 'application/octet-stream', '.abw': 'application/x-abiword', '.ai': 'application/postscript', '.aif': 'audio/x-aiff', '.aifc': 'audio/x-aiff', ...}</dl>
+
+<dl><dt><strong>server_version</strong> = 'SimpleHTTP/0.6'</dl>
+
+<hr>
+Methods inherited from <a href="BaseHTTPServer.html#BaseHTTPRequestHandler">BaseHTTPServer.BaseHTTPRequestHandler</a>:<br>
+<dl><dt><a name="FeedParserTestRequestHandler-address_string"><strong>address_string</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;client&nbsp;address&nbsp;formatted&nbsp;for&nbsp;logging.<br>
+&nbsp;<br>
+This&nbsp;version&nbsp;looks&nbsp;up&nbsp;the&nbsp;full&nbsp;hostname&nbsp;using&nbsp;gethostbyaddr(),<br>
+and&nbsp;tries&nbsp;to&nbsp;find&nbsp;a&nbsp;name&nbsp;that&nbsp;contains&nbsp;at&nbsp;least&nbsp;one&nbsp;dot.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-date_time_string"><strong>date_time_string</strong></a>(self, timestamp<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;the&nbsp;current&nbsp;date&nbsp;and&nbsp;time&nbsp;formatted&nbsp;for&nbsp;a&nbsp;message&nbsp;header.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-end_headers"><strong>end_headers</strong></a>(self)</dt><dd><tt>Send&nbsp;the&nbsp;blank&nbsp;line&nbsp;ending&nbsp;the&nbsp;MIME&nbsp;headers.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-handle"><strong>handle</strong></a>(self)</dt><dd><tt>Handle&nbsp;multiple&nbsp;requests&nbsp;if&nbsp;necessary.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-handle_one_request"><strong>handle_one_request</strong></a>(self)</dt><dd><tt>Handle&nbsp;a&nbsp;single&nbsp;HTTP&nbsp;request.<br>
+&nbsp;<br>
+You&nbsp;normally&nbsp;don't&nbsp;need&nbsp;to&nbsp;override&nbsp;this&nbsp;method;&nbsp;see&nbsp;the&nbsp;class<br>
+__doc__&nbsp;string&nbsp;for&nbsp;information&nbsp;on&nbsp;how&nbsp;to&nbsp;handle&nbsp;specific&nbsp;HTTP<br>
+commands&nbsp;such&nbsp;as&nbsp;GET&nbsp;and&nbsp;POST.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-log_date_time_string"><strong>log_date_time_string</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;current&nbsp;time&nbsp;formatted&nbsp;for&nbsp;logging.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-log_error"><strong>log_error</strong></a>(self, format, *args)</dt><dd><tt>Log&nbsp;an&nbsp;error.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;called&nbsp;when&nbsp;a&nbsp;request&nbsp;cannot&nbsp;be&nbsp;fulfilled.&nbsp;&nbsp;By<br>
+default&nbsp;it&nbsp;passes&nbsp;the&nbsp;message&nbsp;on&nbsp;to&nbsp;<a href="#FeedParserTestRequestHandler-log_message">log_message</a>().<br>
+&nbsp;<br>
+Arguments&nbsp;are&nbsp;the&nbsp;same&nbsp;as&nbsp;for&nbsp;<a href="#FeedParserTestRequestHandler-log_message">log_message</a>().<br>
+&nbsp;<br>
+XXX&nbsp;This&nbsp;should&nbsp;go&nbsp;to&nbsp;the&nbsp;separate&nbsp;error&nbsp;log.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-log_message"><strong>log_message</strong></a>(self, format, *args)</dt><dd><tt>Log&nbsp;an&nbsp;arbitrary&nbsp;message.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;used&nbsp;by&nbsp;all&nbsp;other&nbsp;logging&nbsp;functions.&nbsp;&nbsp;Override<br>
+it&nbsp;if&nbsp;you&nbsp;have&nbsp;specific&nbsp;logging&nbsp;wishes.<br>
+&nbsp;<br>
+The&nbsp;first&nbsp;argument,&nbsp;FORMAT,&nbsp;is&nbsp;a&nbsp;format&nbsp;string&nbsp;for&nbsp;the<br>
+message&nbsp;to&nbsp;be&nbsp;logged.&nbsp;&nbsp;If&nbsp;the&nbsp;format&nbsp;string&nbsp;contains<br>
+any&nbsp;%&nbsp;escapes&nbsp;requiring&nbsp;parameters,&nbsp;they&nbsp;should&nbsp;be<br>
+specified&nbsp;as&nbsp;subsequent&nbsp;arguments&nbsp;(it's&nbsp;just&nbsp;like<br>
+printf!).<br>
+&nbsp;<br>
+The&nbsp;client&nbsp;host&nbsp;and&nbsp;current&nbsp;date/time&nbsp;are&nbsp;prefixed&nbsp;to<br>
+every&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-parse_request"><strong>parse_request</strong></a>(self)</dt><dd><tt>Parse&nbsp;a&nbsp;request&nbsp;(internal).<br>
+&nbsp;<br>
+The&nbsp;request&nbsp;should&nbsp;be&nbsp;stored&nbsp;in&nbsp;self.<strong>raw_requestline</strong>;&nbsp;the&nbsp;results<br>
+are&nbsp;in&nbsp;self.<strong>command</strong>,&nbsp;self.<strong>path</strong>,&nbsp;self.<strong>request_version</strong>&nbsp;and<br>
+self.<strong>headers</strong>.<br>
+&nbsp;<br>
+Return&nbsp;True&nbsp;for&nbsp;success,&nbsp;False&nbsp;for&nbsp;failure;&nbsp;on&nbsp;failure,&nbsp;an<br>
+error&nbsp;is&nbsp;sent&nbsp;back.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-send_error"><strong>send_error</strong></a>(self, code, message<font color="#909090">=None</font>)</dt><dd><tt>Send&nbsp;and&nbsp;log&nbsp;an&nbsp;error&nbsp;reply.<br>
+&nbsp;<br>
+Arguments&nbsp;are&nbsp;the&nbsp;error&nbsp;code,&nbsp;and&nbsp;a&nbsp;detailed&nbsp;message.<br>
+The&nbsp;detailed&nbsp;message&nbsp;defaults&nbsp;to&nbsp;the&nbsp;short&nbsp;entry&nbsp;matching&nbsp;the<br>
+response&nbsp;code.<br>
+&nbsp;<br>
+This&nbsp;sends&nbsp;an&nbsp;error&nbsp;response&nbsp;(so&nbsp;it&nbsp;must&nbsp;be&nbsp;called&nbsp;before&nbsp;any<br>
+output&nbsp;has&nbsp;been&nbsp;generated),&nbsp;logs&nbsp;the&nbsp;error,&nbsp;and&nbsp;finally&nbsp;sends<br>
+a&nbsp;piece&nbsp;of&nbsp;HTML&nbsp;explaining&nbsp;the&nbsp;error&nbsp;to&nbsp;the&nbsp;user.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-send_header"><strong>send_header</strong></a>(self, keyword, value)</dt><dd><tt>Send&nbsp;a&nbsp;MIME&nbsp;header.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-send_response"><strong>send_response</strong></a>(self, code, message<font color="#909090">=None</font>)</dt><dd><tt>Send&nbsp;the&nbsp;response&nbsp;header&nbsp;and&nbsp;log&nbsp;the&nbsp;response&nbsp;code.<br>
+&nbsp;<br>
+Also&nbsp;send&nbsp;two&nbsp;standard&nbsp;headers&nbsp;with&nbsp;the&nbsp;server&nbsp;software<br>
+version&nbsp;and&nbsp;the&nbsp;current&nbsp;date.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-version_string"><strong>version_string</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;server&nbsp;software&nbsp;version&nbsp;string.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="BaseHTTPServer.html#BaseHTTPRequestHandler">BaseHTTPServer.BaseHTTPRequestHandler</a>:<br>
+<dl><dt><strong>MessageClass</strong> = &lt;class mimetools.Message&gt;</dl>
+
+<dl><dt><strong>default_request_version</strong> = 'HTTP/0.9'</dl>
+
+<dl><dt><strong>error_content_type</strong> = 'text/html'</dl>
+
+<dl><dt><strong>error_message_format</strong> = '&lt;head&gt;<font color="#c040c0">\n</font>&lt;title&gt;Error response&lt;/title&gt;<font color="#c040c0">\n</font>&lt;/head&gt;<font color="#c040c0">\n</font>&lt;bo...ode explanation: %(code)s = %(explain)s.<font color="#c040c0">\n</font>&lt;/body&gt;<font color="#c040c0">\n</font>'</dl>
+
+<dl><dt><strong>monthname</strong> = [None, 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']</dl>
+
+<dl><dt><strong>protocol_version</strong> = 'HTTP/1.0'</dl>
+
+<dl><dt><strong>responses</strong> = {100: ('Continue', 'Request received, please continue'), 101: ('Switching Protocols', 'Switching to new protocol; obey Upgrade header'), 200: ('OK', 'Request fulfilled, document follows'), 201: ('Created', 'Document created, URL follows'), 202: ('Accepted', 'Request accepted, processing continues off-line'), 203: ('Non-Authoritative Information', 'Request fulfilled from cache'), 204: ('No Content', 'Request fulfilled, nothing follows'), 205: ('Reset Content', 'Clear input form for further input.'), 206: ('Partial Content', 'Partial content follows.'), 300: ('Multiple Choices', 'Object has several resources -- see URI list'), ...}</dl>
+
+<dl><dt><strong>sys_version</strong> = 'Python/2.7.1+'</dl>
+
+<dl><dt><strong>weekdayname</strong> = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']</dl>
+
+<hr>
+Methods inherited from <a href="SocketServer.html#StreamRequestHandler">SocketServer.StreamRequestHandler</a>:<br>
+<dl><dt><a name="FeedParserTestRequestHandler-finish"><strong>finish</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="FeedParserTestRequestHandler-setup"><strong>setup</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="SocketServer.html#StreamRequestHandler">SocketServer.StreamRequestHandler</a>:<br>
+<dl><dt><strong>disable_nagle_algorithm</strong> = False</dl>
+
+<dl><dt><strong>rbufsize</strong> = -1</dl>
+
+<dl><dt><strong>timeout</strong> = None</dl>
+
+<dl><dt><strong>wbufsize</strong> = 0</dl>
+
+<hr>
+Methods inherited from <a href="SocketServer.html#BaseRequestHandler">SocketServer.BaseRequestHandler</a>:<br>
+<dl><dt><a name="FeedParserTestRequestHandler-__init__"><strong>__init__</strong></a>(self, request, client_address, server)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="FeedParserTestServer">class <strong>FeedParserTestServer</strong></a>(<a href="threading.html#Thread">threading.Thread</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>HTTP&nbsp;Server&nbsp;that&nbsp;runs&nbsp;in&nbsp;a&nbsp;thread&nbsp;and&nbsp;handles&nbsp;a&nbsp;predetermined&nbsp;number&nbsp;of&nbsp;requests<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.feedparsertest.html#FeedParserTestServer">FeedParserTestServer</a></dd>
+<dd><a href="threading.html#Thread">threading.Thread</a></dd>
+<dd><a href="threading.html#_Verbose">threading._Verbose</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="FeedParserTestServer-__init__"><strong>__init__</strong></a>(self, requests)</dt></dl>
+
+<dl><dt><a name="FeedParserTestServer-run"><strong>run</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="threading.html#Thread">threading.Thread</a>:<br>
+<dl><dt><a name="FeedParserTestServer-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="FeedParserTestServer-getName"><strong>getName</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="FeedParserTestServer-isAlive"><strong>isAlive</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="FeedParserTestServer-isDaemon"><strong>isDaemon</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="FeedParserTestServer-is_alive"><strong>is_alive</strong></a> = isAlive(self)</dt></dl>
+
+<dl><dt><a name="FeedParserTestServer-join"><strong>join</strong></a>(self, timeout<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="FeedParserTestServer-setDaemon"><strong>setDaemon</strong></a>(self, daemonic)</dt></dl>
+
+<dl><dt><a name="FeedParserTestServer-setName"><strong>setName</strong></a>(self, name)</dt></dl>
+
+<dl><dt><a name="FeedParserTestServer-start"><strong>start</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="threading.html#Thread">threading.Thread</a>:<br>
+<dl><dt><strong>daemon</strong></dt>
+</dl>
+<dl><dt><strong>ident</strong></dt>
+</dl>
+<dl><dt><strong>name</strong></dt>
+</dl>
+<hr>
+Data descriptors inherited from <a href="threading.html#_Verbose">threading._Verbose</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TestBuildRequest">class <strong>TestBuildRequest</strong></a>(<a href="unittest.case.html#TestCase">unittest.case.TestCase</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.feedparsertest.html#TestBuildRequest">TestBuildRequest</a></dd>
+<dd><a href="unittest.case.html#TestCase">unittest.case.TestCase</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TestBuildRequest-test_extra_headers"><strong>test_extra_headers</strong></a>(self)</dt><dd><tt>You&nbsp;can&nbsp;pass&nbsp;in&nbsp;extra&nbsp;headers&nbsp;and&nbsp;they&nbsp;go&nbsp;into&nbsp;the&nbsp;request&nbsp;object.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="unittest.case.html#TestCase">unittest.case.TestCase</a>:<br>
+<dl><dt><a name="TestBuildRequest-__call__"><strong>__call__</strong></a>(self, *args, **kwds)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-__eq__"><strong>__eq__</strong></a>(self, other)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-__hash__"><strong>__hash__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-__init__"><strong>__init__</strong></a>(self, methodName<font color="#909090">='runTest'</font>)</dt><dd><tt>Create&nbsp;an&nbsp;instance&nbsp;of&nbsp;the&nbsp;class&nbsp;that&nbsp;will&nbsp;use&nbsp;the&nbsp;named&nbsp;test<br>
+method&nbsp;when&nbsp;executed.&nbsp;Raises&nbsp;a&nbsp;ValueError&nbsp;if&nbsp;the&nbsp;instance&nbsp;does<br>
+not&nbsp;have&nbsp;a&nbsp;method&nbsp;with&nbsp;the&nbsp;specified&nbsp;name.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-__ne__"><strong>__ne__</strong></a>(self, other)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-addCleanup"><strong>addCleanup</strong></a>(self, function, *args, **kwargs)</dt><dd><tt>Add&nbsp;a&nbsp;function,&nbsp;with&nbsp;arguments,&nbsp;to&nbsp;be&nbsp;called&nbsp;when&nbsp;the&nbsp;test&nbsp;is<br>
+completed.&nbsp;Functions&nbsp;added&nbsp;are&nbsp;called&nbsp;on&nbsp;a&nbsp;LIFO&nbsp;basis&nbsp;and&nbsp;are<br>
+called&nbsp;after&nbsp;tearDown&nbsp;on&nbsp;test&nbsp;failure&nbsp;or&nbsp;success.<br>
+&nbsp;<br>
+Cleanup&nbsp;items&nbsp;are&nbsp;called&nbsp;even&nbsp;if&nbsp;setUp&nbsp;fails&nbsp;(unlike&nbsp;tearDown).</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-addTypeEqualityFunc"><strong>addTypeEqualityFunc</strong></a>(self, typeobj, function)</dt><dd><tt>Add&nbsp;a&nbsp;type&nbsp;specific&nbsp;assertEqual&nbsp;style&nbsp;function&nbsp;to&nbsp;compare&nbsp;a&nbsp;type.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;is&nbsp;for&nbsp;use&nbsp;by&nbsp;<a href="#TestCase">TestCase</a>&nbsp;subclasses&nbsp;that&nbsp;need&nbsp;to&nbsp;register<br>
+their&nbsp;own&nbsp;type&nbsp;equality&nbsp;functions&nbsp;to&nbsp;provide&nbsp;nicer&nbsp;error&nbsp;messages.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;typeobj:&nbsp;The&nbsp;data&nbsp;type&nbsp;to&nbsp;call&nbsp;this&nbsp;function&nbsp;on&nbsp;when&nbsp;both&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;are&nbsp;of&nbsp;the&nbsp;same&nbsp;type&nbsp;in&nbsp;<a href="#TestBuildRequest-assertEqual">assertEqual</a>().<br>
+&nbsp;&nbsp;&nbsp;&nbsp;function:&nbsp;The&nbsp;callable&nbsp;taking&nbsp;two&nbsp;arguments&nbsp;and&nbsp;an&nbsp;optional<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;msg=&nbsp;argument&nbsp;that&nbsp;raises&nbsp;self.<strong>failureException</strong>&nbsp;with&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;useful&nbsp;error&nbsp;message&nbsp;when&nbsp;the&nbsp;two&nbsp;arguments&nbsp;are&nbsp;not&nbsp;equal.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertAlmostEqual"><strong>assertAlmostEqual</strong></a>(self, first, second, places<font color="#909090">=None</font>, msg<font color="#909090">=None</font>, delta<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;unequal&nbsp;as&nbsp;determined&nbsp;by&nbsp;their<br>
+difference&nbsp;rounded&nbsp;to&nbsp;the&nbsp;given&nbsp;number&nbsp;of&nbsp;decimal&nbsp;places<br>
+(default&nbsp;7)&nbsp;and&nbsp;comparing&nbsp;to&nbsp;zero,&nbsp;or&nbsp;by&nbsp;comparing&nbsp;that&nbsp;the<br>
+between&nbsp;the&nbsp;two&nbsp;objects&nbsp;is&nbsp;more&nbsp;than&nbsp;the&nbsp;given&nbsp;delta.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;decimal&nbsp;places&nbsp;(from&nbsp;zero)&nbsp;are&nbsp;usually&nbsp;not&nbsp;the&nbsp;same<br>
+as&nbsp;significant&nbsp;digits&nbsp;(measured&nbsp;from&nbsp;the&nbsp;most&nbsp;signficant&nbsp;digit).<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;two&nbsp;objects&nbsp;compare&nbsp;equal&nbsp;then&nbsp;they&nbsp;will&nbsp;automatically<br>
+compare&nbsp;almost&nbsp;equal.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertAlmostEquals"><strong>assertAlmostEquals</strong></a> = assertAlmostEqual(self, first, second, places<font color="#909090">=None</font>, msg<font color="#909090">=None</font>, delta<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;unequal&nbsp;as&nbsp;determined&nbsp;by&nbsp;their<br>
+difference&nbsp;rounded&nbsp;to&nbsp;the&nbsp;given&nbsp;number&nbsp;of&nbsp;decimal&nbsp;places<br>
+(default&nbsp;7)&nbsp;and&nbsp;comparing&nbsp;to&nbsp;zero,&nbsp;or&nbsp;by&nbsp;comparing&nbsp;that&nbsp;the<br>
+between&nbsp;the&nbsp;two&nbsp;objects&nbsp;is&nbsp;more&nbsp;than&nbsp;the&nbsp;given&nbsp;delta.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;decimal&nbsp;places&nbsp;(from&nbsp;zero)&nbsp;are&nbsp;usually&nbsp;not&nbsp;the&nbsp;same<br>
+as&nbsp;significant&nbsp;digits&nbsp;(measured&nbsp;from&nbsp;the&nbsp;most&nbsp;signficant&nbsp;digit).<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;two&nbsp;objects&nbsp;compare&nbsp;equal&nbsp;then&nbsp;they&nbsp;will&nbsp;automatically<br>
+compare&nbsp;almost&nbsp;equal.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertDictContainsSubset"><strong>assertDictContainsSubset</strong></a>(self, expected, actual, msg<font color="#909090">=None</font>)</dt><dd><tt>Checks&nbsp;whether&nbsp;actual&nbsp;is&nbsp;a&nbsp;superset&nbsp;of&nbsp;expected.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertDictEqual"><strong>assertDictEqual</strong></a>(self, d1, d2, msg<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-assertEqual"><strong>assertEqual</strong></a>(self, first, second, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;unequal&nbsp;as&nbsp;determined&nbsp;by&nbsp;the&nbsp;'=='<br>
+operator.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertEquals"><strong>assertEquals</strong></a> = assertEqual(self, first, second, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;unequal&nbsp;as&nbsp;determined&nbsp;by&nbsp;the&nbsp;'=='<br>
+operator.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertFalse"><strong>assertFalse</strong></a>(self, expr, msg<font color="#909090">=None</font>)</dt><dd><tt>Check&nbsp;that&nbsp;the&nbsp;expression&nbsp;is&nbsp;false.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertGreater"><strong>assertGreater</strong></a>(self, a, b, msg<font color="#909090">=None</font>)</dt><dd><tt>Just&nbsp;like&nbsp;<a href="#TestBuildRequest-assertTrue">assertTrue</a>(a&nbsp;&gt;&nbsp;b),&nbsp;but&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertGreaterEqual"><strong>assertGreaterEqual</strong></a>(self, a, b, msg<font color="#909090">=None</font>)</dt><dd><tt>Just&nbsp;like&nbsp;<a href="#TestBuildRequest-assertTrue">assertTrue</a>(a&nbsp;&gt;=&nbsp;b),&nbsp;but&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertIn"><strong>assertIn</strong></a>(self, member, container, msg<font color="#909090">=None</font>)</dt><dd><tt>Just&nbsp;like&nbsp;<a href="#TestBuildRequest-assertTrue">assertTrue</a>(a&nbsp;in&nbsp;b),&nbsp;but&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertIs"><strong>assertIs</strong></a>(self, expr1, expr2, msg<font color="#909090">=None</font>)</dt><dd><tt>Just&nbsp;like&nbsp;<a href="#TestBuildRequest-assertTrue">assertTrue</a>(a&nbsp;is&nbsp;b),&nbsp;but&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertIsInstance"><strong>assertIsInstance</strong></a>(self, obj, cls, msg<font color="#909090">=None</font>)</dt><dd><tt>Same&nbsp;as&nbsp;<a href="#TestBuildRequest-assertTrue">assertTrue</a>(isinstance(obj,&nbsp;cls)),&nbsp;with&nbsp;a&nbsp;nicer<br>
+default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertIsNone"><strong>assertIsNone</strong></a>(self, obj, msg<font color="#909090">=None</font>)</dt><dd><tt>Same&nbsp;as&nbsp;<a href="#TestBuildRequest-assertTrue">assertTrue</a>(obj&nbsp;is&nbsp;None),&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertIsNot"><strong>assertIsNot</strong></a>(self, expr1, expr2, msg<font color="#909090">=None</font>)</dt><dd><tt>Just&nbsp;like&nbsp;<a href="#TestBuildRequest-assertTrue">assertTrue</a>(a&nbsp;is&nbsp;not&nbsp;b),&nbsp;but&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertIsNotNone"><strong>assertIsNotNone</strong></a>(self, obj, msg<font color="#909090">=None</font>)</dt><dd><tt>Included&nbsp;for&nbsp;symmetry&nbsp;with&nbsp;assertIsNone.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertItemsEqual"><strong>assertItemsEqual</strong></a>(self, expected_seq, actual_seq, msg<font color="#909090">=None</font>)</dt><dd><tt>An&nbsp;unordered&nbsp;sequence&nbsp;specific&nbsp;comparison.&nbsp;It&nbsp;asserts&nbsp;that<br>
+actual_seq&nbsp;and&nbsp;expected_seq&nbsp;have&nbsp;the&nbsp;same&nbsp;element&nbsp;counts.<br>
+Equivalent&nbsp;to::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#TestBuildRequest-assertEqual">assertEqual</a>(Counter(iter(actual_seq)),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Counter(iter(expected_seq)))<br>
+&nbsp;<br>
+Asserts&nbsp;that&nbsp;each&nbsp;element&nbsp;has&nbsp;the&nbsp;same&nbsp;count&nbsp;in&nbsp;both&nbsp;sequences.<br>
+Example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;[0,&nbsp;1,&nbsp;1]&nbsp;and&nbsp;[1,&nbsp;0,&nbsp;1]&nbsp;compare&nbsp;equal.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;[0,&nbsp;0,&nbsp;1]&nbsp;and&nbsp;[0,&nbsp;1]&nbsp;compare&nbsp;unequal.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertLess"><strong>assertLess</strong></a>(self, a, b, msg<font color="#909090">=None</font>)</dt><dd><tt>Just&nbsp;like&nbsp;<a href="#TestBuildRequest-assertTrue">assertTrue</a>(a&nbsp;&lt;&nbsp;b),&nbsp;but&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertLessEqual"><strong>assertLessEqual</strong></a>(self, a, b, msg<font color="#909090">=None</font>)</dt><dd><tt>Just&nbsp;like&nbsp;<a href="#TestBuildRequest-assertTrue">assertTrue</a>(a&nbsp;&lt;=&nbsp;b),&nbsp;but&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertListEqual"><strong>assertListEqual</strong></a>(self, list1, list2, msg<font color="#909090">=None</font>)</dt><dd><tt>A&nbsp;list-specific&nbsp;equality&nbsp;assertion.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list1:&nbsp;The&nbsp;first&nbsp;list&nbsp;to&nbsp;compare.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list2:&nbsp;The&nbsp;second&nbsp;list&nbsp;to&nbsp;compare.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;msg:&nbsp;Optional&nbsp;message&nbsp;to&nbsp;use&nbsp;on&nbsp;failure&nbsp;instead&nbsp;of&nbsp;a&nbsp;list&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;differences.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertMultiLineEqual"><strong>assertMultiLineEqual</strong></a>(self, first, second, msg<font color="#909090">=None</font>)</dt><dd><tt>Assert&nbsp;that&nbsp;two&nbsp;multi-line&nbsp;strings&nbsp;are&nbsp;equal.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertNotAlmostEqual"><strong>assertNotAlmostEqual</strong></a>(self, first, second, places<font color="#909090">=None</font>, msg<font color="#909090">=None</font>, delta<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;equal&nbsp;as&nbsp;determined&nbsp;by&nbsp;their<br>
+difference&nbsp;rounded&nbsp;to&nbsp;the&nbsp;given&nbsp;number&nbsp;of&nbsp;decimal&nbsp;places<br>
+(default&nbsp;7)&nbsp;and&nbsp;comparing&nbsp;to&nbsp;zero,&nbsp;or&nbsp;by&nbsp;comparing&nbsp;that&nbsp;the<br>
+between&nbsp;the&nbsp;two&nbsp;objects&nbsp;is&nbsp;less&nbsp;than&nbsp;the&nbsp;given&nbsp;delta.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;decimal&nbsp;places&nbsp;(from&nbsp;zero)&nbsp;are&nbsp;usually&nbsp;not&nbsp;the&nbsp;same<br>
+as&nbsp;significant&nbsp;digits&nbsp;(measured&nbsp;from&nbsp;the&nbsp;most&nbsp;signficant&nbsp;digit).<br>
+&nbsp;<br>
+Objects&nbsp;that&nbsp;are&nbsp;equal&nbsp;automatically&nbsp;fail.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertNotAlmostEquals"><strong>assertNotAlmostEquals</strong></a> = assertNotAlmostEqual(self, first, second, places<font color="#909090">=None</font>, msg<font color="#909090">=None</font>, delta<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;equal&nbsp;as&nbsp;determined&nbsp;by&nbsp;their<br>
+difference&nbsp;rounded&nbsp;to&nbsp;the&nbsp;given&nbsp;number&nbsp;of&nbsp;decimal&nbsp;places<br>
+(default&nbsp;7)&nbsp;and&nbsp;comparing&nbsp;to&nbsp;zero,&nbsp;or&nbsp;by&nbsp;comparing&nbsp;that&nbsp;the<br>
+between&nbsp;the&nbsp;two&nbsp;objects&nbsp;is&nbsp;less&nbsp;than&nbsp;the&nbsp;given&nbsp;delta.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;decimal&nbsp;places&nbsp;(from&nbsp;zero)&nbsp;are&nbsp;usually&nbsp;not&nbsp;the&nbsp;same<br>
+as&nbsp;significant&nbsp;digits&nbsp;(measured&nbsp;from&nbsp;the&nbsp;most&nbsp;signficant&nbsp;digit).<br>
+&nbsp;<br>
+Objects&nbsp;that&nbsp;are&nbsp;equal&nbsp;automatically&nbsp;fail.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertNotEqual"><strong>assertNotEqual</strong></a>(self, first, second, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;equal&nbsp;as&nbsp;determined&nbsp;by&nbsp;the&nbsp;'=='<br>
+operator.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertNotEquals"><strong>assertNotEquals</strong></a> = assertNotEqual(self, first, second, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;equal&nbsp;as&nbsp;determined&nbsp;by&nbsp;the&nbsp;'=='<br>
+operator.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertNotIn"><strong>assertNotIn</strong></a>(self, member, container, msg<font color="#909090">=None</font>)</dt><dd><tt>Just&nbsp;like&nbsp;<a href="#TestBuildRequest-assertTrue">assertTrue</a>(a&nbsp;not&nbsp;in&nbsp;b),&nbsp;but&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertNotIsInstance"><strong>assertNotIsInstance</strong></a>(self, obj, cls, msg<font color="#909090">=None</font>)</dt><dd><tt>Included&nbsp;for&nbsp;symmetry&nbsp;with&nbsp;assertIsInstance.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertNotRegexpMatches"><strong>assertNotRegexpMatches</strong></a>(self, text, unexpected_regexp, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;the&nbsp;test&nbsp;if&nbsp;the&nbsp;text&nbsp;matches&nbsp;the&nbsp;regular&nbsp;expression.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertRaises"><strong>assertRaises</strong></a>(self, excClass, callableObj<font color="#909090">=None</font>, *args, **kwargs)</dt><dd><tt>Fail&nbsp;unless&nbsp;an&nbsp;exception&nbsp;of&nbsp;class&nbsp;excClass&nbsp;is&nbsp;thrown<br>
+by&nbsp;callableObj&nbsp;when&nbsp;invoked&nbsp;with&nbsp;arguments&nbsp;args&nbsp;and&nbsp;keyword<br>
+arguments&nbsp;kwargs.&nbsp;If&nbsp;a&nbsp;different&nbsp;type&nbsp;of&nbsp;exception&nbsp;is<br>
+thrown,&nbsp;it&nbsp;will&nbsp;not&nbsp;be&nbsp;caught,&nbsp;and&nbsp;the&nbsp;test&nbsp;case&nbsp;will&nbsp;be<br>
+deemed&nbsp;to&nbsp;have&nbsp;suffered&nbsp;an&nbsp;error,&nbsp;exactly&nbsp;as&nbsp;for&nbsp;an<br>
+unexpected&nbsp;exception.<br>
+&nbsp;<br>
+If&nbsp;called&nbsp;with&nbsp;callableObj&nbsp;omitted&nbsp;or&nbsp;None,&nbsp;will&nbsp;return&nbsp;a<br>
+context&nbsp;object&nbsp;used&nbsp;like&nbsp;this::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;<a href="#TestBuildRequest-assertRaises">assertRaises</a>(SomeException):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_something()<br>
+&nbsp;<br>
+The&nbsp;context&nbsp;manager&nbsp;keeps&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;exception&nbsp;as<br>
+the&nbsp;'exception'&nbsp;attribute.&nbsp;This&nbsp;allows&nbsp;you&nbsp;to&nbsp;inspect&nbsp;the<br>
+exception&nbsp;after&nbsp;the&nbsp;assertion::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;<a href="#TestBuildRequest-assertRaises">assertRaises</a>(SomeException)&nbsp;as&nbsp;cm:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_something()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the_exception&nbsp;=&nbsp;cm.exception<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#TestBuildRequest-assertEqual">assertEqual</a>(the_exception.error_code,&nbsp;3)</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertRaisesRegexp"><strong>assertRaisesRegexp</strong></a>(self, expected_exception, expected_regexp, callable_obj<font color="#909090">=None</font>, *args, **kwargs)</dt><dd><tt>Asserts&nbsp;that&nbsp;the&nbsp;message&nbsp;in&nbsp;a&nbsp;raised&nbsp;exception&nbsp;matches&nbsp;a&nbsp;regexp.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;expected_exception:&nbsp;Exception&nbsp;class&nbsp;expected&nbsp;to&nbsp;be&nbsp;raised.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;expected_regexp:&nbsp;Regexp&nbsp;(re&nbsp;pattern&nbsp;object&nbsp;or&nbsp;string)&nbsp;expected<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;be&nbsp;found&nbsp;in&nbsp;error&nbsp;message.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;callable_obj:&nbsp;Function&nbsp;to&nbsp;be&nbsp;called.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;args:&nbsp;Extra&nbsp;args.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;kwargs:&nbsp;Extra&nbsp;kwargs.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertRegexpMatches"><strong>assertRegexpMatches</strong></a>(self, text, expected_regexp, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;the&nbsp;test&nbsp;unless&nbsp;the&nbsp;text&nbsp;matches&nbsp;the&nbsp;regular&nbsp;expression.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertSequenceEqual"><strong>assertSequenceEqual</strong></a>(self, seq1, seq2, msg<font color="#909090">=None</font>, seq_type<font color="#909090">=None</font>)</dt><dd><tt>An&nbsp;equality&nbsp;assertion&nbsp;for&nbsp;ordered&nbsp;sequences&nbsp;(like&nbsp;lists&nbsp;and&nbsp;tuples).<br>
+&nbsp;<br>
+For&nbsp;the&nbsp;purposes&nbsp;of&nbsp;this&nbsp;function,&nbsp;a&nbsp;valid&nbsp;ordered&nbsp;sequence&nbsp;type&nbsp;is&nbsp;one<br>
+which&nbsp;can&nbsp;be&nbsp;indexed,&nbsp;has&nbsp;a&nbsp;length,&nbsp;and&nbsp;has&nbsp;an&nbsp;equality&nbsp;operator.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;seq1:&nbsp;The&nbsp;first&nbsp;sequence&nbsp;to&nbsp;compare.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;seq2:&nbsp;The&nbsp;second&nbsp;sequence&nbsp;to&nbsp;compare.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;seq_type:&nbsp;The&nbsp;expected&nbsp;datatype&nbsp;of&nbsp;the&nbsp;sequences,&nbsp;or&nbsp;None&nbsp;if&nbsp;no<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;datatype&nbsp;should&nbsp;be&nbsp;enforced.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;msg:&nbsp;Optional&nbsp;message&nbsp;to&nbsp;use&nbsp;on&nbsp;failure&nbsp;instead&nbsp;of&nbsp;a&nbsp;list&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;differences.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertSetEqual"><strong>assertSetEqual</strong></a>(self, set1, set2, msg<font color="#909090">=None</font>)</dt><dd><tt>A&nbsp;set-specific&nbsp;equality&nbsp;assertion.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;set1:&nbsp;The&nbsp;first&nbsp;set&nbsp;to&nbsp;compare.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;set2:&nbsp;The&nbsp;second&nbsp;set&nbsp;to&nbsp;compare.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;msg:&nbsp;Optional&nbsp;message&nbsp;to&nbsp;use&nbsp;on&nbsp;failure&nbsp;instead&nbsp;of&nbsp;a&nbsp;list&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;differences.<br>
+&nbsp;<br>
+assertSetEqual&nbsp;uses&nbsp;ducktyping&nbsp;to&nbsp;support&nbsp;different&nbsp;types&nbsp;of&nbsp;sets,&nbsp;and<br>
+is&nbsp;optimized&nbsp;for&nbsp;sets&nbsp;specifically&nbsp;(parameters&nbsp;must&nbsp;support&nbsp;a<br>
+difference&nbsp;method).</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertTrue"><strong>assertTrue</strong></a>(self, expr, msg<font color="#909090">=None</font>)</dt><dd><tt>Check&nbsp;that&nbsp;the&nbsp;expression&nbsp;is&nbsp;true.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assertTupleEqual"><strong>assertTupleEqual</strong></a>(self, tuple1, tuple2, msg<font color="#909090">=None</font>)</dt><dd><tt>A&nbsp;tuple-specific&nbsp;equality&nbsp;assertion.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tuple1:&nbsp;The&nbsp;first&nbsp;tuple&nbsp;to&nbsp;compare.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tuple2:&nbsp;The&nbsp;second&nbsp;tuple&nbsp;to&nbsp;compare.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;msg:&nbsp;Optional&nbsp;message&nbsp;to&nbsp;use&nbsp;on&nbsp;failure&nbsp;instead&nbsp;of&nbsp;a&nbsp;list&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;differences.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-assert_"><strong>assert_</strong></a> = assertTrue(self, expr, msg<font color="#909090">=None</font>)</dt><dd><tt>Check&nbsp;that&nbsp;the&nbsp;expression&nbsp;is&nbsp;true.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-countTestCases"><strong>countTestCases</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-debug"><strong>debug</strong></a>(self)</dt><dd><tt>Run&nbsp;the&nbsp;test&nbsp;without&nbsp;collecting&nbsp;errors&nbsp;in&nbsp;a&nbsp;TestResult</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-defaultTestResult"><strong>defaultTestResult</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-doCleanups"><strong>doCleanups</strong></a>(self)</dt><dd><tt>Execute&nbsp;all&nbsp;cleanup&nbsp;functions.&nbsp;Normally&nbsp;called&nbsp;for&nbsp;you&nbsp;after<br>
+tearDown.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-fail"><strong>fail</strong></a>(self, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;immediately,&nbsp;with&nbsp;the&nbsp;given&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-failIf"><strong>failIf</strong></a> = deprecated_func(*args, **kwargs)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-failIfAlmostEqual"><strong>failIfAlmostEqual</strong></a> = deprecated_func(*args, **kwargs)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-failIfEqual"><strong>failIfEqual</strong></a> = deprecated_func(*args, **kwargs)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-failUnless"><strong>failUnless</strong></a> = deprecated_func(*args, **kwargs)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-failUnlessAlmostEqual"><strong>failUnlessAlmostEqual</strong></a> = deprecated_func(*args, **kwargs)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-failUnlessEqual"><strong>failUnlessEqual</strong></a> = deprecated_func(*args, **kwargs)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-failUnlessRaises"><strong>failUnlessRaises</strong></a> = deprecated_func(*args, **kwargs)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-id"><strong>id</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-run"><strong>run</strong></a>(self, result<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="TestBuildRequest-setUp"><strong>setUp</strong></a>(self)</dt><dd><tt>Hook&nbsp;method&nbsp;for&nbsp;setting&nbsp;up&nbsp;the&nbsp;test&nbsp;fixture&nbsp;before&nbsp;exercising&nbsp;it.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-shortDescription"><strong>shortDescription</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;one-line&nbsp;description&nbsp;of&nbsp;the&nbsp;test,&nbsp;or&nbsp;None&nbsp;if&nbsp;no<br>
+description&nbsp;has&nbsp;been&nbsp;provided.<br>
+&nbsp;<br>
+The&nbsp;default&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method&nbsp;returns&nbsp;the&nbsp;first&nbsp;line&nbsp;of<br>
+the&nbsp;specified&nbsp;test&nbsp;method's&nbsp;docstring.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-skipTest"><strong>skipTest</strong></a>(self, reason)</dt><dd><tt>Skip&nbsp;this&nbsp;test.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-tearDown"><strong>tearDown</strong></a>(self)</dt><dd><tt>Hook&nbsp;method&nbsp;for&nbsp;deconstructing&nbsp;the&nbsp;test&nbsp;fixture&nbsp;after&nbsp;testing&nbsp;it.</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="unittest.case.html#TestCase">unittest.case.TestCase</a>:<br>
+<dl><dt><a name="TestBuildRequest-setUpClass"><strong>setUpClass</strong></a>(cls)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Hook&nbsp;method&nbsp;for&nbsp;setting&nbsp;up&nbsp;class&nbsp;fixture&nbsp;before&nbsp;running&nbsp;tests&nbsp;in&nbsp;the&nbsp;class.</tt></dd></dl>
+
+<dl><dt><a name="TestBuildRequest-tearDownClass"><strong>tearDownClass</strong></a>(cls)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Hook&nbsp;method&nbsp;for&nbsp;deconstructing&nbsp;the&nbsp;class&nbsp;fixture&nbsp;after&nbsp;running&nbsp;all&nbsp;tests&nbsp;in&nbsp;the&nbsp;class.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="unittest.case.html#TestCase">unittest.case.TestCase</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="unittest.case.html#TestCase">unittest.case.TestCase</a>:<br>
+<dl><dt><strong>failureException</strong> = &lt;type 'exceptions.AssertionError'&gt;<dd><tt>Assertion&nbsp;failed.</tt></dl>
+
+<dl><dt><strong>longMessage</strong> = False</dl>
+
+<dl><dt><strong>maxDiff</strong> = 640</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TestCase">class <strong>TestCase</strong></a>(<a href="unittest.case.html#TestCase">unittest.case.TestCase</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.feedparsertest.html#TestCase">TestCase</a></dd>
+<dd><a href="unittest.case.html#TestCase">unittest.case.TestCase</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TestCase-failUnlessEval"><strong>failUnlessEval</strong></a>(self, evalString, env, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;unless&nbsp;eval(evalString,&nbsp;env)</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="unittest.case.html#TestCase">unittest.case.TestCase</a>:<br>
+<dl><dt><a name="TestCase-__call__"><strong>__call__</strong></a>(self, *args, **kwds)</dt></dl>
+
+<dl><dt><a name="TestCase-__eq__"><strong>__eq__</strong></a>(self, other)</dt></dl>
+
+<dl><dt><a name="TestCase-__hash__"><strong>__hash__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="TestCase-__init__"><strong>__init__</strong></a>(self, methodName<font color="#909090">='runTest'</font>)</dt><dd><tt>Create&nbsp;an&nbsp;instance&nbsp;of&nbsp;the&nbsp;class&nbsp;that&nbsp;will&nbsp;use&nbsp;the&nbsp;named&nbsp;test<br>
+method&nbsp;when&nbsp;executed.&nbsp;Raises&nbsp;a&nbsp;ValueError&nbsp;if&nbsp;the&nbsp;instance&nbsp;does<br>
+not&nbsp;have&nbsp;a&nbsp;method&nbsp;with&nbsp;the&nbsp;specified&nbsp;name.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-__ne__"><strong>__ne__</strong></a>(self, other)</dt></dl>
+
+<dl><dt><a name="TestCase-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="TestCase-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="TestCase-addCleanup"><strong>addCleanup</strong></a>(self, function, *args, **kwargs)</dt><dd><tt>Add&nbsp;a&nbsp;function,&nbsp;with&nbsp;arguments,&nbsp;to&nbsp;be&nbsp;called&nbsp;when&nbsp;the&nbsp;test&nbsp;is<br>
+completed.&nbsp;Functions&nbsp;added&nbsp;are&nbsp;called&nbsp;on&nbsp;a&nbsp;LIFO&nbsp;basis&nbsp;and&nbsp;are<br>
+called&nbsp;after&nbsp;tearDown&nbsp;on&nbsp;test&nbsp;failure&nbsp;or&nbsp;success.<br>
+&nbsp;<br>
+Cleanup&nbsp;items&nbsp;are&nbsp;called&nbsp;even&nbsp;if&nbsp;setUp&nbsp;fails&nbsp;(unlike&nbsp;tearDown).</tt></dd></dl>
+
+<dl><dt><a name="TestCase-addTypeEqualityFunc"><strong>addTypeEqualityFunc</strong></a>(self, typeobj, function)</dt><dd><tt>Add&nbsp;a&nbsp;type&nbsp;specific&nbsp;assertEqual&nbsp;style&nbsp;function&nbsp;to&nbsp;compare&nbsp;a&nbsp;type.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;is&nbsp;for&nbsp;use&nbsp;by&nbsp;<a href="#TestCase">TestCase</a>&nbsp;subclasses&nbsp;that&nbsp;need&nbsp;to&nbsp;register<br>
+their&nbsp;own&nbsp;type&nbsp;equality&nbsp;functions&nbsp;to&nbsp;provide&nbsp;nicer&nbsp;error&nbsp;messages.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;typeobj:&nbsp;The&nbsp;data&nbsp;type&nbsp;to&nbsp;call&nbsp;this&nbsp;function&nbsp;on&nbsp;when&nbsp;both&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;are&nbsp;of&nbsp;the&nbsp;same&nbsp;type&nbsp;in&nbsp;<a href="#TestCase-assertEqual">assertEqual</a>().<br>
+&nbsp;&nbsp;&nbsp;&nbsp;function:&nbsp;The&nbsp;callable&nbsp;taking&nbsp;two&nbsp;arguments&nbsp;and&nbsp;an&nbsp;optional<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;msg=&nbsp;argument&nbsp;that&nbsp;raises&nbsp;self.<strong>failureException</strong>&nbsp;with&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;useful&nbsp;error&nbsp;message&nbsp;when&nbsp;the&nbsp;two&nbsp;arguments&nbsp;are&nbsp;not&nbsp;equal.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertAlmostEqual"><strong>assertAlmostEqual</strong></a>(self, first, second, places<font color="#909090">=None</font>, msg<font color="#909090">=None</font>, delta<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;unequal&nbsp;as&nbsp;determined&nbsp;by&nbsp;their<br>
+difference&nbsp;rounded&nbsp;to&nbsp;the&nbsp;given&nbsp;number&nbsp;of&nbsp;decimal&nbsp;places<br>
+(default&nbsp;7)&nbsp;and&nbsp;comparing&nbsp;to&nbsp;zero,&nbsp;or&nbsp;by&nbsp;comparing&nbsp;that&nbsp;the<br>
+between&nbsp;the&nbsp;two&nbsp;objects&nbsp;is&nbsp;more&nbsp;than&nbsp;the&nbsp;given&nbsp;delta.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;decimal&nbsp;places&nbsp;(from&nbsp;zero)&nbsp;are&nbsp;usually&nbsp;not&nbsp;the&nbsp;same<br>
+as&nbsp;significant&nbsp;digits&nbsp;(measured&nbsp;from&nbsp;the&nbsp;most&nbsp;signficant&nbsp;digit).<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;two&nbsp;objects&nbsp;compare&nbsp;equal&nbsp;then&nbsp;they&nbsp;will&nbsp;automatically<br>
+compare&nbsp;almost&nbsp;equal.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertAlmostEquals"><strong>assertAlmostEquals</strong></a> = assertAlmostEqual(self, first, second, places<font color="#909090">=None</font>, msg<font color="#909090">=None</font>, delta<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;unequal&nbsp;as&nbsp;determined&nbsp;by&nbsp;their<br>
+difference&nbsp;rounded&nbsp;to&nbsp;the&nbsp;given&nbsp;number&nbsp;of&nbsp;decimal&nbsp;places<br>
+(default&nbsp;7)&nbsp;and&nbsp;comparing&nbsp;to&nbsp;zero,&nbsp;or&nbsp;by&nbsp;comparing&nbsp;that&nbsp;the<br>
+between&nbsp;the&nbsp;two&nbsp;objects&nbsp;is&nbsp;more&nbsp;than&nbsp;the&nbsp;given&nbsp;delta.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;decimal&nbsp;places&nbsp;(from&nbsp;zero)&nbsp;are&nbsp;usually&nbsp;not&nbsp;the&nbsp;same<br>
+as&nbsp;significant&nbsp;digits&nbsp;(measured&nbsp;from&nbsp;the&nbsp;most&nbsp;signficant&nbsp;digit).<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;two&nbsp;objects&nbsp;compare&nbsp;equal&nbsp;then&nbsp;they&nbsp;will&nbsp;automatically<br>
+compare&nbsp;almost&nbsp;equal.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertDictContainsSubset"><strong>assertDictContainsSubset</strong></a>(self, expected, actual, msg<font color="#909090">=None</font>)</dt><dd><tt>Checks&nbsp;whether&nbsp;actual&nbsp;is&nbsp;a&nbsp;superset&nbsp;of&nbsp;expected.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertDictEqual"><strong>assertDictEqual</strong></a>(self, d1, d2, msg<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="TestCase-assertEqual"><strong>assertEqual</strong></a>(self, first, second, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;unequal&nbsp;as&nbsp;determined&nbsp;by&nbsp;the&nbsp;'=='<br>
+operator.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertEquals"><strong>assertEquals</strong></a> = assertEqual(self, first, second, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;unequal&nbsp;as&nbsp;determined&nbsp;by&nbsp;the&nbsp;'=='<br>
+operator.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertFalse"><strong>assertFalse</strong></a>(self, expr, msg<font color="#909090">=None</font>)</dt><dd><tt>Check&nbsp;that&nbsp;the&nbsp;expression&nbsp;is&nbsp;false.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertGreater"><strong>assertGreater</strong></a>(self, a, b, msg<font color="#909090">=None</font>)</dt><dd><tt>Just&nbsp;like&nbsp;<a href="#TestCase-assertTrue">assertTrue</a>(a&nbsp;&gt;&nbsp;b),&nbsp;but&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertGreaterEqual"><strong>assertGreaterEqual</strong></a>(self, a, b, msg<font color="#909090">=None</font>)</dt><dd><tt>Just&nbsp;like&nbsp;<a href="#TestCase-assertTrue">assertTrue</a>(a&nbsp;&gt;=&nbsp;b),&nbsp;but&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertIn"><strong>assertIn</strong></a>(self, member, container, msg<font color="#909090">=None</font>)</dt><dd><tt>Just&nbsp;like&nbsp;<a href="#TestCase-assertTrue">assertTrue</a>(a&nbsp;in&nbsp;b),&nbsp;but&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertIs"><strong>assertIs</strong></a>(self, expr1, expr2, msg<font color="#909090">=None</font>)</dt><dd><tt>Just&nbsp;like&nbsp;<a href="#TestCase-assertTrue">assertTrue</a>(a&nbsp;is&nbsp;b),&nbsp;but&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertIsInstance"><strong>assertIsInstance</strong></a>(self, obj, cls, msg<font color="#909090">=None</font>)</dt><dd><tt>Same&nbsp;as&nbsp;<a href="#TestCase-assertTrue">assertTrue</a>(isinstance(obj,&nbsp;cls)),&nbsp;with&nbsp;a&nbsp;nicer<br>
+default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertIsNone"><strong>assertIsNone</strong></a>(self, obj, msg<font color="#909090">=None</font>)</dt><dd><tt>Same&nbsp;as&nbsp;<a href="#TestCase-assertTrue">assertTrue</a>(obj&nbsp;is&nbsp;None),&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertIsNot"><strong>assertIsNot</strong></a>(self, expr1, expr2, msg<font color="#909090">=None</font>)</dt><dd><tt>Just&nbsp;like&nbsp;<a href="#TestCase-assertTrue">assertTrue</a>(a&nbsp;is&nbsp;not&nbsp;b),&nbsp;but&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertIsNotNone"><strong>assertIsNotNone</strong></a>(self, obj, msg<font color="#909090">=None</font>)</dt><dd><tt>Included&nbsp;for&nbsp;symmetry&nbsp;with&nbsp;assertIsNone.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertItemsEqual"><strong>assertItemsEqual</strong></a>(self, expected_seq, actual_seq, msg<font color="#909090">=None</font>)</dt><dd><tt>An&nbsp;unordered&nbsp;sequence&nbsp;specific&nbsp;comparison.&nbsp;It&nbsp;asserts&nbsp;that<br>
+actual_seq&nbsp;and&nbsp;expected_seq&nbsp;have&nbsp;the&nbsp;same&nbsp;element&nbsp;counts.<br>
+Equivalent&nbsp;to::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#TestCase-assertEqual">assertEqual</a>(Counter(iter(actual_seq)),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Counter(iter(expected_seq)))<br>
+&nbsp;<br>
+Asserts&nbsp;that&nbsp;each&nbsp;element&nbsp;has&nbsp;the&nbsp;same&nbsp;count&nbsp;in&nbsp;both&nbsp;sequences.<br>
+Example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;[0,&nbsp;1,&nbsp;1]&nbsp;and&nbsp;[1,&nbsp;0,&nbsp;1]&nbsp;compare&nbsp;equal.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;[0,&nbsp;0,&nbsp;1]&nbsp;and&nbsp;[0,&nbsp;1]&nbsp;compare&nbsp;unequal.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertLess"><strong>assertLess</strong></a>(self, a, b, msg<font color="#909090">=None</font>)</dt><dd><tt>Just&nbsp;like&nbsp;<a href="#TestCase-assertTrue">assertTrue</a>(a&nbsp;&lt;&nbsp;b),&nbsp;but&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertLessEqual"><strong>assertLessEqual</strong></a>(self, a, b, msg<font color="#909090">=None</font>)</dt><dd><tt>Just&nbsp;like&nbsp;<a href="#TestCase-assertTrue">assertTrue</a>(a&nbsp;&lt;=&nbsp;b),&nbsp;but&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertListEqual"><strong>assertListEqual</strong></a>(self, list1, list2, msg<font color="#909090">=None</font>)</dt><dd><tt>A&nbsp;list-specific&nbsp;equality&nbsp;assertion.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list1:&nbsp;The&nbsp;first&nbsp;list&nbsp;to&nbsp;compare.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list2:&nbsp;The&nbsp;second&nbsp;list&nbsp;to&nbsp;compare.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;msg:&nbsp;Optional&nbsp;message&nbsp;to&nbsp;use&nbsp;on&nbsp;failure&nbsp;instead&nbsp;of&nbsp;a&nbsp;list&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;differences.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertMultiLineEqual"><strong>assertMultiLineEqual</strong></a>(self, first, second, msg<font color="#909090">=None</font>)</dt><dd><tt>Assert&nbsp;that&nbsp;two&nbsp;multi-line&nbsp;strings&nbsp;are&nbsp;equal.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertNotAlmostEqual"><strong>assertNotAlmostEqual</strong></a>(self, first, second, places<font color="#909090">=None</font>, msg<font color="#909090">=None</font>, delta<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;equal&nbsp;as&nbsp;determined&nbsp;by&nbsp;their<br>
+difference&nbsp;rounded&nbsp;to&nbsp;the&nbsp;given&nbsp;number&nbsp;of&nbsp;decimal&nbsp;places<br>
+(default&nbsp;7)&nbsp;and&nbsp;comparing&nbsp;to&nbsp;zero,&nbsp;or&nbsp;by&nbsp;comparing&nbsp;that&nbsp;the<br>
+between&nbsp;the&nbsp;two&nbsp;objects&nbsp;is&nbsp;less&nbsp;than&nbsp;the&nbsp;given&nbsp;delta.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;decimal&nbsp;places&nbsp;(from&nbsp;zero)&nbsp;are&nbsp;usually&nbsp;not&nbsp;the&nbsp;same<br>
+as&nbsp;significant&nbsp;digits&nbsp;(measured&nbsp;from&nbsp;the&nbsp;most&nbsp;signficant&nbsp;digit).<br>
+&nbsp;<br>
+Objects&nbsp;that&nbsp;are&nbsp;equal&nbsp;automatically&nbsp;fail.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertNotAlmostEquals"><strong>assertNotAlmostEquals</strong></a> = assertNotAlmostEqual(self, first, second, places<font color="#909090">=None</font>, msg<font color="#909090">=None</font>, delta<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;equal&nbsp;as&nbsp;determined&nbsp;by&nbsp;their<br>
+difference&nbsp;rounded&nbsp;to&nbsp;the&nbsp;given&nbsp;number&nbsp;of&nbsp;decimal&nbsp;places<br>
+(default&nbsp;7)&nbsp;and&nbsp;comparing&nbsp;to&nbsp;zero,&nbsp;or&nbsp;by&nbsp;comparing&nbsp;that&nbsp;the<br>
+between&nbsp;the&nbsp;two&nbsp;objects&nbsp;is&nbsp;less&nbsp;than&nbsp;the&nbsp;given&nbsp;delta.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;decimal&nbsp;places&nbsp;(from&nbsp;zero)&nbsp;are&nbsp;usually&nbsp;not&nbsp;the&nbsp;same<br>
+as&nbsp;significant&nbsp;digits&nbsp;(measured&nbsp;from&nbsp;the&nbsp;most&nbsp;signficant&nbsp;digit).<br>
+&nbsp;<br>
+Objects&nbsp;that&nbsp;are&nbsp;equal&nbsp;automatically&nbsp;fail.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertNotEqual"><strong>assertNotEqual</strong></a>(self, first, second, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;equal&nbsp;as&nbsp;determined&nbsp;by&nbsp;the&nbsp;'=='<br>
+operator.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertNotEquals"><strong>assertNotEquals</strong></a> = assertNotEqual(self, first, second, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;if&nbsp;the&nbsp;two&nbsp;objects&nbsp;are&nbsp;equal&nbsp;as&nbsp;determined&nbsp;by&nbsp;the&nbsp;'=='<br>
+operator.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertNotIn"><strong>assertNotIn</strong></a>(self, member, container, msg<font color="#909090">=None</font>)</dt><dd><tt>Just&nbsp;like&nbsp;<a href="#TestCase-assertTrue">assertTrue</a>(a&nbsp;not&nbsp;in&nbsp;b),&nbsp;but&nbsp;with&nbsp;a&nbsp;nicer&nbsp;default&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertNotIsInstance"><strong>assertNotIsInstance</strong></a>(self, obj, cls, msg<font color="#909090">=None</font>)</dt><dd><tt>Included&nbsp;for&nbsp;symmetry&nbsp;with&nbsp;assertIsInstance.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertNotRegexpMatches"><strong>assertNotRegexpMatches</strong></a>(self, text, unexpected_regexp, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;the&nbsp;test&nbsp;if&nbsp;the&nbsp;text&nbsp;matches&nbsp;the&nbsp;regular&nbsp;expression.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertRaises"><strong>assertRaises</strong></a>(self, excClass, callableObj<font color="#909090">=None</font>, *args, **kwargs)</dt><dd><tt>Fail&nbsp;unless&nbsp;an&nbsp;exception&nbsp;of&nbsp;class&nbsp;excClass&nbsp;is&nbsp;thrown<br>
+by&nbsp;callableObj&nbsp;when&nbsp;invoked&nbsp;with&nbsp;arguments&nbsp;args&nbsp;and&nbsp;keyword<br>
+arguments&nbsp;kwargs.&nbsp;If&nbsp;a&nbsp;different&nbsp;type&nbsp;of&nbsp;exception&nbsp;is<br>
+thrown,&nbsp;it&nbsp;will&nbsp;not&nbsp;be&nbsp;caught,&nbsp;and&nbsp;the&nbsp;test&nbsp;case&nbsp;will&nbsp;be<br>
+deemed&nbsp;to&nbsp;have&nbsp;suffered&nbsp;an&nbsp;error,&nbsp;exactly&nbsp;as&nbsp;for&nbsp;an<br>
+unexpected&nbsp;exception.<br>
+&nbsp;<br>
+If&nbsp;called&nbsp;with&nbsp;callableObj&nbsp;omitted&nbsp;or&nbsp;None,&nbsp;will&nbsp;return&nbsp;a<br>
+context&nbsp;object&nbsp;used&nbsp;like&nbsp;this::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;<a href="#TestCase-assertRaises">assertRaises</a>(SomeException):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_something()<br>
+&nbsp;<br>
+The&nbsp;context&nbsp;manager&nbsp;keeps&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;exception&nbsp;as<br>
+the&nbsp;'exception'&nbsp;attribute.&nbsp;This&nbsp;allows&nbsp;you&nbsp;to&nbsp;inspect&nbsp;the<br>
+exception&nbsp;after&nbsp;the&nbsp;assertion::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;<a href="#TestCase-assertRaises">assertRaises</a>(SomeException)&nbsp;as&nbsp;cm:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_something()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the_exception&nbsp;=&nbsp;cm.exception<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#TestCase-assertEqual">assertEqual</a>(the_exception.error_code,&nbsp;3)</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertRaisesRegexp"><strong>assertRaisesRegexp</strong></a>(self, expected_exception, expected_regexp, callable_obj<font color="#909090">=None</font>, *args, **kwargs)</dt><dd><tt>Asserts&nbsp;that&nbsp;the&nbsp;message&nbsp;in&nbsp;a&nbsp;raised&nbsp;exception&nbsp;matches&nbsp;a&nbsp;regexp.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;expected_exception:&nbsp;Exception&nbsp;class&nbsp;expected&nbsp;to&nbsp;be&nbsp;raised.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;expected_regexp:&nbsp;Regexp&nbsp;(re&nbsp;pattern&nbsp;object&nbsp;or&nbsp;string)&nbsp;expected<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;be&nbsp;found&nbsp;in&nbsp;error&nbsp;message.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;callable_obj:&nbsp;Function&nbsp;to&nbsp;be&nbsp;called.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;args:&nbsp;Extra&nbsp;args.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;kwargs:&nbsp;Extra&nbsp;kwargs.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertRegexpMatches"><strong>assertRegexpMatches</strong></a>(self, text, expected_regexp, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;the&nbsp;test&nbsp;unless&nbsp;the&nbsp;text&nbsp;matches&nbsp;the&nbsp;regular&nbsp;expression.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertSequenceEqual"><strong>assertSequenceEqual</strong></a>(self, seq1, seq2, msg<font color="#909090">=None</font>, seq_type<font color="#909090">=None</font>)</dt><dd><tt>An&nbsp;equality&nbsp;assertion&nbsp;for&nbsp;ordered&nbsp;sequences&nbsp;(like&nbsp;lists&nbsp;and&nbsp;tuples).<br>
+&nbsp;<br>
+For&nbsp;the&nbsp;purposes&nbsp;of&nbsp;this&nbsp;function,&nbsp;a&nbsp;valid&nbsp;ordered&nbsp;sequence&nbsp;type&nbsp;is&nbsp;one<br>
+which&nbsp;can&nbsp;be&nbsp;indexed,&nbsp;has&nbsp;a&nbsp;length,&nbsp;and&nbsp;has&nbsp;an&nbsp;equality&nbsp;operator.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;seq1:&nbsp;The&nbsp;first&nbsp;sequence&nbsp;to&nbsp;compare.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;seq2:&nbsp;The&nbsp;second&nbsp;sequence&nbsp;to&nbsp;compare.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;seq_type:&nbsp;The&nbsp;expected&nbsp;datatype&nbsp;of&nbsp;the&nbsp;sequences,&nbsp;or&nbsp;None&nbsp;if&nbsp;no<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;datatype&nbsp;should&nbsp;be&nbsp;enforced.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;msg:&nbsp;Optional&nbsp;message&nbsp;to&nbsp;use&nbsp;on&nbsp;failure&nbsp;instead&nbsp;of&nbsp;a&nbsp;list&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;differences.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertSetEqual"><strong>assertSetEqual</strong></a>(self, set1, set2, msg<font color="#909090">=None</font>)</dt><dd><tt>A&nbsp;set-specific&nbsp;equality&nbsp;assertion.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;set1:&nbsp;The&nbsp;first&nbsp;set&nbsp;to&nbsp;compare.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;set2:&nbsp;The&nbsp;second&nbsp;set&nbsp;to&nbsp;compare.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;msg:&nbsp;Optional&nbsp;message&nbsp;to&nbsp;use&nbsp;on&nbsp;failure&nbsp;instead&nbsp;of&nbsp;a&nbsp;list&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;differences.<br>
+&nbsp;<br>
+assertSetEqual&nbsp;uses&nbsp;ducktyping&nbsp;to&nbsp;support&nbsp;different&nbsp;types&nbsp;of&nbsp;sets,&nbsp;and<br>
+is&nbsp;optimized&nbsp;for&nbsp;sets&nbsp;specifically&nbsp;(parameters&nbsp;must&nbsp;support&nbsp;a<br>
+difference&nbsp;method).</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertTrue"><strong>assertTrue</strong></a>(self, expr, msg<font color="#909090">=None</font>)</dt><dd><tt>Check&nbsp;that&nbsp;the&nbsp;expression&nbsp;is&nbsp;true.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assertTupleEqual"><strong>assertTupleEqual</strong></a>(self, tuple1, tuple2, msg<font color="#909090">=None</font>)</dt><dd><tt>A&nbsp;tuple-specific&nbsp;equality&nbsp;assertion.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tuple1:&nbsp;The&nbsp;first&nbsp;tuple&nbsp;to&nbsp;compare.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tuple2:&nbsp;The&nbsp;second&nbsp;tuple&nbsp;to&nbsp;compare.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;msg:&nbsp;Optional&nbsp;message&nbsp;to&nbsp;use&nbsp;on&nbsp;failure&nbsp;instead&nbsp;of&nbsp;a&nbsp;list&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;differences.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-assert_"><strong>assert_</strong></a> = assertTrue(self, expr, msg<font color="#909090">=None</font>)</dt><dd><tt>Check&nbsp;that&nbsp;the&nbsp;expression&nbsp;is&nbsp;true.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-countTestCases"><strong>countTestCases</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="TestCase-debug"><strong>debug</strong></a>(self)</dt><dd><tt>Run&nbsp;the&nbsp;test&nbsp;without&nbsp;collecting&nbsp;errors&nbsp;in&nbsp;a&nbsp;TestResult</tt></dd></dl>
+
+<dl><dt><a name="TestCase-defaultTestResult"><strong>defaultTestResult</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="TestCase-doCleanups"><strong>doCleanups</strong></a>(self)</dt><dd><tt>Execute&nbsp;all&nbsp;cleanup&nbsp;functions.&nbsp;Normally&nbsp;called&nbsp;for&nbsp;you&nbsp;after<br>
+tearDown.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-fail"><strong>fail</strong></a>(self, msg<font color="#909090">=None</font>)</dt><dd><tt>Fail&nbsp;immediately,&nbsp;with&nbsp;the&nbsp;given&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-failIf"><strong>failIf</strong></a> = deprecated_func(*args, **kwargs)</dt></dl>
+
+<dl><dt><a name="TestCase-failIfAlmostEqual"><strong>failIfAlmostEqual</strong></a> = deprecated_func(*args, **kwargs)</dt></dl>
+
+<dl><dt><a name="TestCase-failIfEqual"><strong>failIfEqual</strong></a> = deprecated_func(*args, **kwargs)</dt></dl>
+
+<dl><dt><a name="TestCase-failUnless"><strong>failUnless</strong></a> = deprecated_func(*args, **kwargs)</dt></dl>
+
+<dl><dt><a name="TestCase-failUnlessAlmostEqual"><strong>failUnlessAlmostEqual</strong></a> = deprecated_func(*args, **kwargs)</dt></dl>
+
+<dl><dt><a name="TestCase-failUnlessEqual"><strong>failUnlessEqual</strong></a> = deprecated_func(*args, **kwargs)</dt></dl>
+
+<dl><dt><a name="TestCase-failUnlessRaises"><strong>failUnlessRaises</strong></a> = deprecated_func(*args, **kwargs)</dt></dl>
+
+<dl><dt><a name="TestCase-id"><strong>id</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="TestCase-run"><strong>run</strong></a>(self, result<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="TestCase-setUp"><strong>setUp</strong></a>(self)</dt><dd><tt>Hook&nbsp;method&nbsp;for&nbsp;setting&nbsp;up&nbsp;the&nbsp;test&nbsp;fixture&nbsp;before&nbsp;exercising&nbsp;it.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-shortDescription"><strong>shortDescription</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;one-line&nbsp;description&nbsp;of&nbsp;the&nbsp;test,&nbsp;or&nbsp;None&nbsp;if&nbsp;no<br>
+description&nbsp;has&nbsp;been&nbsp;provided.<br>
+&nbsp;<br>
+The&nbsp;default&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method&nbsp;returns&nbsp;the&nbsp;first&nbsp;line&nbsp;of<br>
+the&nbsp;specified&nbsp;test&nbsp;method's&nbsp;docstring.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-skipTest"><strong>skipTest</strong></a>(self, reason)</dt><dd><tt>Skip&nbsp;this&nbsp;test.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-tearDown"><strong>tearDown</strong></a>(self)</dt><dd><tt>Hook&nbsp;method&nbsp;for&nbsp;deconstructing&nbsp;the&nbsp;test&nbsp;fixture&nbsp;after&nbsp;testing&nbsp;it.</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="unittest.case.html#TestCase">unittest.case.TestCase</a>:<br>
+<dl><dt><a name="TestCase-setUpClass"><strong>setUpClass</strong></a>(cls)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Hook&nbsp;method&nbsp;for&nbsp;setting&nbsp;up&nbsp;class&nbsp;fixture&nbsp;before&nbsp;running&nbsp;tests&nbsp;in&nbsp;the&nbsp;class.</tt></dd></dl>
+
+<dl><dt><a name="TestCase-tearDownClass"><strong>tearDownClass</strong></a>(cls)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Hook&nbsp;method&nbsp;for&nbsp;deconstructing&nbsp;the&nbsp;class&nbsp;fixture&nbsp;after&nbsp;running&nbsp;all&nbsp;tests&nbsp;in&nbsp;the&nbsp;class.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="unittest.case.html#TestCase">unittest.case.TestCase</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="unittest.case.html#TestCase">unittest.case.TestCase</a>:<br>
+<dl><dt><strong>failureException</strong> = &lt;type 'exceptions.AssertionError'&gt;<dd><tt>Assertion&nbsp;failed.</tt></dl>
+
+<dl><dt><strong>longMessage</strong> = False</dl>
+
+<dl><dt><strong>maxDiff</strong> = 640</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-Lock"><strong>Lock</strong></a> = allocate_lock(...)</dt><dd><tt>allocate_lock()&nbsp;-&gt;&nbsp;lock&nbsp;object<br>
+(allocate()&nbsp;is&nbsp;an&nbsp;obsolete&nbsp;synonym)<br>
+&nbsp;<br>
+Create&nbsp;a&nbsp;new&nbsp;lock&nbsp;object.&nbsp;&nbsp;See&nbsp;help(LockType)&nbsp;for&nbsp;information&nbsp;about&nbsp;locks.</tt></dd></dl>
+ <dl><dt><a name="-buildTestCase"><strong>buildTestCase</strong></a>(xmlfile, description, method, evalString)</dt></dl>
+ <dl><dt><a name="-getDescription"><strong>getDescription</strong></a>(xmlfile)</dt><dd><tt>Extract&nbsp;test&nbsp;data<br>
+&nbsp;<br>
+Each&nbsp;test&nbsp;case&nbsp;is&nbsp;an&nbsp;XML&nbsp;file&nbsp;which&nbsp;contains&nbsp;not&nbsp;only&nbsp;a&nbsp;test&nbsp;feed<br>
+but&nbsp;also&nbsp;the&nbsp;description&nbsp;of&nbsp;the&nbsp;test,&nbsp;i.e.&nbsp;the&nbsp;condition&nbsp;that&nbsp;we<br>
+would&nbsp;expect&nbsp;the&nbsp;parser&nbsp;to&nbsp;create&nbsp;when&nbsp;it&nbsp;parses&nbsp;the&nbsp;feed.&nbsp;&nbsp;Example:<br>
+&lt;!--<br>
+Description:&nbsp;feed&nbsp;title<br>
+Expect:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;feed['title']&nbsp;==&nbsp;u'Example&nbsp;feed'<br>
+--&gt;</tt></dd></dl>
+ <dl><dt><a name="-stack_size"><strong>stack_size</strong></a>(...)</dt><dd><tt><a href="#-stack_size">stack_size</a>([size])&nbsp;-&gt;&nbsp;size<br>
+&nbsp;<br>
+Return&nbsp;the&nbsp;thread&nbsp;stack&nbsp;size&nbsp;used&nbsp;when&nbsp;creating&nbsp;new&nbsp;threads.&nbsp;&nbsp;The<br>
+optional&nbsp;size&nbsp;argument&nbsp;specifies&nbsp;the&nbsp;stack&nbsp;size&nbsp;(in&nbsp;bytes)&nbsp;to&nbsp;be&nbsp;used<br>
+for&nbsp;subsequently&nbsp;created&nbsp;threads,&nbsp;and&nbsp;must&nbsp;be&nbsp;0&nbsp;(use&nbsp;platform&nbsp;or<br>
+configured&nbsp;default)&nbsp;or&nbsp;a&nbsp;positive&nbsp;integer&nbsp;value&nbsp;of&nbsp;at&nbsp;least&nbsp;32,768&nbsp;(32k).<br>
+If&nbsp;changing&nbsp;the&nbsp;thread&nbsp;stack&nbsp;size&nbsp;is&nbsp;unsupported,&nbsp;a&nbsp;ThreadError<br>
+exception&nbsp;is&nbsp;raised.&nbsp;&nbsp;If&nbsp;the&nbsp;specified&nbsp;size&nbsp;is&nbsp;invalid,&nbsp;a&nbsp;ValueError<br>
+exception&nbsp;is&nbsp;raised,&nbsp;and&nbsp;the&nbsp;stack&nbsp;size&nbsp;is&nbsp;unmodified.&nbsp;&nbsp;32k&nbsp;bytes<br>
+&nbsp;currently&nbsp;the&nbsp;minimum&nbsp;supported&nbsp;stack&nbsp;size&nbsp;value&nbsp;to&nbsp;guarantee<br>
+sufficient&nbsp;stack&nbsp;space&nbsp;for&nbsp;the&nbsp;interpreter&nbsp;itself.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;some&nbsp;platforms&nbsp;may&nbsp;have&nbsp;particular&nbsp;restrictions&nbsp;on&nbsp;values&nbsp;for<br>
+the&nbsp;stack&nbsp;size,&nbsp;such&nbsp;as&nbsp;requiring&nbsp;a&nbsp;minimum&nbsp;stack&nbsp;size&nbsp;larger&nbsp;than&nbsp;32kB&nbsp;or<br>
+requiring&nbsp;allocation&nbsp;in&nbsp;multiples&nbsp;of&nbsp;the&nbsp;system&nbsp;memory&nbsp;page&nbsp;size<br>
+-&nbsp;platform&nbsp;documentation&nbsp;should&nbsp;be&nbsp;referred&nbsp;to&nbsp;for&nbsp;more&nbsp;information<br>
+(4kB&nbsp;pages&nbsp;are&nbsp;common;&nbsp;using&nbsp;multiples&nbsp;of&nbsp;4096&nbsp;for&nbsp;the&nbsp;stack&nbsp;size&nbsp;is<br>
+the&nbsp;suggested&nbsp;approach&nbsp;in&nbsp;the&nbsp;absence&nbsp;of&nbsp;more&nbsp;specific&nbsp;information).</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__author__</strong> = 'Mark Pilgrim &lt;http://diveintomark.org/&gt;'<br>
+<strong>__license__</strong> = 'Copyright (c) 2004-2008, Mark Pilgrim, All right...VEN IF ADVISED OF THE<font color="#c040c0">\n</font>POSSIBILITY OF SUCH DAMAGE.'<br>
+<strong>desc_re</strong> = &lt;_sre.SRE_Pattern object&gt;<br>
+<strong>skip_re</strong> = &lt;_sre.SRE_Pattern object&gt;<br>
+<strong>unicode1_re</strong> = &lt;_sre.SRE_Pattern object&gt;<br>
+<strong>unicode2_re</strong> = &lt;_sre.SRE_Pattern object&gt;</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Mark&nbsp;Pilgrim&nbsp;&lt;<a href="http://diveintomark.org/">http://diveintomark.org/</a>&gt;</td></tr></table>
+</body></html>

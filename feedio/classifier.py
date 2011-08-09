@@ -64,6 +64,7 @@ def addTopic(topic):
         session.rollback()
         print "Error adding topic"
     else:
+        topic = topic.replace(" ", "_")
         c = Classifier(classifierDir, [topic, "not"+topic])
         c2 = Classifier(classifierDir, [topic+"Title", "not"+topic+"Title"])
         print "Added new topic %s" % unicode(topic)
@@ -71,8 +72,13 @@ def addTopic(topic):
         #Now append the topic to every article in the db
         try:
             allItems = Item.query.all()
+            allFeeds = Feed.query.all()
             for item in allItems:
                 setItemTopic(item, newTopic, False)
+
+            for feed in allFeeds:
+                setFeedTopic(feed, newTopic, False)
+
             session.commit()
         except:
             session.rollback()
@@ -85,10 +91,16 @@ def removeTopic(topic):
     """
     topicTitle = topic.title
     try:
-        scoreItems = ScoreTable.query.filter_by(topic = topic).all()
+        scoreItems = ScoreItem.query.filter_by(topic = topic).all()
+        scoreFeeds = ScoreFeed.query.filter_by(topic = topic).all()
+
         # First remove all the scoreItems from the ScoreItem table.
         for item in scoreItems:
             item.delete()
+        # Now remove all the scoreFeeds from the ScoreFeed table.
+        for feed in scoreFeeds:
+            feed.delete()
+
         #Now delete the topic object
         topic.delete()
         session.commit()
@@ -99,7 +111,7 @@ def removeTopic(topic):
         print "removed Topic %s" % topicTitle
 
 
-def assignToAllTopics(itemList):
+def assignItemsToTopics(itemList):
     """
     Assigns a list of items to all the topics available.
     """
@@ -130,6 +142,43 @@ def setItemTopic(item, topic, commit=True):
             except:
                 session.rollback()
                 print "Error in setItemTopic"
+                return None
+
+
+def assignFeedsToTopics(feedList):
+    """
+    Assigns a list of feeds to all the topics available.
+    """
+    allTopics = Topic.query.all()
+    print "assigning the new feed to topics.."
+
+    for feed in feedList:
+        for topic in allTopics:
+            setFeedTopic(feed, topic, False)
+    try:
+        session.commit()
+    except:
+        session.rollback()
+        print "Error Assigning Topics to feed"
+        return None
+
+
+def setFeedTopic(feed, topic, commit=True):
+    """
+    Assigns a feed to the given Topic.
+    """
+    if feed.topics.count(topic) == 0:
+        feed.topics.append(topic)
+        print "Added %s to %s" % (topic.title, feed.title)
+
+        if commit is True:
+            try:
+                session.commit() # disable individual commits to increse performance.
+            except:
+                session.rollback()
+                print "Error in setItemTopic"
+                return None
+
 
 
 def getTopic(topicTitle):
@@ -143,32 +192,38 @@ def getTopic(topicTitle):
         return None
 
 
-def voteFeed(upOrDown, feed):
+def _voteFeed(upOrDown, feed, topic):
+    """
+    Function to add of reduce marks for a feed.
+    """
+    scoreFeed = ScoreFeed.query.filter_by(feed = feed, topic = topic).first()
     try:
         if upOrDown is "up":
-            feed.numVotes += 1
-            session.commit()
-        elif upOrDown is "down" and feed.numVotes > 1:
-            feed.numVotes -= 1
-            session.commit()
+            scoreFeed.score += 1
+            print "Up voted %s under %s new score is  %d" % (feed.title, topic.title, scoreFeed.score)
+
+        elif upOrDown is "down":
+            scoreFeed.score -= 1
+            print "Down voted %s under %s new score is  %d" % (feed.title, topic.title, scoreFeed.score)
+
+        session.commit()
     except:
         session.rollback()
 
 
 def removefromScoreTable(feed):
     """
-    Functtion to remove the Scores of all the Items in a particular feed
+    Function to remove the Scores of all the Items in a particular feed
     """
     itemsList = fm.listItems(feed)
     for item in itemsList:
         removeItemScores(item)
 
-
 def removeItemScores(itemToRemove):
     """
-    Functtion to remove the Scores of a particular article Item.
+    Function to remove the Scores of a particular article Item.
     """
-    itemsInTopics = ScoreTable.query.filter_by(item = itemToRemove).all()
+    itemsInTopics = ScoreItem.query.filter_by(item = itemToRemove).all()
     for item in itemsInTopics:
         item.delete()
     try:
@@ -178,11 +233,40 @@ def removeItemScores(itemToRemove):
         print "Error removing Scores"
 
 
-def voteArticle(upOrDown, item, topic="General"):
+def removefromScoreFeeds(feed):
+    """
+    Function to remove the all Scores particular feed.
+    """
+    feedsList = fm.listFeeds()
+    for feed in feedsList:
+        removeFeedScores(feed)
+
+def removeFeedScores(feedToRemove):
+    """
+    Function to remove the Scores of a particular article Item.
+    """
+    feedsInTopics = ScoreFeed.query.filter_by(feed = feedToRemove).all()
+    for feed in feedsInTopics:
+        feed.delete()
+    try:
+        session.commit()
+        print "removed from Scores"
+    except:
+        print "Error removing Scores"
+
+
+def voteArticle(upOrDown, item, topic):
     """
     voteArticle function, takes arguments upOrDown vote, topic to vote,
     and the text to vote for
     """
+    # vote for the feed that the article belongs.
+    _voteFeed(upOrDown, item.feed, topic)
+
+    # we'll be working with strings so get the topic title.
+    topic = topic.title
+    topic = topic.replace(" ", "_")
+
     text = purify.cleanText(item.description)
     title = purify.cleanText(item.title)
 
@@ -218,6 +302,8 @@ def classifyArticleText(topic,text):
     specified topic. Add code to remove any tags in the code and generate a
     plain text string. Use the "markdown" module if needed.
     """
+    topic = topic.replace(" ", "_")
+
     c = Classifier(classifierDir, [topic,"not"+topic])
 
     try:
@@ -238,6 +324,8 @@ def classifyArticleTitle(topic,title):
     specified topic. Add code to remove any tags in the code and generate a
     plain text string. Use the "markdown" module if needed.
     """
+    topic = topic.replace(" ", "_")
+
     c = Classifier(classifierDir, [topic+"Title", "not"+topic+"Title"])
 
     try:
@@ -249,7 +337,6 @@ def classifyArticleTitle(topic,title):
             (classification, probability) = ("not"+topic+"Title", 0)
     else:
         return (classification, probability)
-
 
 
 def initTopics():

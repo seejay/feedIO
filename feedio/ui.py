@@ -47,6 +47,8 @@ from UI.removeFeed_ui import Ui_removeFeed
 from UI.addTopic_ui import Ui_addTopic
 from UI.removeTopic_ui import Ui_removeTopic
 from UI.manageTopics_ui import Ui_manageTopics
+from UI.twitterPIN_ui import Ui_twitterPIN
+from UI.rilLogin_ui import Ui_rilLogin
 from UI.about_ui import Ui_About
 from UI.license_ui import Ui_License
 from UI.credits_ui import Ui_Credits
@@ -57,6 +59,11 @@ import classifier
 import prioritizer
 import purify
 import notifier
+import twitterPlugin
+import rilPlugin
+import tweepy
+import webbrowser
+
 
 class mainUI(QMainWindow):
     def __init__(self, parent=None):
@@ -93,6 +100,10 @@ class mainUI(QMainWindow):
 
         self.ui.listOld.setFocus()
         self.ui.comboFeed.setCurrentIndex(len(self.feedList))
+        # Twitter authentication details.
+#        self.twitterAuthenticated = False
+#        self.twitterAuthKey = ''
+#        self.twitterAuthSecret = ''
 
         self.connect(self.ui.comboFeed, SIGNAL("currentIndexChanged(int)"), self.displayItems)
         self.connect(self.ui.comboTopic, SIGNAL("currentIndexChanged(int)"), self.displayItems)
@@ -100,6 +111,7 @@ class mainUI(QMainWindow):
         self.connect(self.ui.listOld, SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.setCurrentFromOld)
         self.connect(self.ui.actionVisitPage, SIGNAL("activated()"), self.visitPage)
         self.connect(self.ui.actionFetchAllFeeds, SIGNAL("activated()"), parent.fetchAllFeeds)
+        self.connect(self.ui.actionReCalculateScores, SIGNAL("activated()"), self.reCalculateAllScores)
         self.connect(self.ui.actionFetchFeed, SIGNAL("activated()"), self.fetchFeed)
         self.connect(self.ui.actionUpVote, SIGNAL("activated()"), self.upVoteArticle)
         self.connect(self.ui.actionDownVote, SIGNAL("activated()"), self.downVoteArticle)
@@ -161,8 +173,9 @@ class mainUI(QMainWindow):
                 pri = prioritizer.Prioritizer(self.currentTopic)
                 self.scoreItemList = pri.listScoreItems()
                 # Now filter out the Old items using a generator
+                #this is being done in the prioritizer now
+#                self.scoreItemList = [scoreItem for scoreItem in self.scoreItemList if scoreItem.item.isUnread is True]
 
-                self.scoreItemList = [scoreItem for scoreItem in self.scoreItemList if scoreItem.item.isUnread is True]
                 # prioritize the list according to the scores
                 self.scoreItemList = pri.prioritize(self.scoreItemList)
 
@@ -172,9 +185,10 @@ class mainUI(QMainWindow):
                 selectedFeed = self.feedList[selectedFeedIndex]
 
                 pri = prioritizer.Prioritizer(self.currentTopic)
-                self.scoreItemList = pri.listScoreItems()
+                self.scoreItemList = pri.listScoreItems(selectedFeed)
                 # Now filter out the items for the current Feed using a generator
-                self.scoreItemList = [scoreItem for scoreItem in self.scoreItemList if (scoreItem.item.feed is selectedFeed and scoreItem.item.isUnread is True)]
+                #this is being done in the prioritizer now
+#                self.scoreItemList = [scoreItem for scoreItem in self.scoreItemList if (scoreItem.item.feed is selectedFeed and scoreItem.item.isUnread is True)]
 
                 self.scoreItemList = pri.prioritize(self.scoreItemList)
 
@@ -193,16 +207,17 @@ class mainUI(QMainWindow):
         # then sort it according to the Article date.
 
         for scoreItem in self.scoreItemList:
-#           treeItem=QTreeWidgetItem([scoreItem.item.title, str(time.ctime(scoreItem.item.updated))])
+#            treeItem=QTreeWidgetItem([ str(scoreItem.score), scoreItem.item.title])
             treeItem=QTreeWidgetItem([scoreItem.item.title,])
             treeItem.article = scoreItem.item
 
             treeItem.setIcon(0, itemIcon)
 
 #            # Set a part of the article text as the tooltip of Items
-#            tipLong = purify.cleanText(item.article.description)
-#            tip = purify.shorten(tipLong, 200)
-#            treeItem.setToolTip(0, tip)
+#            itemTip = purify.cleanText(str(scoreItem.score))
+            itemTip = "Score: <b>" + str(scoreItem.score) + "</b> &nbsp; &nbsp;&nbsp;" + "<br>Topic: " + "<i>" + scoreItem.topic.title + "</i>" + "<br>Via: " + "<i>" + scoreItem.item.feed.title + "</i>"
+#            tip = purify.shorten(itemTip, 200)
+            treeItem.setToolTip(0, itemTip)
 
             if scoreItem.item.age is 0:
                 treeItem.setFont(0, self.newFont)
@@ -370,11 +385,11 @@ class mainUI(QMainWindow):
             selectedTopic = self.topicList[selectedTopicIndex]
 
             #call the classifier module
-            classifier.voteArticle("up",selected.article, selectedTopic.title)
+            classifier.voteArticle("up",selected.article, selectedTopic)
 
-            #upVote the feed
-            classifier.voteFeed("up", selected.article.feed)
-            print "Up Voted %s" % selected.article.title
+#            #upVote the feed
+#            classifier.voteFeed("up", selected.article.feed)
+#            print "Up Voted %s" % selected.article.title
 
             self.parent.status = "Up Voted %s under %s" % (selected.article.title, selectedTopic.title)
             self.parent.sendNotification()
@@ -393,14 +408,24 @@ class mainUI(QMainWindow):
             selectedTopic = self.topicList[selectedTopicIndex]
 
             #call the classifier module
-            classifier.voteArticle("down", selected.article, selectedTopic.title)
+            classifier.voteArticle("down", selected.article, selectedTopic)
 
-            #downVote the feed
-            classifier.voteFeed("down", selected.article.feed)
-            print "Down Voted %s" % selected.article.title
+#            #downVote the feed
+#            classifier.voteFeed("down", selected.article.feed)
+#            print "Down Voted %s" % selected.article.title
 
             self.parent.status = "Down Voted %s under %s" % (selected.article.title, selectedTopic.title)
             self.parent.sendNotification()
+
+    def reCalculateAllScores(self):
+        """
+        calls the parent.reCalculateAllScores inside a thread.
+        """
+        print "reCalculateAllScores called"
+        thread = threading.Thread(target=self.parent.reCalculateAllScores, args=())
+#        thread.setDaemon(True)
+        thread.start()
+
 
 
     def on_actionManageFeeds_activated(self, i = None):
@@ -474,6 +499,87 @@ class mainUI(QMainWindow):
         AboutDialog(self).exec_()
 
 
+    def on_actionPostToTwitter_activated(self, i = None):
+        """
+        post to twitter action implementataion.
+        """
+        if i is None: return
+
+        selected = self.currentItem
+        shortUrl = purify.shortenUrl(selected.article.url)
+
+#        # Dirty hack to make the tweet limit to 140 chars.
+#        urlWidth = len(selected.article.url)
+#        articleTitle = purify.shorten(selected.article.title, (135-urlWidth))
+
+        message = selected.article.title +" "+ shortUrl
+
+#        message = selected.article.url + selected.article.title
+
+        if twitterPlugin.ACCESS_KEY is '':
+            try:
+                print "signing into twitter using the browser..."
+                tp = twitterPlugin.TwitterPlugin()
+
+                auth_url = tp.authenticate()
+
+                webbrowser.open_new(auth_url)
+
+                TwitterPinDialog(self).exec_()
+                (twitterPlugin.ACCESS_KEY, twitterPlugin.ACCESS_SECRET) = tp.verify()
+
+            except tweepy.TweepError:
+                print "Not authenticated properly. check the PIN number"
+            else:
+                tp.tweet(message)
+                self.parent.status = message + " posted to twitter."
+                self.parent.sendNotification()
+
+        else:
+            try:
+                tp = twitterPlugin.TwitterPlugin()
+                tp.tweet(message)
+            except:
+                print "Error in tweeting"
+            else:
+                self.parent.status = message + " posted to twitter."
+                self.parent.sendNotification()
+
+
+    def on_actionReadItLater_activated(self, i = None):
+        """
+        Read It Later, action implementataion.
+        """
+        if i is None: return
+
+        selected = self.currentItem
+
+        if rilPlugin.SESSION is None:
+            print "Asking to Sign into RIL..."
+            RilLoginDialog(self).exec_()
+
+            if rilPlugin.SESSION is not None:
+                print rilPlugin.SESSION
+                try:
+                    rilPlugin.SESSION.submitItem(selected.article)
+                except:
+                    print "Error in Submitting to RIL"
+                else:
+                    # TODO: do something like bookmarking the selected article.
+                    self.parent.status = selected.article.title + "Added to Read It Later List."
+                    self.parent.sendNotification()
+        else:
+            try:
+                rilPlugin.SESSION.submitItem(selected.article)
+            except:
+                print "Error in Submitting to RIL"
+            else:
+                # TODO: do something like bookmarking the selected article.
+                self.parent.status = selected.article.title + "Added to Read It Later List."
+                self.parent.sendNotification()
+
+
+
 class AddFeedDialog(QDialog):
     def __init__(self, parent):
         QDialog.__init__(self, parent)
@@ -496,7 +602,7 @@ class AddFeedDialog(QDialog):
         thread.join()
 
         itemList = fm.listNew()
-        classifier.assignToAllTopics(itemList)
+        classifier.assignItemsToTopics(itemList)
         self.parent.parent.setNewItemScores()
         self.close()
 
@@ -571,7 +677,7 @@ class ManageFeedsDialog(QDialog):
         thread.join()
 
         itemList = fm.listNew()
-        classifier.assignToAllTopics(itemList)
+        classifier.assignItemsToTopics(itemList)
         self.parent.parent.setNewItemScores()
 
         self.ui.urlLine.clear()
@@ -590,7 +696,7 @@ class AddTopicDialog(QDialog):
 
     def addTopic(self):
         topic = unicode(self.ui.addTopicLinedit.text())
-        topic = purify.cleanText(topic)
+        #topic = purify.cleanText(topic) # gave an error when adding
         classifier.addTopic(topic)
         self.close()
 
@@ -659,6 +765,43 @@ class ManageTopicsDialog(QDialog):
         classifier.addTopic(topic)
         self.ui.topicLine.clear()
         self.displayTopics()
+
+
+class TwitterPinDialog(QDialog):
+    def __init__(self, parent):
+        QDialog.__init__(self, parent)
+        self.ui = Ui_twitterPIN()
+        self.ui.setupUi(self)
+        self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
+        self.connect(self.ui.btnOK, SIGNAL('clicked()'), self.getPin)
+
+    def getPin(self):
+        twitterPlugin.VERIFIER = self.ui.pinLineEdit.text()
+        self.close()
+
+
+class RilLoginDialog(QDialog):
+    def __init__(self, parent):
+        QDialog.__init__(self, parent)
+        self.ui = Ui_rilLogin()
+        self.ui.setupUi(self)
+        self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
+        self.connect(self.ui.btnOk, SIGNAL('clicked()'), self.login)
+
+    def login(self):
+        """
+        """
+        username = self.ui.userNameLineEdit.text()
+        password = self.ui.passwordLineEdit.text()
+
+        try:
+             rilPlugin.SESSION = rilPlugin.RilSession(username, password)
+        except rilPlugin.LogInError:
+            self.ui.lblStatus.setText("Invalid username/password!. Please retry.")
+            print "LoginError! invalid username/password."
+
+        else:
+            self.close()
 
 
 class AboutDialog(QDialog):
@@ -739,7 +882,7 @@ class FeedIO(QWidget):
 
         #assign the newly fetched articles to the topics
         newList = fm.listNew()
-        classifier.assignToAllTopics(newList)
+        classifier.assignItemsToTopics(newList)
         print "Assigned the new articles to topics"
         #calculate the priority scores of the new articles for each topic.
         self.setNewItemScores()
@@ -762,6 +905,32 @@ class FeedIO(QWidget):
             scoreItemList = [scoreItem for scoreItem in scoreItemsList if scoreItem.item.age is 0]
             pri.setScores(scoreItemList)
             print "calculated New article scores for %s" % topic.title
+
+    def reCalculateAllScores(self):
+        """
+        Function to get all the Unread Articles and calculate their scores under all the topics.
+        """
+        #get all the topics
+        print "reCalculating All Scores"
+        topicsList = classifier.listTopics()
+
+        for topic in topicsList:
+            self.reCalculateScores(topic)
+
+
+    def reCalculateScores(self, topic):
+        """
+        Function to get all the Unread Articles and calculate their scores under the given topic.
+        """
+        print "calculating New article scores for %s" % topic.title
+        pri = prioritizer.Prioritizer(topic)
+        scoreItemsList = pri.listScoreItems()
+#        scoreItemList = [scoreItem for scoreItem in scoreItemsList if scoreItem.item.isUnread is True]
+        pri.setScores(scoreItemsList)
+        print "calculated New article scores for %s" % topic.title
+        self.status = "Calculated New article scores for %s" % topic.title
+        self.sendNotification()
+
 
 
     def closeEvent(self, event):
