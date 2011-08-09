@@ -410,6 +410,33 @@
     <property name="title">
      <string>&amp;Settings</string>
     </property>
+    <widget class="QMenu" name="menuNotifications">
+     <property name="title">
+      <string>&amp;Notifications</string>
+     </property>
+     <addaction name="actionTurnOffNotifications"/>
+     <addaction name="actionTurnOnNotifications"/>
+    </widget>
+    <widget class="QMenu" name="menu_Twitter">
+     <property name="title">
+      <string>&amp;Twitter</string>
+     </property>
+     <addaction name="actionSignInToTwitter"/>
+     <addaction name="actionSignOffFromTwitter"/>
+    </widget>
+    <widget class="QMenu" name="menu_Read_It_Later">
+     <property name="title">
+      <string>&amp;Read It Later</string>
+     </property>
+     <addaction name="actionSignInToRIL"/>
+     <addaction name="actionSignOffFromRIL"/>
+    </widget>
+    <addaction name="separator"/>
+    <addaction name="menuNotifications"/>
+    <addaction name="separator"/>
+    <addaction name="menu_Twitter"/>
+    <addaction name="menu_Read_It_Later"/>
+    <addaction name="separator"/>
     <addaction name="actionPreferences"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -489,7 +516,7 @@
     <bool>false</bool>
    </property>
    <attribute name="toolBarArea">
-    <enum>LeftToolBarArea</enum>
+    <enum>RightToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
@@ -529,6 +556,9 @@
    </property>
    <property name="text">
     <string>&amp;Remove Feed</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -587,7 +617,7 @@
     <string>&amp;Up vote </string>
    </property>
    <property name="shortcut">
-    <string>U</string>
+    <string>Ctrl+U</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -602,7 +632,7 @@
     <string>&amp;Down Vote</string>
    </property>
    <property name="shortcut">
-    <string>D</string>
+    <string>Ctrl+D</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -628,6 +658,9 @@
    <property name="text">
     <string>&amp;Fetch Feed</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>
@@ -641,7 +674,7 @@
     <string>Fetch &amp;All Feeds</string>
    </property>
    <property name="shortcut">
-    <string>F</string>
+    <string>Ctrl+R</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -656,7 +689,7 @@
     <string>&amp;Visit Page</string>
    </property>
    <property name="shortcut">
-    <string>V</string>
+    <string>Ctrl+V</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -718,6 +751,36 @@
   <action name="actionFavorite">
    <property name="text">
     <string>Mark as &amp;Favorite</string>
+   </property>
+  </action>
+  <action name="actionTurnOffNotifications">
+   <property name="text">
+    <string>Turn o&amp;ff Notifications</string>
+   </property>
+  </action>
+  <action name="actionTurnOnNotifications">
+   <property name="text">
+    <string>Turn o&amp;n Notifications</string>
+   </property>
+  </action>
+  <action name="actionSignInToTwitter">
+   <property name="text">
+    <string>Sign &amp;into Twitter</string>
+   </property>
+  </action>
+  <action name="actionSignOffFromTwitter">
+   <property name="text">
+    <string>Sign &amp;off</string>
+   </property>
+  </action>
+  <action name="actionSignInToRIL">
+   <property name="text">
+    <string>Sign &amp;into RIL</string>
+   </property>
+  </action>
+  <action name="actionSignOffFromRIL">
+   <property name="text">
+    <string>Sign &amp;off</string>
    </property>
   </action>
  </widget>

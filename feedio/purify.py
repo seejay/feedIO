@@ -83,5 +83,9 @@ def shortenUrl(url):
     """
     function to shorten a long Url.
     """
-    shortUrl = tinyurl.create_one(url)
+    try:
+        shortUrl = tinyurl.create_one(url)
+    except:
+        return False
+
     return shortUrl

@@ -499,6 +499,52 @@ class mainUI(QMainWindow):
         AboutDialog(self).exec_()
 
 
+    def on_actionSignInToTwitter_activated(self, i = None):
+        """
+        Sign into twitter.
+        """
+        if i is None: return
+
+        if twitterPlugin.ACCESS_KEY is '':
+            try:
+                print "signing into twitter using the browser..."
+                tp = twitterPlugin.TwitterPlugin()
+
+                auth_url = tp.authenticate()
+
+                webbrowser.open_new(auth_url)
+
+                TwitterPinDialog(self).exec_()
+                # return is the VERIFIER code is not set.
+                if twitterPlugin.VERIFIER is '': return
+
+                (twitterPlugin.ACCESS_KEY, twitterPlugin.ACCESS_SECRET) = tp.verify()
+
+            except tweepy.TweepError:
+                print "Not authenticated properly. check the PIN number"
+                self.parent.status = "Error Logging to twitter.com!"
+                self.parent.sendNotification()
+            else:
+                self.parent.status = "You have Signed in to twitter.com"
+                self.parent.sendNotification()
+
+
+    def on_actionSignOffFromTwitter_activated(self, i = None):
+        """
+        Sign off from the twitter session.
+        """
+        if i is None: return
+
+        twitterPlugin.ACCESS_KEY = ''
+        twitterPlugin.ACCESS_SECRET = ''
+        twitterPlugin.VERIFIER = ''
+
+        self.parent.status = "You have Signed Off from twitter."
+        self.parent.sendNotification()
+
+        print "Signed off from twitter."
+
+
     def on_actionPostToTwitter_activated(self, i = None):
         """
         post to twitter action implementataion.
@@ -507,6 +553,7 @@ class mainUI(QMainWindow):
 
         selected = self.currentItem
         shortUrl = purify.shortenUrl(selected.article.url)
+        if shortUrl is False: return
 
 #        # Dirty hack to make the tweet limit to 140 chars.
 #        urlWidth = len(selected.article.url)
@@ -526,10 +573,16 @@ class mainUI(QMainWindow):
                 webbrowser.open_new(auth_url)
 
                 TwitterPinDialog(self).exec_()
+                # return is the VERIFIER code is not set.
+                if twitterPlugin.VERIFIER is '': return
+
                 (twitterPlugin.ACCESS_KEY, twitterPlugin.ACCESS_SECRET) = tp.verify()
 
             except tweepy.TweepError:
                 print "Not authenticated properly. check the PIN number"
+                self.parent.status = "Error Logging to twitter.com!"
+                self.parent.sendNotification()
+
             else:
                 tp.tweet(message)
                 self.parent.status = message + " posted to twitter."
@@ -544,6 +597,37 @@ class mainUI(QMainWindow):
             else:
                 self.parent.status = message + " posted to twitter."
                 self.parent.sendNotification()
+
+
+    def on_actionSignInToRIL_activated(self, i = None):
+        """
+        Sign in to Read It Later, action implementataion.
+        """
+        if i is None: return
+        rilPlugin.SESSION = None
+
+        print "Asking to Sign into RIL..."
+        RilLoginDialog(self).exec_()
+
+        if rilPlugin.SESSION is None: return
+
+        # TODO: do something like bookmarking the selected article.
+        self.parent.status = "Signed in to Read It Later..."
+        self.parent.sendNotification()
+
+
+    def on_actionSignOffFromRIL_activated(self, i = None):
+        """
+        Sign off from Read It Later, action implementataion.
+        """
+        if i is None: return
+
+        rilPlugin.SESSION = None
+
+        self.parent.status = "You have Signed Off from Read It Later."
+        self.parent.sendNotification()
+
+        print "Signed off from RIL."
 
 
     def on_actionReadItLater_activated(self, i = None):
