@@ -1,0 +1,226 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module feedio.feedmanager</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="feedio.html"><font color="#ffffff">feedio</font></a>.feedmanager</strong></big></big> (version 0.0.3)</font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/ceevee/play ground/feedIO/feedio/feedmanager.py">/home/ceevee/play ground/feedIO/feedio/feedmanager.py</a></font></td></tr></table>
+    <p><tt>feedManager&nbsp;for&nbsp;feedIO.&nbsp;provides&nbsp;functionality&nbsp;to&nbsp;add,&nbsp;remove&nbsp;and&nbsp;fetch&nbsp;updates<br>
+&nbsp;from&nbsp;feeds.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="feedio.lib.autorss.html">feedio.lib.autorss</a><br>
+<a href="feedio.lib.feedparser.html">feedio.lib.feedparser</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="time.html">time</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>(<a href="exceptions.html#BaseException">exceptions.BaseException</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="feedio.feedmanager.html#FeedIOError">FeedIOError</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="feedio.feedmanager.html#FeedError">FeedError</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="FeedError">class <strong>FeedError</strong></a>(<a href="feedio.feedmanager.html#FeedIOError">FeedIOError</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.feedmanager.html#FeedError">FeedError</a></dd>
+<dd><a href="feedio.feedmanager.html#FeedIOError">FeedIOError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors inherited from <a href="feedio.feedmanager.html#FeedIOError">FeedIOError</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="FeedError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#FeedError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="FeedError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="FeedError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="FeedError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="FeedError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="FeedError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="FeedError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="FeedError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="FeedError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="FeedError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="FeedError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="FeedIOError">class <strong>FeedIOError</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.feedmanager.html#FeedIOError">FeedIOError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="FeedIOError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedIOError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#FeedIOError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="FeedIOError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedIOError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="FeedIOError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedIOError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="FeedIOError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedIOError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="FeedIOError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedIOError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="FeedIOError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="FeedIOError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedIOError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="FeedIOError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedIOError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="FeedIOError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="FeedIOError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedIOError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="FeedIOError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-addFeed"><strong>addFeed</strong></a>(feedUrl)</dt><dd><tt>Function&nbsp;to&nbsp;add&nbsp;a&nbsp;new&nbsp;feed&nbsp;to&nbsp;the&nbsp;database.</tt></dd></dl>
+ <dl><dt><a name="-fetchFeeds"><strong>fetchFeeds</strong></a>(feed, feedData)</dt></dl>
+ <dl><dt><a name="-listFeeds"><strong>listFeeds</strong></a>()</dt><dd><tt>Function&nbsp;to&nbsp;return&nbsp;the&nbsp;List&nbsp;of&nbsp;subscribed&nbsp;feeds&nbsp;from&nbsp;the&nbsp;database.</tt></dd></dl>
+ <dl><dt><a name="-listItems"><strong>listItems</strong></a>(i<font color="#909090">=-1</font>)</dt><dd><tt>Function&nbsp;to&nbsp;return&nbsp;the&nbsp;List&nbsp;of&nbsp;fetched&nbsp;articles&nbsp;on&nbsp;the&nbsp;database.<br>
+Optional&nbsp;argument&nbsp;will&nbsp;define&nbsp;from&nbsp;wich&nbsp;feed&nbsp;the&nbsp;articles&nbsp;should&nbsp;be&nbsp;returned.</tt></dd></dl>
+ <dl><dt><a name="-listNew"><strong>listNew</strong></a>(i<font color="#909090">=-1</font>)</dt><dd><tt>Function&nbsp;to&nbsp;return&nbsp;the&nbsp;List&nbsp;of&nbsp;fetched&nbsp;articles&nbsp;on&nbsp;the&nbsp;database.<br>
+Optional&nbsp;argument&nbsp;will&nbsp;define&nbsp;from&nbsp;wich&nbsp;feed&nbsp;the&nbsp;articles&nbsp;should&nbsp;be&nbsp;returned.</tt></dd></dl>
+ <dl><dt><a name="-listRead"><strong>listRead</strong></a>(i<font color="#909090">=-1</font>)</dt><dd><tt>Function&nbsp;to&nbsp;return&nbsp;the&nbsp;List&nbsp;of&nbsp;already&nbsp;read&nbsp;articles.<br>
+Optional&nbsp;argument&nbsp;will&nbsp;define&nbsp;from&nbsp;wich&nbsp;feed&nbsp;the&nbsp;articles&nbsp;should&nbsp;be&nbsp;returned.</tt></dd></dl>
+ <dl><dt><a name="-listUnread"><strong>listUnread</strong></a>(i<font color="#909090">=-1</font>)</dt><dd><tt>Function&nbsp;to&nbsp;return&nbsp;the&nbsp;List&nbsp;of&nbsp;fetched&nbsp;articles&nbsp;on&nbsp;the&nbsp;database.<br>
+Optional&nbsp;argument&nbsp;will&nbsp;define&nbsp;from&nbsp;wich&nbsp;feed&nbsp;the&nbsp;articles&nbsp;should&nbsp;be&nbsp;returned.</tt></dd></dl>
+ <dl><dt><a name="-main"><strong>main</strong></a>()</dt></dl>
+ <dl><dt><a name="-removeFeed"><strong>removeFeed</strong></a>(feed)</dt><dd><tt>Function&nbsp;to&nbsp;remove&nbsp;a&nbsp;subscribed&nbsp;feed&nbsp;from&nbsp;the&nbsp;database.</tt></dd></dl>
+ <dl><dt><a name="-setFeedTopic"><strong>setFeedTopic</strong></a>(feed, topic, commit<font color="#909090">=True</font>)</dt><dd><tt>Assigns&nbsp;a&nbsp;feed&nbsp;to&nbsp;the&nbsp;given&nbsp;Topic.</tt></dd></dl>
+ <dl><dt><a name="-setItemFlag"><strong>setItemFlag</strong></a>(item, age<font color="#909090">=2</font>, commit<font color="#909090">=True</font>)</dt><dd><tt>Function&nbsp;to&nbsp;set&nbsp;an&nbsp;article&nbsp;as&nbsp;new&nbsp;unred&nbsp;or&nbsp;old.&nbsp;set&nbsp;the&nbsp;flag&nbsp;as&nbsp;0,&nbsp;1,&nbsp;or&nbsp;2<br>
+as&nbsp;follows,<br>
+&nbsp;<br>
+new&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0<br>
+unread&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1<br>
+read&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2</tt></dd></dl>
+ <dl><dt><a name="-updateAll"><strong>updateAll</strong></a>()</dt><dd><tt>function&nbsp;to&nbsp;update&nbsp;the&nbsp;content&nbsp;of&nbsp;all&nbsp;the&nbsp;feeds&nbsp;in&nbsp;the&nbsp;subscribed&nbsp;list.</tt></dd></dl>
+ <dl><dt><a name="-updateFeed"><strong>updateFeed</strong></a>(feed)</dt><dd><tt>function&nbsp;to&nbsp;update&nbsp;the&nbsp;content&nbsp;of&nbsp;a&nbsp;feed</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>DBFILE</strong> = '/home/ceevee/.feedIO/feedIO.sqlite'<br>
+<strong>USERDIR</strong> = '/home/ceevee/.feedIO'<br>
+<strong>__author__</strong> = 'Chanaka Jayamal &lt;seejay@seejay.net&gt;'<br>
+<strong>__developers__</strong> = ['Chanaka Jayamal', 'Lanka Amarasekara', 'Kolitha Gajanayake', 'Chamika Viraj']<br>
+<strong>__license__</strong> = '<font color="#c040c0">\n</font>    Copyright (C) 2011 Sri Lanka Institute of I...IO.  If not, see &lt;http://www.gnu.org/licenses/&gt;.<font color="#c040c0">\n</font>'<br>
+<strong>__version__</strong> = '0.0.3'<br>
+<strong>belongs_to</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>entities</strong> = [&lt;class 'feedio.models.Feed'&gt;, &lt;class 'feedio.mo...s.ScoreItem'&gt;, &lt;class 'feedio.models.ScoreFeed'&gt;]<br>
+<strong>has_and_belongs_to_many</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>has_field</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>has_many</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>has_one</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>has_property</strong> = &lt;elixir.statements.PropertyStatement object&gt;<br>
+<strong>metadata</strong> = MetaData(None)<br>
+<strong>options_defaults</strong> = {'abstract': False, 'allowcoloverride': False, 'auto_primarykey': True, 'autoload': False, 'autosetup': False, 'identity': None, 'inheritance': 'single', 'mapper_options': {}, 'order_by': None, 'polymorphic': True, ...}<br>
+<strong>session</strong> = &lt;sqlalchemy.orm.scoping.ScopedSession object&gt;<br>
+<strong>using_mapper_options</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>using_options</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>using_options_defaults</strong> = &lt;elixir.statements.ClassMutator object&gt;<br>
+<strong>using_table_options</strong> = &lt;elixir.statements.ClassMutator object&gt;</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Chanaka&nbsp;Jayamal&nbsp;&lt;seejay@seejay.net&gt;</td></tr></table>
+</body></html>

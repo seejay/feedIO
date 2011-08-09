@@ -1,0 +1,599 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module feedio.lib.feedparser</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="feedio.html"><font color="#ffffff">feedio</font></a>.<a href="feedio.lib.html"><font color="#ffffff">lib</font></a>.feedparser</strong></big></big> (version 5.0)</font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/ceevee/play ground/feedIO/feedio/lib/feedparser.py">/home/ceevee/play ground/feedIO/feedio/lib/feedparser.py</a></font></td></tr></table>
+    <p><tt>Universal&nbsp;feed&nbsp;parser<br>
+&nbsp;<br>
+Handles&nbsp;RSS&nbsp;0.9x,&nbsp;RSS&nbsp;1.0,&nbsp;RSS&nbsp;2.0,&nbsp;CDF,&nbsp;Atom&nbsp;0.3,&nbsp;and&nbsp;Atom&nbsp;1.0&nbsp;feeds<br>
+&nbsp;<br>
+Visit&nbsp;<a href="http://feedparser.org/">http://feedparser.org/</a>&nbsp;for&nbsp;the&nbsp;latest&nbsp;version<br>
+Visit&nbsp;<a href="http://feedparser.org/docs/">http://feedparser.org/docs/</a>&nbsp;for&nbsp;the&nbsp;latest&nbsp;documentation<br>
+&nbsp;<br>
+Required:&nbsp;Python&nbsp;2.4&nbsp;or&nbsp;later<br>
+Recommended:&nbsp;CJKCodecs&nbsp;and&nbsp;iconv_codec&nbsp;&lt;<a href="http://cjkpython.i18n.org/">http://cjkpython.i18n.org/</a>&gt;</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="BeautifulSoup.html">BeautifulSoup</a><br>
+<a href="base64.html">base64</a><br>
+<a href="binascii.html">binascii</a><br>
+<a href="cgi.html">cgi</a><br>
+<a href="chardet.html">chardet</a><br>
+</td><td width="25%" valign=top><a href="copy.html">copy</a><br>
+<a href="datetime.html">datetime</a><br>
+<a href="gzip.html">gzip</a><br>
+<a href="re.html">re</a><br>
+<a href="rfc822.html">rfc822</a><br>
+</td><td width="25%" valign=top><a href="sgmllib.html">sgmllib</a><br>
+<a href="string.html">string</a><br>
+<a href="sys.html">sys</a><br>
+<a href="time.html">time</a><br>
+<a href="types.html">types</a><br>
+</td><td width="25%" valign=top><a href="urllib.html">urllib</a><br>
+<a href="urllib2.html">urllib2</a><br>
+<a href="urlparse.html">urlparse</a><br>
+<a href="xml.html">xml</a><br>
+<a href="zlib.html">zlib</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#dict">__builtin__.dict</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="feedio.lib.feedparser.html#FeedParserDict">FeedParserDict</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>(<a href="exceptions.html#BaseException">exceptions.BaseException</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="feedio.lib.feedparser.html#ThingsNobodyCaresAboutButMe">ThingsNobodyCaresAboutButMe</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="feedio.lib.feedparser.html#CharacterEncodingOverride">CharacterEncodingOverride</a>
+</font></dt><dt><font face="helvetica, arial"><a href="feedio.lib.feedparser.html#CharacterEncodingUnknown">CharacterEncodingUnknown</a>
+</font></dt><dt><font face="helvetica, arial"><a href="feedio.lib.feedparser.html#NonXMLContentType">NonXMLContentType</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="feedio.lib.feedparser.html#UndeclaredNamespace">UndeclaredNamespace</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="feedio.lib.feedparser.html#EndBracketMatch">EndBracketMatch</a>
+</font></dt><dt><font face="helvetica, arial"><a href="feedio.lib.feedparser.html#EndBracketRegEx">EndBracketRegEx</a>
+</font></dt><dt><font face="helvetica, arial"><a href="feedio.lib.feedparser.html#Serializer">Serializer</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="feedio.lib.feedparser.html#PprintSerializer">PprintSerializer</a>
+</font></dt><dt><font face="helvetica, arial"><a href="feedio.lib.feedparser.html#TextSerializer">TextSerializer</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CharacterEncodingOverride">class <strong>CharacterEncodingOverride</strong></a>(<a href="feedio.lib.feedparser.html#ThingsNobodyCaresAboutButMe">ThingsNobodyCaresAboutButMe</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.feedparser.html#CharacterEncodingOverride">CharacterEncodingOverride</a></dd>
+<dd><a href="feedio.lib.feedparser.html#ThingsNobodyCaresAboutButMe">ThingsNobodyCaresAboutButMe</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors inherited from <a href="feedio.lib.feedparser.html#ThingsNobodyCaresAboutButMe">ThingsNobodyCaresAboutButMe</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="CharacterEncodingOverride-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#CharacterEncodingOverride-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#CharacterEncodingOverride-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="CharacterEncodingOverride-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#CharacterEncodingOverride-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="CharacterEncodingOverride-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#CharacterEncodingOverride-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="CharacterEncodingOverride-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#CharacterEncodingOverride-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="CharacterEncodingOverride-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#CharacterEncodingOverride-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="CharacterEncodingOverride-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="CharacterEncodingOverride-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#CharacterEncodingOverride-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="CharacterEncodingOverride-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#CharacterEncodingOverride-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="CharacterEncodingOverride-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="CharacterEncodingOverride-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#CharacterEncodingOverride-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="CharacterEncodingOverride-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CharacterEncodingUnknown">class <strong>CharacterEncodingUnknown</strong></a>(<a href="feedio.lib.feedparser.html#ThingsNobodyCaresAboutButMe">ThingsNobodyCaresAboutButMe</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.feedparser.html#CharacterEncodingUnknown">CharacterEncodingUnknown</a></dd>
+<dd><a href="feedio.lib.feedparser.html#ThingsNobodyCaresAboutButMe">ThingsNobodyCaresAboutButMe</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors inherited from <a href="feedio.lib.feedparser.html#ThingsNobodyCaresAboutButMe">ThingsNobodyCaresAboutButMe</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="CharacterEncodingUnknown-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#CharacterEncodingUnknown-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#CharacterEncodingUnknown-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="CharacterEncodingUnknown-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#CharacterEncodingUnknown-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="CharacterEncodingUnknown-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#CharacterEncodingUnknown-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="CharacterEncodingUnknown-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#CharacterEncodingUnknown-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="CharacterEncodingUnknown-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#CharacterEncodingUnknown-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="CharacterEncodingUnknown-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="CharacterEncodingUnknown-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#CharacterEncodingUnknown-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="CharacterEncodingUnknown-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#CharacterEncodingUnknown-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="CharacterEncodingUnknown-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="CharacterEncodingUnknown-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#CharacterEncodingUnknown-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="CharacterEncodingUnknown-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="EndBracketMatch">class <strong>EndBracketMatch</strong></a></font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="EndBracketMatch-__init__"><strong>__init__</strong></a>(self, match)</dt></dl>
+
+<dl><dt><a name="EndBracketMatch-start"><strong>start</strong></a>(self, n)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="EndBracketRegEx">class <strong>EndBracketRegEx</strong></a></font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="EndBracketRegEx-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="EndBracketRegEx-search"><strong>search</strong></a>(self, string, index<font color="#909090">=0</font>)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="FeedParserDict">class <strong>FeedParserDict</strong></a>(<a href="__builtin__.html#dict">__builtin__.dict</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.feedparser.html#FeedParserDict">FeedParserDict</a></dd>
+<dd><a href="__builtin__.html#dict">__builtin__.dict</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="FeedParserDict-__contains__"><strong>__contains__</strong></a>(self, key)</dt></dl>
+
+<dl><dt><a name="FeedParserDict-__getattr__"><strong>__getattr__</strong></a>(self, key)</dt></dl>
+
+<dl><dt><a name="FeedParserDict-__getitem__"><strong>__getitem__</strong></a>(self, key)</dt></dl>
+
+<dl><dt><a name="FeedParserDict-__setattr__"><strong>__setattr__</strong></a>(self, key, value)</dt></dl>
+
+<dl><dt><a name="FeedParserDict-__setitem__"><strong>__setitem__</strong></a>(self, key, value)</dt></dl>
+
+<dl><dt><a name="FeedParserDict-get"><strong>get</strong></a>(self, key, default<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="FeedParserDict-has_key"><strong>has_key</strong></a>(self, key)</dt></dl>
+
+<dl><dt><a name="FeedParserDict-setdefault"><strong>setdefault</strong></a>(self, key, value)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>keymap</strong> = {'channel': 'feed', 'copyright': 'rights', 'copyright_detail': 'rights_detail', 'date': 'updated', 'date_parsed': 'updated_parsed', 'description': ['summary', 'subtitle'], 'guid': 'id', 'issued': 'published', 'issued_parsed': 'published_parsed', 'items': 'entries', ...}</dl>
+
+<hr>
+Methods inherited from <a href="__builtin__.html#dict">__builtin__.dict</a>:<br>
+<dl><dt><a name="FeedParserDict-__cmp__"><strong>__cmp__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedParserDict-__cmp__">__cmp__</a>(y)&nbsp;&lt;==&gt;&nbsp;cmp(x,y)</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-__delitem__"><strong>__delitem__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedParserDict-__delitem__">__delitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-__eq__"><strong>__eq__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedParserDict-__eq__">__eq__</a>(y)&nbsp;&lt;==&gt;&nbsp;x==y</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedParserDict-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedParserDict-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedParserDict-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedParserDict-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-__iter__"><strong>__iter__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedParserDict-__iter__">__iter__</a>()&nbsp;&lt;==&gt;&nbsp;iter(x)</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedParserDict-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedParserDict-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedParserDict-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedParserDict-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#FeedParserDict-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-__sizeof__"><strong>__sizeof__</strong></a>(...)</dt><dd><tt>D.<a href="#FeedParserDict-__sizeof__">__sizeof__</a>()&nbsp;-&gt;&nbsp;size&nbsp;of&nbsp;D&nbsp;in&nbsp;memory,&nbsp;in&nbsp;bytes</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-clear"><strong>clear</strong></a>(...)</dt><dd><tt>D.<a href="#FeedParserDict-clear">clear</a>()&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Remove&nbsp;all&nbsp;items&nbsp;from&nbsp;D.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-copy"><strong>copy</strong></a>(...)</dt><dd><tt>D.<a href="#FeedParserDict-copy">copy</a>()&nbsp;-&gt;&nbsp;a&nbsp;shallow&nbsp;copy&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-items"><strong>items</strong></a>(...)</dt><dd><tt>D.<a href="#FeedParserDict-items">items</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;(key,&nbsp;value)&nbsp;pairs,&nbsp;as&nbsp;2-tuples</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-iteritems"><strong>iteritems</strong></a>(...)</dt><dd><tt>D.<a href="#FeedParserDict-iteritems">iteritems</a>()&nbsp;-&gt;&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;(key,&nbsp;value)&nbsp;items&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-iterkeys"><strong>iterkeys</strong></a>(...)</dt><dd><tt>D.<a href="#FeedParserDict-iterkeys">iterkeys</a>()&nbsp;-&gt;&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;keys&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-itervalues"><strong>itervalues</strong></a>(...)</dt><dd><tt>D.<a href="#FeedParserDict-itervalues">itervalues</a>()&nbsp;-&gt;&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;values&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-keys"><strong>keys</strong></a>(...)</dt><dd><tt>D.<a href="#FeedParserDict-keys">keys</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;keys</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-pop"><strong>pop</strong></a>(...)</dt><dd><tt>D.<a href="#FeedParserDict-pop">pop</a>(k[,d])&nbsp;-&gt;&nbsp;v,&nbsp;remove&nbsp;specified&nbsp;key&nbsp;and&nbsp;return&nbsp;the&nbsp;corresponding&nbsp;value.<br>
+If&nbsp;key&nbsp;is&nbsp;not&nbsp;found,&nbsp;d&nbsp;is&nbsp;returned&nbsp;if&nbsp;given,&nbsp;otherwise&nbsp;KeyError&nbsp;is&nbsp;raised</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-popitem"><strong>popitem</strong></a>(...)</dt><dd><tt>D.<a href="#FeedParserDict-popitem">popitem</a>()&nbsp;-&gt;&nbsp;(k,&nbsp;v),&nbsp;remove&nbsp;and&nbsp;return&nbsp;some&nbsp;(key,&nbsp;value)&nbsp;pair&nbsp;as&nbsp;a<br>
+2-tuple;&nbsp;but&nbsp;raise&nbsp;KeyError&nbsp;if&nbsp;D&nbsp;is&nbsp;empty.</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-update"><strong>update</strong></a>(...)</dt><dd><tt>D.<a href="#FeedParserDict-update">update</a>(E,&nbsp;**F)&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Update&nbsp;D&nbsp;from&nbsp;<a href="__builtin__.html#dict">dict</a>/iterable&nbsp;E&nbsp;and&nbsp;F.<br>
+If&nbsp;E&nbsp;has&nbsp;a&nbsp;.<a href="#FeedParserDict-keys">keys</a>()&nbsp;method,&nbsp;does:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;E[k]<br>
+If&nbsp;E&nbsp;lacks&nbsp;.<a href="#FeedParserDict-keys">keys</a>()&nbsp;method,&nbsp;does:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(k,&nbsp;v)&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;v<br>
+In&nbsp;either&nbsp;case,&nbsp;this&nbsp;is&nbsp;followed&nbsp;by:&nbsp;for&nbsp;k&nbsp;in&nbsp;F:&nbsp;D[k]&nbsp;=&nbsp;F[k]</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-values"><strong>values</strong></a>(...)</dt><dd><tt>D.<a href="#FeedParserDict-values">values</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;values</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-viewitems"><strong>viewitems</strong></a>(...)</dt><dd><tt>D.<a href="#FeedParserDict-viewitems">viewitems</a>()&nbsp;-&gt;&nbsp;a&nbsp;set-like&nbsp;object&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;items</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-viewkeys"><strong>viewkeys</strong></a>(...)</dt><dd><tt>D.<a href="#FeedParserDict-viewkeys">viewkeys</a>()&nbsp;-&gt;&nbsp;a&nbsp;set-like&nbsp;object&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;keys</tt></dd></dl>
+
+<dl><dt><a name="FeedParserDict-viewvalues"><strong>viewvalues</strong></a>(...)</dt><dd><tt>D.<a href="#FeedParserDict-viewvalues">viewvalues</a>()&nbsp;-&gt;&nbsp;an&nbsp;object&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;values</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="__builtin__.html#dict">__builtin__.dict</a>:<br>
+<dl><dt><strong>__hash__</strong> = None</dl>
+
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#FeedParserDict-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<dl><dt><strong>fromkeys</strong> = &lt;built-in method fromkeys of type object&gt;<dd><tt><a href="__builtin__.html#dict">dict</a>.<a href="#FeedParserDict-fromkeys">fromkeys</a>(S[,v])&nbsp;-&gt;&nbsp;New&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;with&nbsp;keys&nbsp;from&nbsp;S&nbsp;and&nbsp;values&nbsp;equal&nbsp;to&nbsp;v.<br>
+v&nbsp;defaults&nbsp;to&nbsp;None.</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="NonXMLContentType">class <strong>NonXMLContentType</strong></a>(<a href="feedio.lib.feedparser.html#ThingsNobodyCaresAboutButMe">ThingsNobodyCaresAboutButMe</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.feedparser.html#NonXMLContentType">NonXMLContentType</a></dd>
+<dd><a href="feedio.lib.feedparser.html#ThingsNobodyCaresAboutButMe">ThingsNobodyCaresAboutButMe</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors inherited from <a href="feedio.lib.feedparser.html#ThingsNobodyCaresAboutButMe">ThingsNobodyCaresAboutButMe</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="NonXMLContentType-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#NonXMLContentType-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#NonXMLContentType-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="NonXMLContentType-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#NonXMLContentType-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="NonXMLContentType-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#NonXMLContentType-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="NonXMLContentType-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#NonXMLContentType-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="NonXMLContentType-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#NonXMLContentType-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="NonXMLContentType-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NonXMLContentType-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#NonXMLContentType-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="NonXMLContentType-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#NonXMLContentType-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="NonXMLContentType-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NonXMLContentType-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#NonXMLContentType-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="NonXMLContentType-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PprintSerializer">class <strong>PprintSerializer</strong></a>(<a href="feedio.lib.feedparser.html#Serializer">Serializer</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="PprintSerializer-write"><strong>write</strong></a>(self, stream<font color="#909090">=&lt;open file '&lt;stdout&gt;', mode 'w'&gt;</font>)</dt></dl>
+
+<hr>
+Methods inherited from <a href="feedio.lib.feedparser.html#Serializer">Serializer</a>:<br>
+<dl><dt><a name="PprintSerializer-__init__"><strong>__init__</strong></a>(self, results)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Serializer">class <strong>Serializer</strong></a></font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Serializer-__init__"><strong>__init__</strong></a>(self, results)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TextSerializer">class <strong>TextSerializer</strong></a>(<a href="feedio.lib.feedparser.html#Serializer">Serializer</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="TextSerializer-write"><strong>write</strong></a>(self, stream<font color="#909090">=&lt;open file '&lt;stdout&gt;', mode 'w'&gt;</font>)</dt></dl>
+
+<hr>
+Methods inherited from <a href="feedio.lib.feedparser.html#Serializer">Serializer</a>:<br>
+<dl><dt><a name="TextSerializer-__init__"><strong>__init__</strong></a>(self, results)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ThingsNobodyCaresAboutButMe">class <strong>ThingsNobodyCaresAboutButMe</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>#&nbsp;----------&nbsp;don't&nbsp;touch&nbsp;these&nbsp;----------<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.feedparser.html#ThingsNobodyCaresAboutButMe">ThingsNobodyCaresAboutButMe</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="ThingsNobodyCaresAboutButMe-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#ThingsNobodyCaresAboutButMe-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#ThingsNobodyCaresAboutButMe-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="ThingsNobodyCaresAboutButMe-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#ThingsNobodyCaresAboutButMe-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="ThingsNobodyCaresAboutButMe-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#ThingsNobodyCaresAboutButMe-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="ThingsNobodyCaresAboutButMe-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#ThingsNobodyCaresAboutButMe-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="ThingsNobodyCaresAboutButMe-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#ThingsNobodyCaresAboutButMe-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="ThingsNobodyCaresAboutButMe-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ThingsNobodyCaresAboutButMe-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#ThingsNobodyCaresAboutButMe-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="ThingsNobodyCaresAboutButMe-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#ThingsNobodyCaresAboutButMe-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="ThingsNobodyCaresAboutButMe-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ThingsNobodyCaresAboutButMe-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#ThingsNobodyCaresAboutButMe-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="ThingsNobodyCaresAboutButMe-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="UndeclaredNamespace">class <strong>UndeclaredNamespace</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.feedparser.html#UndeclaredNamespace">UndeclaredNamespace</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="UndeclaredNamespace-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#UndeclaredNamespace-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#UndeclaredNamespace-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="UndeclaredNamespace-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#UndeclaredNamespace-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="UndeclaredNamespace-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#UndeclaredNamespace-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="UndeclaredNamespace-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#UndeclaredNamespace-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="UndeclaredNamespace-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#UndeclaredNamespace-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="UndeclaredNamespace-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="UndeclaredNamespace-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#UndeclaredNamespace-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="UndeclaredNamespace-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#UndeclaredNamespace-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="UndeclaredNamespace-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="UndeclaredNamespace-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#UndeclaredNamespace-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="UndeclaredNamespace-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-parse"><strong>parse</strong></a>(url_file_stream_or_string, etag<font color="#909090">=None</font>, modified<font color="#909090">=None</font>, agent<font color="#909090">=None</font>, referrer<font color="#909090">=None</font>, handlers<font color="#909090">=[]</font>, request_headers<font color="#909090">={}</font>, response_headers<font color="#909090">={}</font>)</dt><dd><tt>Parse&nbsp;a&nbsp;feed&nbsp;from&nbsp;a&nbsp;URL,&nbsp;file,&nbsp;stream,&nbsp;or&nbsp;string.<br>
+&nbsp;<br>
+request_headers,&nbsp;if&nbsp;given,&nbsp;is&nbsp;a&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;from&nbsp;http&nbsp;header&nbsp;name&nbsp;to&nbsp;value&nbsp;to&nbsp;add<br>
+to&nbsp;the&nbsp;request;&nbsp;this&nbsp;overrides&nbsp;internally&nbsp;generated&nbsp;values.</tt></dd></dl>
+ <dl><dt><a name="-registerDateHandler"><strong>registerDateHandler</strong></a>(func)</dt><dd><tt>Register&nbsp;a&nbsp;date&nbsp;handler&nbsp;function&nbsp;(takes&nbsp;string,&nbsp;returns&nbsp;9-tuple&nbsp;date&nbsp;in&nbsp;GMT)</tt></dd></dl>
+ <dl><dt><a name="-zopeCompatibilityHack"><strong>zopeCompatibilityHack</strong></a>()</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ACCEPTABLE_URI_SCHEMES</strong> = ('file', 'ftp', 'gopher', 'h323', 'hdl', 'http', 'https', 'imap', 'mailto', 'mms', 'news', 'nntp', 'prospero', 'rsync', 'rtsp', 'rtspu', 'sftp', 'shttp', 'sip', 'sips', ...)<br>
+<strong>ACCEPT_HEADER</strong> = 'application/atom+xml,application/rdf+xml,applica...df,application/xml;q=0.9,text/xml;q=0.2,*/*;q=0.1'<br>
+<strong>PREFERRED_TIDY_INTERFACES</strong> = ['uTidy', 'mxTidy']<br>
+<strong>PREFERRED_XML_PARSERS</strong> = ['drv_libxml2']<br>
+<strong>RESOLVE_RELATIVE_URIS</strong> = 1<br>
+<strong>SANITIZE_HTML</strong> = 1<br>
+<strong>SUPPORTED_VERSIONS</strong> = {'': 'unknown', 'atom': 'Atom (unknown version)', 'atom01': 'Atom 0.1', 'atom02': 'Atom 0.2', 'atom03': 'Atom 0.3', 'atom10': 'Atom 1.0', 'cdf': 'CDF', 'hotrss': 'Hot RSS', 'rss': 'RSS (unknown version)', 'rss090': 'RSS 0.90', ...}<br>
+<strong>TIDY_MARKUP</strong> = 0<br>
+<strong>USER_AGENT</strong> = 'UniversalFeedParser/5.0 +http://feedparser.org/'<br>
+<strong>__author__</strong> = 'Mark Pilgrim &lt;http://diveintomark.org/&gt;'<br>
+<strong>__contributors__</strong> = ['Jason Diamond &lt;http://injektilo.org/&gt;', 'John Beimler &lt;http://john.beimler.org/&gt;', 'Fazal Majid &lt;http://www.majid.info/mylos/weblog/&gt;', 'Aaron Swartz &lt;http://aaronsw.com/&gt;', 'Kevin Marks &lt;http://epeus.blogspot.com/&gt;', 'Sam Ruby &lt;http://intertwingly.net/&gt;', 'Ade Oshineye &lt;http://blog.oshineye.com/&gt;', 'Martin Pool &lt;http://sourcefrog.net/&gt;', 'Kurt McKee &lt;http://kurtmckee.org/&gt;']<br>
+<strong>__license__</strong> = 'Copyright (c) 2002-2008, Mark Pilgrim, All right...VEN IF ADVISED OF THE<font color="#c040c0">\n</font>POSSIBILITY OF SUCH DAMAGE.'<br>
+<strong>__version__</strong> = '5.0'<br>
+<strong>codepoint2name</strong> = {34: 'quot', 38: 'amp', 60: 'lt', 62: 'gt', 160: 'nbsp', 161: 'iexcl', 162: 'cent', 163: 'pound', 164: 'curren', 165: 'yen', ...}<br>
+<strong>name2codepoint</strong> = {'AElig': 198, 'Aacute': 193, 'Acirc': 194, 'Agrave': 192, 'Alpha': 913, 'Aring': 197, 'Atilde': 195, 'Auml': 196, 'Beta': 914, 'Ccedil': 199, ...}</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Mark&nbsp;Pilgrim&nbsp;&lt;<a href="http://diveintomark.org/">http://diveintomark.org/</a>&gt;</td></tr></table>
+</body></html>
