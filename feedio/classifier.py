@@ -37,22 +37,30 @@ import sys
 import os
 import purify
 
-USERDIR=os.path.join(os.path.expanduser("~"),".feedIO")
-classifierDir=os.path.join(USERDIR,"classifier")
 
 from lib.crm import *
 from models import *
 import feedmanager as fm
 
 
+USERDIR=os.path.join(os.path.expanduser("~"),".feedIO")
+classifierDir=os.path.join(USERDIR,"classifier")
+
+
 def listTopics():
+    """
+    Function to query the database for the available Topics. Returns a list
+    with all the topics as Topic objects.
+    """
     topicsList = Topic.query.all()
     return topicsList
 
 
 def addTopic(topic):
     """
-    function to add a new topic, creates required classifier files and database entries.
+    Function to add a new topic, creates required classifier files and database entries.
+    Also assigns the newly created topic with all the Item objects and Feed objects 
+    in the table.
     """
     if topic is unicode(""):
         return None
@@ -82,12 +90,14 @@ def addTopic(topic):
             session.commit()
         except:
             session.rollback()
-            print "Error Assignning new topic to all Items!"
+            print "Error Assigning new topic to all Items!"
 
 
 def removeTopic(topic):
     """
-    function to remove topic from the database.
+    Function to remove a Topic. First removes all the ScoreItem objects from
+    the ScoreItem table and then removes all the ScoreFeed objects from the
+    ScoreFeed table.
     """
     topicTitle = topic.title
     try:
@@ -113,7 +123,9 @@ def removeTopic(topic):
 
 def assignItemsToTopics(itemList):
     """
-    Assigns a list of items to all the topics available.
+    Assigns a list of Item objects to all the Topic objects available.
+    This will create an ScoreItem object for each Item and Topic pair to hold 
+    the priority score of an Item under a particular topic.
     """
     allTopics = Topic.query.all()
     print "assigning the new articles to topics.."
@@ -130,7 +142,9 @@ def assignItemsToTopics(itemList):
 
 def setItemTopic(item, topic, commit=True):
     """
-    Assigns an Item to the given Topic.
+    Assigns an Item to a given Topic. This will create a ScoreItem object.
+    commit is set to True by default but should be disabled by passing False 
+    when setting a Topic to a couple of Items at once to increase the performance.
     """
     if item.topics.count(topic) == 0:
         item.topics.append(topic)
@@ -147,7 +161,9 @@ def setItemTopic(item, topic, commit=True):
 
 def assignFeedsToTopics(feedList):
     """
-    Assigns a list of feeds to all the topics available.
+    Assigns a list of Feed objects to all the Topic objects available.
+    This will create an ScoreFeed object for each Feed and Topic pair to hold 
+    the reputation score (number of votes) of an Feed under a particular topic.
     """
     allTopics = Topic.query.all()
     print "assigning the new feed to topics.."
@@ -165,7 +181,9 @@ def assignFeedsToTopics(feedList):
 
 def setFeedTopic(feed, topic, commit=True):
     """
-    Assigns a feed to the given Topic.
+    Assigns a feed to the given Topic. This will create a ScoreFeed object.
+    commit is set to True by default but should be disabled by passing False 
+    when setting a Topic to a couple of Feeds at once to increase the performance.
     """
     if feed.topics.count(topic) == 0:
         feed.topics.append(topic)
@@ -183,7 +201,9 @@ def setFeedTopic(feed, topic, commit=True):
 
 def getTopic(topicTitle):
     """
-    returns the Topic object when the Topics title is passed.
+    This returns the Topic object when the Topic title is given. This is used
+    to easily retrieve the Topic object from the title string which is being
+    used mostly when dealing with the text classification process.
     """
     try:
         topic = Topic.query.filter_by(title = unicode(topicTitle))[0]
@@ -194,7 +214,8 @@ def getTopic(topicTitle):
 
 def _voteFeed(upOrDown, feed, topic):
     """
-    Function to add of reduce marks for a feed.
+    Function to add or subtract the number of votes of a Feed under a given
+    Topic when getting an Up Vote or a Down Vote.
     """
     scoreFeed = ScoreFeed.query.filter_by(feed = feed, topic = topic).first()
     try:
@@ -213,15 +234,18 @@ def _voteFeed(upOrDown, feed, topic):
 
 def removefromScoreTable(feed):
     """
-    Function to remove the Scores of all the Items in a particular feed
+    Function to remove the Scores of all the Items in a particular feed. This will
+    remove all the ScoreItem objects of the Items that belong to a particular feed.
     """
     itemsList = fm.listItems(feed)
     for item in itemsList:
         removeItemScores(item)
 
+
 def removeItemScores(itemToRemove):
     """
-    Function to remove the Scores of a particular article Item.
+    Function to remove the Scores of a particular article Item. This will remove 
+    all the ScoreItem objects for that Item under all the Topics.
     """
     itemsInTopics = ScoreItem.query.filter_by(item = itemToRemove).all()
     for item in itemsInTopics:
@@ -263,8 +287,9 @@ def voteArticle(upOrDown, item, topic):
     # vote for the feed that the article belongs.
     _voteFeed(upOrDown, item.feed, topic)
 
-    # we'll be working with strings so get the topic title.
+    # we'll be working with strings from now on, so get the topic title.
     topic = topic.title
+    # calls to CRM breaks when a topic title contains spaces, replace them with underscores.
     topic = topic.replace(" ", "_")
 
     text = purify.cleanText(item.description)
@@ -289,19 +314,21 @@ def voteArticle(upOrDown, item, topic):
                 d.learn("General", text)
                 d2.learn("GeneralTitle", title)
 
-            elif upOrDown is "down":
-                d.learn("notGeneral", text)
-                d2.learn("notGeneralTitle", title)
+            # We sould only get the Upvote for general. So disabled the DownVote.
+#            elif upOrDown is "down":
+#                d.learn("notGeneral", text)
+#                d2.learn("notGeneralTitle", title)
     except UnicodeEncodeError:
         print "Article content contains invalid characters!"
 
 
 def classifyArticleText(topic,text):
     """
-    function to calculate the matching probability of a given text to a
-    specified topic. Add code to remove any tags in the code and generate a
-    plain text string. Use the "markdown" module if needed.
+    function to calculate the matching probability of a given Article text to a
+    specified topic.
     """
+
+    # calls to CRM breaks when a topic title contains spaces, replace them with underscores.
     topic = topic.replace(" ", "_")
 
     c = Classifier(classifierDir, [topic,"not"+topic])
@@ -310,8 +337,8 @@ def classifyArticleText(topic,text):
         (classification, probability) = c.classify(text)
 
     except UnicodeEncodeError:
-        # return a dummy value for articles with character Errors
-        #TODO: filter out the invalic characters
+        # return a default value for articles with character Errors
+        #TODO: filter out the invalid characters
             (classification, probability) = ("not"+topic, 0)
 
     else:
@@ -320,10 +347,11 @@ def classifyArticleText(topic,text):
 
 def classifyArticleTitle(topic,title):
     """
-    function to calculate the matching probability of a given text to a
-    specified topic. Add code to remove any tags in the code and generate a
-    plain text string. Use the "markdown" module if needed.
+    function to calculate the matching probability of a given Article Title to a
+    specified Topic.
     """
+
+    # calls to CRM breaks when a topic title contains spaces, replace them with underscores.
     topic = topic.replace(" ", "_")
 
     c = Classifier(classifierDir, [topic+"Title", "not"+topic+"Title"])
@@ -332,8 +360,8 @@ def classifyArticleTitle(topic,title):
         (classification, probability) = c.classify(title)
 
     except UnicodeEncodeError:
-        # return a dummy value for articles with character Errors
-        #TODO: filter out the invalic characters
+        # return a default value for articles with character Errors
+        #TODO: filter out the invalid characters
             (classification, probability) = ("not"+topic+"Title", 0)
     else:
         return (classification, probability)
@@ -341,7 +369,8 @@ def classifyArticleTitle(topic,title):
 
 def initTopics():
     """
-    function to create the initial user interest profile.
+    Function to initialize the user interest profile. Adds the Topic "General"
+    by default.
     """
 
     #Add the "General" interest topic by default
