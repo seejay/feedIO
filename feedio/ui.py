@@ -108,6 +108,10 @@ class mainUI(QMainWindow):
         self.connect(self.ui.comboFeed, SIGNAL("currentIndexChanged(int)"), self.displayItems)
         self.connect(self.ui.comboTopic, SIGNAL("currentIndexChanged(int)"), self.displayItems)
         self.connect(self.ui.listUnread, SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.setCurrentFromUnread)
+
+        self.connect(self.ui.listUnread, SIGNAL("itemDoubleClicked(QTreeWidgetItem *,int)"), self.on_actionReadItLater_activated)
+        self.connect(self.ui.listOld, SIGNAL("itemDoubleClicked(QTreeWidgetItem *,int)"), self.on_actionReadItLater_activated)
+
         self.connect(self.ui.listOld, SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.setCurrentFromOld)
         self.connect(self.ui.actionVisitPage, SIGNAL("activated()"), self.visitPage)
         self.connect(self.ui.actionFetchAllFeeds, SIGNAL("activated()"), parent.fetchAllFeeds)
@@ -871,6 +875,8 @@ class RilLoginDialog(QDialog):
         self.ui.setupUi(self)
         self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
         self.connect(self.ui.btnOk, SIGNAL('clicked()'), self.login)
+        self.connect(self.ui.passwordLineEdit, SIGNAL("returnPressed()"), self.login)
+        self.connect(self.ui.userNameLineEdit, SIGNAL("returnPressed()"), self.login)
 
     def login(self):
         """

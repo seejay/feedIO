@@ -185,6 +185,13 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>userNameLineEdit</tabstop>
+  <tabstop>passwordLineEdit</tabstop>
+  <tabstop>btnOk</tabstop>
+  <tabstop>btnCancel</tabstop>
+  <tabstop>chkKeepSigned</tabstop>
+ </tabstops>
  <resources>
   <include location="feedIOicons.qrc"/>
  </resources>

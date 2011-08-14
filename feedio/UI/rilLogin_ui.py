@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'rilLogin.ui'
 #
-# Created: Mon Aug  8 23:09:33 2011
+# Created: Mon Aug 15 00:39:54 2011
 #      by: PyQt4 UI code generator 4.8.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -98,6 +98,10 @@ class Ui_rilLogin(object):
 
         self.retranslateUi(rilLogin)
         QtCore.QMetaObject.connectSlotsByName(rilLogin)
+        rilLogin.setTabOrder(self.userNameLineEdit, self.passwordLineEdit)
+        rilLogin.setTabOrder(self.passwordLineEdit, self.btnOk)
+        rilLogin.setTabOrder(self.btnOk, self.btnCancel)
+        rilLogin.setTabOrder(self.btnCancel, self.chkKeepSigned)
 
     def retranslateUi(self, rilLogin):
         rilLogin.setWindowTitle(QtGui.QApplication.translate("rilLogin", "Log in to Read It Later.", None, QtGui.QApplication.UnicodeUTF8))
