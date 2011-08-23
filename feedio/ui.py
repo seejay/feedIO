@@ -52,6 +52,7 @@ from UI.rilLogin_ui import Ui_rilLogin
 from UI.about_ui import Ui_About
 from UI.license_ui import Ui_License
 from UI.credits_ui import Ui_Credits
+from UI.settings_ui import Ui_settings
 
 from UI.systray import SystemTrayIcon
 import feedmanager as fm
@@ -503,6 +504,14 @@ class mainUI(QMainWindow):
         AboutDialog(self).exec_()
 
 
+    def on_actionPreferences_activated(self, i = None):
+        """
+        Settings  action implementataion.
+        """
+        if i is None: return
+        SettingsDialog(self).exec_()
+
+
     def on_actionSignInToTwitter_activated(self, i = None):
         """
         Sign into twitter.
@@ -894,6 +903,16 @@ class RilLoginDialog(QDialog):
             self.close()
 
 
+class SettingsDialog(QDialog):
+    def __init__(self, parent):
+        QDialog.__init__(self, parent)
+        self.ui=Ui_settings()
+        self.ui.setupUi(self)
+
+        self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
+        self.connect(self.ui.btnSave, SIGNAL("clicked()"), SLOT('close()'))
+
+
 class AboutDialog(QDialog):
     def __init__(self, parent):
         QDialog.__init__(self, parent)
@@ -1039,6 +1058,12 @@ class FeedIO(QWidget):
 def initUI():
 
     app = QApplication(sys.argv)
+
+    # Set up the Organization, Domain and App names to be used for QSettings.
+    app.setOrganizationName("feedIO project")
+    app.setOrganizationDomain("feedio.org")
+    app.setApplicationName("feedIO")
+
 
 #    #add following 3 lines to enable sinhala
 #    translator = QTranslator(app)
