@@ -64,6 +64,7 @@ import twitterPlugin
 import rilPlugin
 import tweepy
 import webbrowser
+import speechengine
 
 
 class mainUI(QMainWindow):
@@ -101,6 +102,10 @@ class mainUI(QMainWindow):
 
         self.ui.listOld.setFocus()
         self.ui.comboFeed.setCurrentIndex(len(self.feedList))
+
+        #espeak speech engine initiation
+        self.playerState='standby'
+        self.sp=speechengine.SpeechEngine("40","150")
         # Twitter authentication details.
 #        self.twitterAuthenticated = False
 #        self.twitterAuthKey = ''
@@ -503,6 +508,20 @@ class mainUI(QMainWindow):
         if i is None: return
         AboutDialog(self).exec_()
 
+    def on_actionRead_activated(self, i = None):
+        """
+        Read article implementataion.Can play or stop the selected article.
+        """
+        if i is None: return
+        selected = self.currentItem
+        if self.playerState =='standby':
+            self.playerState = 'playing'
+            self.sp.say(purify.cleanText(str(selected.article.title + "....." + selected.article.description)))
+            #self.sp.say(selected.article.description)
+        	
+        else:
+            self.sp.stop()
+            self.playerState='standby'
 
     def on_actionPreferences_activated(self, i = None):
         """
