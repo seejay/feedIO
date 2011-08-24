@@ -537,6 +537,12 @@ class mainUI(QMainWindow):
         """
         if i is None: return
 
+        # create a QSettings object to get twitter auth data.
+        s = QSettings()
+        twitterPlugin.ACCESS_KEY  = str(s.value("TWITTER_ACCESS_KEY").toString())
+        twitterPlugin.ACCESS_SECRET = str(s.value("TWITTER_ACCESS_SECRET").toString())
+
+
         if twitterPlugin.ACCESS_KEY is '':
             try:
                 print "signing into twitter using the browser..."
@@ -551,6 +557,12 @@ class mainUI(QMainWindow):
                 if twitterPlugin.VERIFIER is '': return
 
                 (twitterPlugin.ACCESS_KEY, twitterPlugin.ACCESS_SECRET) = tp.verify()
+                #Store the values using in a QSettings object.
+                s = QSettings()
+
+                s.setValue("TWITTER_ACCESS_KEY", twitterPlugin.ACCESS_KEY)
+                s.setValue("TWITTER_ACCESS_SECRET", twitterPlugin.ACCESS_SECRET)
+
 
             except tweepy.TweepError:
                 print "Not authenticated properly. check the PIN number"
@@ -570,6 +582,12 @@ class mainUI(QMainWindow):
         twitterPlugin.ACCESS_KEY = ''
         twitterPlugin.ACCESS_SECRET = ''
         twitterPlugin.VERIFIER = ''
+
+        #Store the values using in a QSettings object.
+        s = QSettings()
+
+        s.setValue("TWITTER_ACCESS_KEY", twitterPlugin.ACCESS_KEY)
+        s.setValue("TWITTER_ACCESS_SECRET", twitterPlugin.ACCESS_SECRET)
 
         self.parent.status = "You have Signed Off from twitter."
         self.parent.sendNotification()
@@ -595,6 +613,11 @@ class mainUI(QMainWindow):
 
 #        message = selected.article.url + selected.article.title
 
+        # create a QSettings object to get twitter auth data.
+        s = QSettings()
+        twitterPlugin.ACCESS_KEY  = str(s.value("TWITTER_ACCESS_KEY").toString())
+        twitterPlugin.ACCESS_SECRET = str(s.value("TWITTER_ACCESS_SECRET").toString())
+
         if twitterPlugin.ACCESS_KEY is '':
             try:
                 print "signing into twitter using the browser..."
@@ -609,6 +632,10 @@ class mainUI(QMainWindow):
                 if twitterPlugin.VERIFIER is '': return
 
                 (twitterPlugin.ACCESS_KEY, twitterPlugin.ACCESS_SECRET) = tp.verify()
+                #Store the values using in a QSettings object.
+                s = QSettings()
+                s.setValue("TWITTER_ACCESS_KEY", twitterPlugin.ACCESS_KEY)
+                s.setValue("TWITTER_ACCESS_SECRET", twitterPlugin.ACCESS_SECRET)
 
             except tweepy.TweepError:
                 print "Not authenticated properly. check the PIN number"
