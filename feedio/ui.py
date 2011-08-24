@@ -528,7 +528,7 @@ class mainUI(QMainWindow):
             self.playerState = 'playing'
             self.sp.say(purify.cleanText(str(selected.article.title + "....." + selected.article.description)))
             #self.sp.say(selected.article.description)
-        	
+
         else:
             self.sp.stop()
             self.playerState='standby'
@@ -692,6 +692,10 @@ class mainUI(QMainWindow):
         if i is None: return
 
         rilPlugin.SESSION = None
+        # create a QSettings object to get RIL auth data.
+        s = QSettings()
+        s.setValue("RIL_USER", '')
+        s.setValue("RIL_PW", '')
 
         self.parent.status = "You have Signed Off from Read It Later."
         self.parent.sendNotification()
@@ -707,20 +711,41 @@ class mainUI(QMainWindow):
 
         selected = self.currentItem
 
-        if rilPlugin.SESSION is None:
-            print "Asking to Sign into RIL..."
-            RilLoginDialog(self).exec_()
 
-            if rilPlugin.SESSION is not None:
-                print rilPlugin.SESSION
+        if rilPlugin.SESSION is None:
+            s = QSettings()
+            username = str(s.value("RIL_USER").toString())
+            pw = str(s.value("RIL_PW").toString())
+
+            if username is not '' and pw is not '':
+                # Not logged in but the username and pw is there.
                 try:
+                    rilPlugin.SESSION = rilPlugin.RilSession(username, pw)
                     rilPlugin.SESSION.submitItem(selected.article)
-                except:
-                    print "Error in Submitting to RIL"
+                except rilPlugin.LogInError:
+                    print "LoginError! invalid username/pw."
+                    ## invalid credentials. prompt to re-enter username/pw.
+                    #self.on_actionSignOffFromRIL_activated()
                 else:
                     # TODO: do something like bookmarking the selected article.
                     self.parent.status = selected.article.title + "Added to Read It Later List."
                     self.parent.sendNotification()
+
+            else:
+                # Not logged in and the username and pw is not stored.
+                print "Asking to Sign into RIL..."
+                RilLoginDialog(self).exec_()
+
+                if rilPlugin.SESSION is not None:
+                    try:
+                        rilPlugin.SESSION.submitItem(selected.article)
+                    except:
+                        print "Error in Submitting to RIL"
+                    else:
+                        # TODO: do something like bookmarking the selected article.
+                        self.parent.status = selected.article.title + "Added to Read It Later List."
+                        self.parent.sendNotification()
+
         else:
             try:
                 rilPlugin.SESSION.submitItem(selected.article)
@@ -730,7 +755,6 @@ class mainUI(QMainWindow):
                 # TODO: do something like bookmarking the selected article.
                 self.parent.status = selected.article.title + "Added to Read It Later List."
                 self.parent.sendNotification()
-
 
 
 class AddFeedDialog(QDialog):
@@ -956,6 +980,12 @@ class RilLoginDialog(QDialog):
             print "LoginError! invalid username/password."
 
         else:
+            if self.ui.chkKeepSigned.isChecked():
+                #Store the username and PW for RIL
+                s = QSettings()
+                s.setValue("RIL_USER", username)
+                s.setValue("RIL_PW", password)
+
             self.close()
 
 
@@ -1163,3 +1193,4 @@ def initUI():
 
 if __name__ == "__main__":
     initUI()
+
