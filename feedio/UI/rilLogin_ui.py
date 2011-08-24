@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'rilLogin.ui'
 #
-# Created: Mon Aug 15 00:39:54 2011
+# Created: Thu Aug 25 00:01:13 2011
 #      by: PyQt4 UI code generator 4.8.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -71,6 +71,7 @@ class Ui_rilLogin(object):
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Sans Serif"))
         self.chkKeepSigned.setFont(font)
+        self.chkKeepSigned.setChecked(True)
         self.chkKeepSigned.setObjectName(_fromUtf8("chkKeepSigned"))
         self.horizontalLayout_4.addWidget(self.chkKeepSigned)
         self.gridLayout.addLayout(self.horizontalLayout_4, 3, 0, 1, 1)

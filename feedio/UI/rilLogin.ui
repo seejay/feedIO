@@ -112,6 +112,9 @@
        <property name="text">
         <string>Keep  me &amp;Signed In.</string>
        </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
     </layout>
