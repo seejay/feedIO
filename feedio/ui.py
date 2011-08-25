@@ -452,22 +452,27 @@ class mainUI(QMainWindow):
         """
         if i is None: return
         ManageFeedsDialog(self).exec_()
-        self.displayFeeds()
+
+        if self.parent.refreshDisplay is True:
+            self.displayFeeds()
+            self.parent.refreshDisplay = False
 
 
     def on_actionAddFeed_activated(self, i = None):
         if i is None: return
 
         AddFeedDialog(self).exec_()
-        self.displayFeeds()
+        #self.displayFeeds()
 
 
     def on_actionRemoveFeed_activated(self, i = None):
         if i is None: return
 
         RemoveFeedDialog(self).exec_()
-        self.displayFeeds()
 
+        if self.parent.refreshDisplay is True:
+            self.displayFeeds()
+            self.parent.refreshDisplay = False
 
     def on_actionManageTopics_activated(self, i = None):
         """
@@ -476,21 +481,30 @@ class mainUI(QMainWindow):
         if i is None: return
 
         ManageTopicsDialog(self).exec_()
-        self.displayTopics()
+
+        if self.parent.refreshDisplay is True:
+            self.displayTopics()
+            self.parent.refreshDisplay = False
 
 
     def on_actionAddTopic_activated(self, i = None):
         if i is None: return
 
         AddTopicDialog(self).exec_()
-        self.displayTopics()
+
+        if self.parent.refreshDisplay is True:
+            self.displayTopics()
+            self.parent.refreshDisplay = False
 
 
     def on_actionRemoveTopic_activated(self, i = None):
         if i is None: return
 
         RemoveTopicDialog(self).exec_()
-        self.displayTopics()
+
+        if self.parent.refreshDisplay is True:
+            self.displayTopics()
+            self.parent.refreshDisplay = False
 
 
     def on_actionExit_activated(self, i = None):
@@ -775,10 +789,11 @@ class AddFeedDialog(QDialog):
         thread.start()
         thread.join()
 
-        if self.parent.parent.newFeed is True:
+        if self.parent.parent.refreshDisplay is True:
             itemList = fm.listNew()
             classifier.assignItemsToTopics(itemList)
             self.parent.parent.setNewItemScores()
+            self.parent.displayFeeds()
         self.close()
 
 
@@ -810,7 +825,9 @@ class RemoveFeedDialog(QDialog):
 
         classifier.removefromScoreTable(selectedFeed)
         fm.removeFeed(selectedFeed)
-
+#        self.parent.displayFeeds()
+        #Set the refreshDisplay status to true.
+        self.parent.parent.refreshDisplay = True
         self.close()
 
 
@@ -840,6 +857,8 @@ class ManageFeedsDialog(QDialog):
         selectedFeed = self.feedList[selectedItemIndex]
         classifier.removefromScoreTable(selectedFeed)
         fm.removeFeed(selectedFeed)
+        #Set the refreshDisplay status to true.
+        self.parent.parent.refreshDisplay = True
         self.displayFeeds()
 
 
@@ -851,7 +870,7 @@ class ManageFeedsDialog(QDialog):
         thread.start()
         thread.join()
 
-        if self.parent.parent.newFeed is True:
+        if self.parent.parent.refreshDisplay is True:
             itemList = fm.listNew()
             classifier.assignItemsToTopics(itemList)
             self.parent.parent.setNewItemScores()
@@ -874,6 +893,10 @@ class AddTopicDialog(QDialog):
         topic = unicode(self.ui.addTopicLinedit.text())
         #topic = purify.cleanText(topic) # gave an error when adding
         classifier.addTopic(topic)
+
+        #Set the refreshDisplay status to true.
+        self.parent.parent.refreshDisplay = True
+
         self.close()
 
 
@@ -905,6 +928,10 @@ class RemoveTopicDialog(QDialog):
         selectedIndex = self.ui.topicListCombo.currentIndex()
         selectedTopic = self.topicList[selectedIndex]
         classifier.removeTopic(selectedTopic)
+
+        #Set the refreshDisplay status to true.
+        self.parent.parent.refreshDisplay = True
+
         self.close()
 
 
@@ -933,6 +960,10 @@ class ManageTopicsDialog(QDialog):
         selectedItemIndex = self.ui.topicList.currentRow()
         selectedTopic = self.topicList[selectedItemIndex]
         classifier.removeTopic(selectedTopic)
+
+        #Set the refreshDisplay status to true.
+        self.parent.parent.refreshDisplay = True
+
         self.displayTopics()
 
 
@@ -940,6 +971,10 @@ class ManageTopicsDialog(QDialog):
         topic = unicode(self.ui.topicLine.text())
         classifier.addTopic(topic)
         self.ui.topicLine.clear()
+
+        #Set the refreshDisplay status to true.
+        self.parent.parent.refreshDisplay = True
+
         self.displayTopics()
 
 
@@ -1047,7 +1082,7 @@ class FeedIO(QWidget):
         self.playerState='standby'
         self.sp=speechengine.SpeechEngine("40","150")
 
-        self.newFeed = False
+        self.refreshDisplay = False
 
         self.updateInterval = 1800000 # time in miliseconds (30 minutes)
 
@@ -1069,7 +1104,7 @@ class FeedIO(QWidget):
             print self.status
             self.sendNotification()
         else:
-            self.newFeed = True
+            self.refreshDisplay = True
 
 
     def fetchAllFeeds(self):
