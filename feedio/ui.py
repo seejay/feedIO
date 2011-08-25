@@ -772,15 +772,15 @@ class AddFeedDialog(QDialog):
     def addFeed(self):
         feedUrl = unicode(self.ui.UrlLineEdit.text())
 
-        thread = threading.Thread(target=fm.addFeed, args=(feedUrl,))
+        thread = threading.Thread(target=self.parent.parent.addFeed, args=(feedUrl,))
         thread.setDaemon(True)
         thread.start()
-
         thread.join()
 
-        itemList = fm.listNew()
-        classifier.assignItemsToTopics(itemList)
-        self.parent.parent.setNewItemScores()
+        if self.parent.parent.newFeed is True:
+            itemList = fm.listNew()
+            classifier.assignItemsToTopics(itemList)
+            self.parent.parent.setNewItemScores()
         self.close()
 
 
@@ -848,17 +848,18 @@ class ManageFeedsDialog(QDialog):
     def addFeed(self):
         feedUrl = unicode(self.ui.urlLine.text())
         #Run the addFeed function in a new thread so that the ui is responsive.
-        thread = threading.Thread(target=fm.addFeed, args=(feedUrl,))
+        thread = threading.Thread(target=self.parent.parent.addFeed, args=(feedUrl,))
         thread.setDaemon(True)
         thread.start()
         thread.join()
 
-        itemList = fm.listNew()
-        classifier.assignItemsToTopics(itemList)
-        self.parent.parent.setNewItemScores()
+        if self.parent.parent.newFeed is True:
+            itemList = fm.listNew()
+            classifier.assignItemsToTopics(itemList)
+            self.parent.parent.setNewItemScores()
 
-        self.ui.urlLine.clear()
-        self.displayFeeds()
+            self.ui.urlLine.clear()
+            self.displayFeeds()
 
 
 class AddTopicDialog(QDialog):
@@ -1043,6 +1044,7 @@ class FeedIO(QWidget):
         print "FeedIO instance created"
 
         self.status = "Running..."
+        self.newFeed = False
 
         self.updateInterval = 1800000 # time in miliseconds (30 minutes)
 
@@ -1054,6 +1056,18 @@ class FeedIO(QWidget):
     def sendNotification(self, title = "feedIO"):
         no = notifier.Notifier(title, self.status)
         no.feedNotification()
+
+
+    def addFeed(self, feedUrl):
+        try:
+            fm.addFeed(feedUrl)
+        except:
+            self.status = "Error adding feed!"
+            print self.status
+            self.sendNotification()
+        else:
+            self.newFeed = True
+
 
     def fetchAllFeeds(self):
         thread = threading.Thread(target=self.fetchAll, args=())

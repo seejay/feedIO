@@ -57,7 +57,7 @@ def addFeed(feedUrl):
     except:
         #this never occurs since parser does not raise any exceptions when invalid url is sent
         print "Invalid feed Url!"
-        #raise FeedError
+        raise FeedError
 
     else:
         try:
@@ -70,9 +70,11 @@ def addFeed(feedUrl):
         except AttributeError:
             session.rollback()
             print "Error! Invalid feed URL"
+            raise FeedError
         except:
             session.rollback()
             print "%s \t Feed already subscribed" % (feedData.feed.title)
+            raise FeedError
 
         else:
             try:
@@ -85,6 +87,7 @@ def addFeed(feedUrl):
             except:
                 session.rollback()
                 print "Error setting up topics to the Feed"
+                raise FeedError
 
             print "Subscribed to \t %s " % (feedData.feed.title)
             fetchFeeds(newFeed, feedData)
