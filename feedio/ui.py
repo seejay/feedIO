@@ -306,12 +306,12 @@ class mainUI(QMainWindow):
             selected = self.currentItem
             selectedItem = selected.article
 
-            text = "<style>.bg_color {background-color: #f8f8ff ;}.blue {color: #6f6fff;}.big { font-size: 8em; }.bold { font-weight: bold; }.date{ font-weight: bold; color: #066bb6;  }.info     { font-size: .95em; margin: 2px 0 6px !important; color: #148d04; }</style>" + \
+            text = "<style>.bg_color {background-color: #f8f8ff ;}.blue {color: #6f6fff;}.big { font-size: 8em; }.bold { font-weight: bold; }.date{ font-weight: bold; color: #066bb6;  }.info     { font-size: .95em; margin: 2px 0 6px !important; color: #148d04; }.headline_font_size {font-size: .80em;}</style>" + \
                 "<div class=\" bg_color \">" + \
                 "<div class=\" blue \">" + \
                 "<H3>" + selectedItem.title + \
                 "</div>" + \
-                "<div class=\" bold \">" + \
+                "<div class=\" bold headline_font_size\">" + \
                 "</H3>(" + selectedItem.feed.title + ")<br>" + \
                 "</div>" + \
                 "<div class=\"date info\">" + \
