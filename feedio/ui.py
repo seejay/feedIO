@@ -103,9 +103,7 @@ class mainUI(QMainWindow):
         self.ui.listOld.setFocus()
         self.ui.comboFeed.setCurrentIndex(len(self.feedList))
 
-        #espeak speech engine initiation
-        self.playerState='standby'
-        self.sp=speechengine.SpeechEngine("40","150")
+
         # Twitter authentication details.
 #        self.twitterAuthenticated = False
 #        self.twitterAuthKey = ''
@@ -524,14 +522,14 @@ class mainUI(QMainWindow):
         """
         if i is None: return
         selected = self.currentItem
-        if self.playerState =='standby':
-            self.playerState = 'playing'
-            self.sp.say(purify.cleanText(str(selected.article.title + "....." + selected.article.description)))
+        if self.parent.playerState =='standby':
+            self.parent.playerState = 'playing'
+            self.parent.sp.say(purify.cleanText(str(selected.article.title + "....." + selected.article.description)))
             #self.sp.say(selected.article.description)
-
+        	
         else:
-            self.sp.stop()
-            self.playerState='standby'
+            self.parent.sp.stop()
+            self.parent.playerState='standby'
 
     def on_actionPreferences_activated(self, i = None):
         """
@@ -1044,6 +1042,11 @@ class FeedIO(QWidget):
         print "FeedIO instance created"
 
         self.status = "Running..."
+
+        #espeak speech engine initiation
+        self.playerState='standby'
+        self.sp=speechengine.SpeechEngine("40","150")
+
         self.newFeed = False
 
         self.updateInterval = 1800000 # time in miliseconds (30 minutes)
@@ -1148,6 +1151,14 @@ class FeedIO(QWidget):
         for item in newItems:
             fm.setItemFlag(item, 1, False)
             print "marked %s new to unread" % item.title
+
+        #check whether text to speech is still working
+        if (self.playerState == 'playing'):
+            self.sp.stop()
+            self.playerState='standby'
+            print "speech engine terminated on exit"
+        else:
+            pass
 
         # Might need to move this commit to a better place.
         # this is done to ruduce the number of commites to be performed when exiting, to one
