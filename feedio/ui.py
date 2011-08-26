@@ -804,7 +804,7 @@ class RemoveFeedDialog(QDialog):
         self.ui.setupUi(self)
         self.feedList = []
         self.displayFeeds()
-
+        self.parent = parent
         self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
         self.connect(self.ui.btnRemove, SIGNAL("clicked()"), self.removeFeed)
 
@@ -884,6 +884,7 @@ class AddTopicDialog(QDialog):
         QDialog.__init__(self, parent)
         self.ui = Ui_addTopic()
         self.ui.setupUi(self)
+
         self.parent = parent
 
         self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
@@ -905,6 +906,8 @@ class RemoveTopicDialog(QDialog):
         QDialog.__init__(self, parent)
         self.ui=Ui_removeTopic()
         self.ui.setupUi(self)
+
+        self.parent = parent
 
         self.topicList = []
         self.displayTopics()
@@ -942,6 +945,8 @@ class ManageTopicsDialog(QDialog):
         self.ui.setupUi(self)
         self.topicList = []
         self.displayTopics()
+
+        self.parent = parent
 
         self.connect(self.ui.btnExit, SIGNAL('clicked()'), SLOT('close()'))
         self.connect(self.ui.btnRemove, SIGNAL('clicked()'), self.removeTopic)
