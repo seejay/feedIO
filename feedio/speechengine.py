@@ -4,7 +4,7 @@ which installed in operating system and generating a speech for a given text.
 The module also capable of making the text more friendly for the particular tts engine.
 """
 
-__version__ = "0.0.3"
+__version__ = "0.0.5"
 
 __license__ = """
     Copyright (C) 2011 Sri Lanka Institute of Information Technology.

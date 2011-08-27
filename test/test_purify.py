@@ -3,7 +3,7 @@
 Doctest unit tests for feedIO : purify module
 """
 
-__version__ = "0.0.3"
+__version__ = "0.0.5"
 
 __license__ = """
     Copyright (C) 2011 Sri Lanka Institute of Information Technology.

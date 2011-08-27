@@ -6,7 +6,7 @@ import feedIO
 
 
 setup(name='feedio',
-      version='0.0.3',
+      version='0.0.5',
       author='Chanaka Jayamal',
       author_email='seejay@seejay.net',
       url='http://feedio.org',
