@@ -372,9 +372,12 @@
          <height>0</height>
         </size>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(248, 248, 255);</string>
+       </property>
        <property name="url" stdset="0">
         <url>
-         <string>http://feedio.org</string>
+         <string>http://www.feedio.org/</string>
         </url>
        </property>
       </widget>
@@ -388,7 +391,7 @@
      <x>0</x>
      <y>0</y>
      <width>952</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="font">
@@ -410,6 +413,33 @@
     <property name="title">
      <string>&amp;Settings</string>
     </property>
+    <widget class="QMenu" name="menuNotifications">
+     <property name="title">
+      <string>&amp;Notifications</string>
+     </property>
+     <addaction name="actionTurnOffNotifications"/>
+     <addaction name="actionTurnOnNotifications"/>
+    </widget>
+    <widget class="QMenu" name="menu_Twitter">
+     <property name="title">
+      <string>&amp;Twitter</string>
+     </property>
+     <addaction name="actionSignInToTwitter"/>
+     <addaction name="actionSignOffFromTwitter"/>
+    </widget>
+    <widget class="QMenu" name="menu_Read_It_Later">
+     <property name="title">
+      <string>&amp;Read It Later</string>
+     </property>
+     <addaction name="actionSignInToRIL"/>
+     <addaction name="actionSignOffFromRIL"/>
+    </widget>
+    <addaction name="separator"/>
+    <addaction name="menuNotifications"/>
+    <addaction name="separator"/>
+    <addaction name="menu_Twitter"/>
+    <addaction name="menu_Read_It_Later"/>
+    <addaction name="separator"/>
     <addaction name="actionPreferences"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -427,7 +457,12 @@
     <addaction name="actionDownVote"/>
     <addaction name="actionRead"/>
     <addaction name="actionVisitPage"/>
+    <addaction name="separator"/>
     <addaction name="actionUnread"/>
+    <addaction name="actionFavorite"/>
+    <addaction name="separator"/>
+    <addaction name="actionPostToTwitter"/>
+    <addaction name="actionReadItLater"/>
    </widget>
    <widget class="QMenu" name="menuFeedIO">
     <property name="title">
@@ -443,6 +478,9 @@
     <addaction name="actionAddTopic"/>
     <addaction name="actionRemoveTopic"/>
     <addaction name="actionManageTopics"/>
+    <addaction name="separator"/>
+    <addaction name="actionReCalculateScores"/>
+    <addaction name="actionReCalculateTopicScores"/>
    </widget>
    <addaction name="menuFeedIO"/>
    <addaction name="menuFile"/>
@@ -481,7 +519,7 @@
     <bool>false</bool>
    </property>
    <attribute name="toolBarArea">
-    <enum>LeftToolBarArea</enum>
+    <enum>RightToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
@@ -508,7 +546,7 @@
     <string>&amp;Add Feed</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+1</string>
+    <string>Ins</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -521,6 +559,9 @@
    </property>
    <property name="text">
     <string>&amp;Remove Feed</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -578,6 +619,9 @@
    <property name="text">
     <string>&amp;Up vote </string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
+   </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>
@@ -589,6 +633,9 @@
    </property>
    <property name="text">
     <string>&amp;Down Vote</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -614,6 +661,9 @@
    <property name="text">
     <string>&amp;Fetch Feed</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>
@@ -626,6 +676,9 @@
    <property name="text">
     <string>Fetch &amp;All Feeds</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>
@@ -637,6 +690,9 @@
    </property>
    <property name="text">
     <string>&amp;Visit Page</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -672,7 +728,62 @@
     <string>&amp;Mark as Unread</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+M</string>
+    <string>M</string>
+   </property>
+  </action>
+  <action name="actionReCalculateScores">
+   <property name="text">
+    <string>Recalculate All &amp;Scores</string>
+   </property>
+  </action>
+  <action name="actionPostToTwitter">
+   <property name="text">
+    <string>Share on &amp;Twitter</string>
+   </property>
+  </action>
+  <action name="actionReCalculateTopicScores">
+   <property name="text">
+    <string>Recalculate &amp;Current Topic Scores</string>
+   </property>
+  </action>
+  <action name="actionReadItLater">
+   <property name="text">
+    <string>Mark to Read It Later</string>
+   </property>
+  </action>
+  <action name="actionFavorite">
+   <property name="text">
+    <string>Mark as &amp;Favorite</string>
+   </property>
+  </action>
+  <action name="actionTurnOffNotifications">
+   <property name="text">
+    <string>Turn o&amp;ff Notifications</string>
+   </property>
+  </action>
+  <action name="actionTurnOnNotifications">
+   <property name="text">
+    <string>Turn o&amp;n Notifications</string>
+   </property>
+  </action>
+  <action name="actionSignInToTwitter">
+   <property name="text">
+    <string>Sign &amp;into Twitter</string>
+   </property>
+  </action>
+  <action name="actionSignOffFromTwitter">
+   <property name="text">
+    <string>Sign &amp;off</string>
+   </property>
+  </action>
+  <action name="actionSignInToRIL">
+   <property name="text">
+    <string>Sign &amp;into RIL</string>
+   </property>
+  </action>
+  <action name="actionSignOffFromRIL">
+   <property name="text">
+    <string>Sign &amp;off</string>
    </property>
   </action>
  </widget>

@@ -1,0 +1,474 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module feedio.lib.readitlater.api</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="feedio.html"><font color="#ffffff">feedio</font></a>.<a href="feedio.lib.html"><font color="#ffffff">lib</font></a>.<a href="feedio.lib.readitlater.html"><font color="#ffffff">readitlater</font></a>.api</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/ceevee/play ground/feedIO/feedio/lib/readitlater/api.py">/home/ceevee/play ground/feedIO/feedio/lib/readitlater/api.py</a></font></td></tr></table>
+    <p><tt>#&nbsp;-*-&nbsp;coding:&nbsp;utf-8&nbsp;-*-</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="json.html">json</a><br>
+</td><td width="25%" valign=top><a href="logging.html">logging</a><br>
+</td><td width="25%" valign=top><a href="urllib.html">urllib</a><br>
+</td><td width="25%" valign=top><a href="urllib2.html">urllib2</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="feedio.lib.readitlater.api.html#API">API</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>(<a href="exceptions.html#BaseException">exceptions.BaseException</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="feedio.lib.readitlater.api.html#APIError">APIError</a>
+</font></dt><dt><font face="helvetica, arial"><a href="feedio.lib.readitlater.api.html#AuthError">AuthError</a>
+</font></dt><dt><font face="helvetica, arial"><a href="feedio.lib.readitlater.api.html#RateLimitExceeded">RateLimitExceeded</a>
+</font></dt><dt><font face="helvetica, arial"><a href="feedio.lib.readitlater.api.html#RequestError">RequestError</a>
+</font></dt><dt><font face="helvetica, arial"><a href="feedio.lib.readitlater.api.html#ServerError">ServerError</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="API">class <strong>API</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="API-__init__"><strong>__init__</strong></a>(self, api_key, username, password)</dt></dl>
+
+<dl><dt><a name="API-add"><strong>add</strong></a>(self, url, title<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="API-auth"><strong>auth</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="API-get"><strong>get</strong></a>(self, state<font color="#909090">=None</font>, my_app_only<font color="#909090">=False</font>, since<font color="#909090">=None</font>, count<font color="#909090">=None</font>, page<font color="#909090">=None</font>, tags<font color="#909090">=False</font>)</dt><dd><tt>Retrieve&nbsp;List.<br>
+:param&nbsp;state:&nbsp;Get&nbsp;only&nbsp;read&nbsp;or&nbsp;unread&nbsp;items.&nbsp;Valid&nbsp;values:&nbsp;"read"&nbsp;or<br>
+&nbsp;&nbsp;"unread".If&nbsp;not&nbsp;provided,&nbsp;defaults&nbsp;to&nbsp;all.<br>
+:type&nbsp;state:&nbsp;string&nbsp;or&nbsp;None<br>
+:param&nbsp;my_app_only:&nbsp;Only&nbsp;retrieve&nbsp;pages&nbsp;saved&nbsp;from&nbsp;your&nbsp;api&nbsp;key.<br>
+:type&nbsp;my_app_only:&nbsp;boolean&nbsp;or&nbsp;None<br>
+:param&nbsp;since:&nbsp;Only&nbsp;get&nbsp;changed/added&nbsp;items&nbsp;since&nbsp;this&nbsp;time.<br>
+:type&nbsp;since:&nbsp;datetime.datetime&nbsp;or&nbsp;None<br>
+:param&nbsp;count:&nbsp;Number&nbsp;of&nbsp;items&nbsp;to&nbsp;retrieve.<br>
+:type&nbsp;count:&nbsp;integer&nbsp;or&nbsp;None<br>
+:param&nbsp;page:&nbsp;Used&nbsp;with&nbsp;count&nbsp;to&nbsp;paginate&nbsp;results.<br>
+:type&nbsp;page:&nbsp;integer&nbsp;or&nbsp;None<br>
+:param&nbsp;tags:&nbsp;Retrieve&nbsp;tags&nbsp;with&nbsp;items.<br>
+:type&nbsp;tags:&nbsp;boolean&nbsp;or&nbsp;None<br>
+:rtype:&nbsp;dict&nbsp;with&nbsp;status,&nbsp;since&nbsp;and&nbsp;list&nbsp;keys.</tt></dd></dl>
+
+<dl><dt><a name="API-send"><strong>send</strong></a>(self, **params)</dt><dd><tt>Send&nbsp;changes&nbsp;using&nbsp;the&nbsp;`send`&nbsp;method<br>
+&nbsp;<br>
+See&nbsp;more&nbsp;about&nbsp;this&nbsp;<a href="#API">API</a>&nbsp;here:<br>
+<a href="http://readitlaterlist.com/api/docs/#send">http://readitlaterlist.com/api/docs/#send</a><br>
+&nbsp;<br>
+Examples<br>
+--------<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;new&nbsp;=&nbsp;[<br>
+...&nbsp;&nbsp;&nbsp;{"url":"<a href="http://google.com">http://google.com</a>",<br>
+...&nbsp;&nbsp;&nbsp;&nbsp;"title":"Google"<br>
+...&nbsp;&nbsp;&nbsp;&nbsp;"ref_id":"123456709"<br>
+...&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+...&nbsp;&nbsp;&nbsp;&nbsp;{"url":"<a href="http://ideashower.com">http://ideashower.com</a>"<br>
+...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"title":"The&nbsp;Idea&nbsp;Shower"<br>
+...&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+...&nbsp;]<br>
+&gt;&gt;&gt;&nbsp;api.<a href="#API-send">send</a>(new=new)</tt></dd></dl>
+
+<dl><dt><a name="API-status"><strong>status</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="APIError">class <strong>APIError</strong></a>(<a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.readitlater.api.html#APIError">APIError</a></dd>
+<dd><a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors inherited from <a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="APIError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#APIError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#APIError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="APIError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#APIError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="APIError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#APIError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="APIError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#APIError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="APIError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#APIError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="APIError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="APIError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#APIError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="APIError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#APIError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="APIError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="APIError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#APIError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="APIError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AuthError">class <strong>AuthError</strong></a>(<a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.readitlater.api.html#AuthError">AuthError</a></dd>
+<dd><a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors inherited from <a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="AuthError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#AuthError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="AuthError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="AuthError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="AuthError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="AuthError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="AuthError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="AuthError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="AuthError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="AuthError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="AuthError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="AuthError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="RateLimitExceeded">class <strong>RateLimitExceeded</strong></a>(<a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.readitlater.api.html#RateLimitExceeded">RateLimitExceeded</a></dd>
+<dd><a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors inherited from <a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="RateLimitExceeded-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#RateLimitExceeded-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#RateLimitExceeded-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="RateLimitExceeded-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#RateLimitExceeded-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="RateLimitExceeded-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#RateLimitExceeded-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="RateLimitExceeded-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#RateLimitExceeded-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="RateLimitExceeded-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#RateLimitExceeded-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="RateLimitExceeded-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="RateLimitExceeded-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#RateLimitExceeded-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="RateLimitExceeded-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#RateLimitExceeded-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="RateLimitExceeded-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="RateLimitExceeded-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#RateLimitExceeded-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="RateLimitExceeded-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ReadItLaterError">class <strong>ReadItLaterError</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="ReadItLaterError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#ReadItLaterError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#ReadItLaterError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="ReadItLaterError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#ReadItLaterError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="ReadItLaterError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#ReadItLaterError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="ReadItLaterError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#ReadItLaterError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="ReadItLaterError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#ReadItLaterError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="ReadItLaterError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ReadItLaterError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#ReadItLaterError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="ReadItLaterError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#ReadItLaterError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="ReadItLaterError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ReadItLaterError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#ReadItLaterError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="ReadItLaterError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="RequestError">class <strong>RequestError</strong></a>(<a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.readitlater.api.html#RequestError">RequestError</a></dd>
+<dd><a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors inherited from <a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="RequestError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#RequestError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#RequestError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="RequestError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#RequestError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="RequestError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#RequestError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="RequestError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#RequestError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="RequestError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#RequestError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="RequestError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="RequestError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#RequestError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="RequestError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#RequestError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="RequestError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="RequestError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#RequestError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="RequestError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ServerError">class <strong>ServerError</strong></a>(<a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.readitlater.api.html#ServerError">ServerError</a></dd>
+<dd><a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors inherited from <a href="feedio.lib.readitlater.api.html#ReadItLaterError">ReadItLaterError</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="ServerError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#ServerError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#ServerError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="ServerError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#ServerError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="ServerError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#ServerError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="ServerError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#ServerError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="ServerError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#ServerError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="ServerError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ServerError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#ServerError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="ServerError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#ServerError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="ServerError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ServerError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#ServerError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="ServerError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>API_ENDPOINT</strong> = 'https://readitlaterlist.com/v2/'</td></tr></table>
+</body></html>

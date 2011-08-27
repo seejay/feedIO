@@ -6,7 +6,7 @@ prioritizer module for feedIO. Provides functionality to calculate the score of
 
 """
 
-__version__ = "0.0.3"
+__version__ = "0.0.5"
 
 __license__ = """
     Copyright (C) 2011 Sri Lanka Institute of Information Technology.
@@ -40,6 +40,13 @@ from models import *
 from operator import itemgetter, attrgetter
 
 
+TEXT_SCORE_WEIGHT = 0.45
+TITLE_SCORE_WEIGHT = 0.45
+FEED_SCORE_WEIGHT = 0.1
+UPDATE_FREQUENCY_WEIGHT = 0.1
+
+
+
 class Prioritizer:
     def __init__(self, topic="General"):
             self.topic = topic
@@ -62,16 +69,19 @@ class Prioritizer:
         """
         Lists all the ScoreItem objects under the self.topic of the Prioritizer instance.
         """
-        ScoreItemList = []
+        scoreItemList = []
 
         if feed is (-1):
-            ScoreItemList = ScoreTable.query.filter_by(topic = self.topic).all()
+            scoreItemList = ScoreItem.query.filter_by(topic = self.topic).all()
+            # Generator to return only the unread Items.
+            scoreItemList = [scoreItem for scoreItem in scoreItemList if scoreItem.item.isUnread is True]
 
         else:
-            ScoreItemList = ScoreTable.query.filter_by(topic = self.topic).all()
+            scoreItemList = ScoreItem.query.filter_by(topic = self.topic).all()
             # Implement a generator here to get only the feeds of the "feed"
+            scoreItemList = [scoreItem for scoreItem in scoreItemList if (scoreItem.item.feed is feed and scoreItem.item.isUnread is True)]
 
-        return ScoreItemList
+        return scoreItemList
 
 
     def setScores(self, scoreItemsList):
@@ -104,11 +114,13 @@ class Prioritizer:
 
         #Calculate the Score for the texual content of the article
         (textTopic, textScore) = classifier.classifyArticleText(self.topic.title, text)
-
+        textTopic = textTopic.replace("_", " ")
 #        print "text : %s, %s" % (textTopic, textScore)
 
         #Calculate the Score for the title of the article.
         (titleTopic,titleScore) = classifier.classifyArticleTitle(self.topic.title, titleText)
+        titleTopic = titleTopic.replace("_", " ")
+
 #        print "Title : %s, %s" % (titleTopic,titleScore)
 
         #Now set the textual scores to minus values if the article "notTopic"
@@ -123,7 +135,8 @@ class Prioritizer:
             titleScore = titleScore * (-100)
 
         #Get the Score for the feed from the db
-        feedScore = article.feed.numVotes * 200
+        scoreFeed = ScoreFeed.query.filter_by(feed = article.feed, topic = self.topic).first()
+        feedScore = scoreFeed.score * 100
 
         #updateFrequencyScore - score based on the feeds update frequncy.
         #less frequently updated content would get fairly better scores.
@@ -131,10 +144,10 @@ class Prioritizer:
         # Set weights to be given for the calculated individual scores.
         #TODO: Give an option for the user to set the weights of these scores from GUI.
 
-        textScoreWeight = 0.55
-        titleScoreWeight = 0.35
-        feedScoreWeight = 0.1
-#        updateFrequencyWeight = 0.1
+        textScoreWeight = TEXT_SCORE_WEIGHT
+        titleScoreWeight = TITLE_SCORE_WEIGHT
+        feedScoreWeight = FEED_SCORE_WEIGHT
+#        updateFrequencyWeight = UPDATE_FREQUENCY_WEIGHT
 
         finalScore = ( ( textScoreWeight * textScore ) +
                         ( titleScoreWeight * titleScore ) +

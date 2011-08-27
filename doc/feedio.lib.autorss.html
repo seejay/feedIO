@@ -1,0 +1,187 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module feedio.lib.autorss</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="feedio.html"><font color="#ffffff">feedio</font></a>.<a href="feedio.lib.html"><font color="#ffffff">lib</font></a>.autorss</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/ceevee/play ground/feedIO/feedio/lib/autorss.py">/home/ceevee/play ground/feedIO/feedio/lib/autorss.py</a></font></td></tr></table>
+    <p><tt>Find&nbsp;RSS&nbsp;feed&nbsp;from&nbsp;site's&nbsp;LINK&nbsp;tag</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="urllib.html">urllib</a><br>
+</td><td width="25%" valign=top><a href="urlparse.html">urlparse</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="sgmllib.html#SGMLParser">sgmllib.SGMLParser</a>(<a href="markupbase.html#ParserBase">markupbase.ParserBase</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="feedio.lib.autorss.html#LinkParser">LinkParser</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LinkParser">class <strong>LinkParser</strong></a>(<a href="sgmllib.html#SGMLParser">sgmllib.SGMLParser</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="feedio.lib.autorss.html#LinkParser">LinkParser</a></dd>
+<dd><a href="sgmllib.html#SGMLParser">sgmllib.SGMLParser</a></dd>
+<dd><a href="markupbase.html#ParserBase">markupbase.ParserBase</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="LinkParser-do_link"><strong>do_link</strong></a>(self, attrs)</dt></dl>
+
+<dl><dt><a name="LinkParser-end_head"><strong>end_head</strong></a>(self, attrs)</dt></dl>
+
+<dl><dt><a name="LinkParser-reset"><strong>reset</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LinkParser-start_body"><strong>start_body</strong></a> = <a href="#LinkParser-end_head">end_head</a>(self, attrs)</dt></dl>
+
+<hr>
+Methods inherited from <a href="sgmllib.html#SGMLParser">sgmllib.SGMLParser</a>:<br>
+<dl><dt><a name="LinkParser-__init__"><strong>__init__</strong></a>(self, verbose<font color="#909090">=0</font>)</dt><dd><tt>Initialize&nbsp;and&nbsp;reset&nbsp;this&nbsp;instance.</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-close"><strong>close</strong></a>(self)</dt><dd><tt>Handle&nbsp;the&nbsp;remaining&nbsp;data.</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-convert_charref"><strong>convert_charref</strong></a>(self, name)</dt><dd><tt>Convert&nbsp;character&nbsp;reference,&nbsp;may&nbsp;be&nbsp;overridden.</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-convert_codepoint"><strong>convert_codepoint</strong></a>(self, codepoint)</dt></dl>
+
+<dl><dt><a name="LinkParser-convert_entityref"><strong>convert_entityref</strong></a>(self, name)</dt><dd><tt>Convert&nbsp;entity&nbsp;references.<br>
+&nbsp;<br>
+As&nbsp;an&nbsp;alternative&nbsp;to&nbsp;overriding&nbsp;this&nbsp;method;&nbsp;one&nbsp;can&nbsp;tailor&nbsp;the<br>
+results&nbsp;by&nbsp;setting&nbsp;up&nbsp;the&nbsp;self.<strong>entitydefs</strong>&nbsp;mapping&nbsp;appropriately.</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-error"><strong>error</strong></a>(self, message)</dt></dl>
+
+<dl><dt><a name="LinkParser-feed"><strong>feed</strong></a>(self, data)</dt><dd><tt>Feed&nbsp;some&nbsp;data&nbsp;to&nbsp;the&nbsp;parser.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Call&nbsp;this&nbsp;as&nbsp;often&nbsp;as&nbsp;you&nbsp;want,&nbsp;with&nbsp;as&nbsp;little&nbsp;or&nbsp;as&nbsp;much&nbsp;text<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;you&nbsp;want&nbsp;(may&nbsp;include&nbsp;'<br>
+').&nbsp;&nbsp;(This&nbsp;just&nbsp;saves&nbsp;the&nbsp;text,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;the&nbsp;processing&nbsp;is&nbsp;done&nbsp;by&nbsp;<a href="#LinkParser-goahead">goahead</a>().)</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-finish_endtag"><strong>finish_endtag</strong></a>(self, tag)</dt><dd><tt>#&nbsp;Internal&nbsp;--&nbsp;finish&nbsp;processing&nbsp;of&nbsp;end&nbsp;tag</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-finish_shorttag"><strong>finish_shorttag</strong></a>(self, tag, data)</dt><dd><tt>#&nbsp;Internal&nbsp;--&nbsp;finish&nbsp;parsing&nbsp;of&nbsp;&lt;tag/data/&nbsp;(same&nbsp;as&nbsp;&lt;tag&gt;data&lt;/tag&gt;)</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-finish_starttag"><strong>finish_starttag</strong></a>(self, tag, attrs)</dt><dd><tt>#&nbsp;Internal&nbsp;--&nbsp;finish&nbsp;processing&nbsp;of&nbsp;start&nbsp;tag<br>
+#&nbsp;Return&nbsp;-1&nbsp;for&nbsp;unknown&nbsp;tag,&nbsp;0&nbsp;for&nbsp;open-only&nbsp;tag,&nbsp;1&nbsp;for&nbsp;balanced&nbsp;tag</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-get_starttag_text"><strong>get_starttag_text</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LinkParser-goahead"><strong>goahead</strong></a>(self, end)</dt><dd><tt>#&nbsp;Internal&nbsp;--&nbsp;handle&nbsp;data&nbsp;as&nbsp;far&nbsp;as&nbsp;reasonable.&nbsp;&nbsp;May&nbsp;leave&nbsp;state<br>
+#&nbsp;and&nbsp;data&nbsp;to&nbsp;be&nbsp;processed&nbsp;by&nbsp;a&nbsp;subsequent&nbsp;call.&nbsp;&nbsp;If&nbsp;'end'&nbsp;is<br>
+#&nbsp;true,&nbsp;force&nbsp;handling&nbsp;all&nbsp;data&nbsp;as&nbsp;if&nbsp;followed&nbsp;by&nbsp;EOF&nbsp;marker.</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-handle_charref"><strong>handle_charref</strong></a>(self, name)</dt><dd><tt>Handle&nbsp;character&nbsp;reference,&nbsp;no&nbsp;need&nbsp;to&nbsp;override.</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-handle_comment"><strong>handle_comment</strong></a>(self, data)</dt><dd><tt>#&nbsp;Example&nbsp;--&nbsp;handle&nbsp;comment,&nbsp;could&nbsp;be&nbsp;overridden</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-handle_data"><strong>handle_data</strong></a>(self, data)</dt><dd><tt>#&nbsp;Example&nbsp;--&nbsp;handle&nbsp;data,&nbsp;should&nbsp;be&nbsp;overridden</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-handle_decl"><strong>handle_decl</strong></a>(self, decl)</dt><dd><tt>#&nbsp;Example&nbsp;--&nbsp;handle&nbsp;declaration,&nbsp;could&nbsp;be&nbsp;overridden</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-handle_endtag"><strong>handle_endtag</strong></a>(self, tag, method)</dt><dd><tt>#&nbsp;Overridable&nbsp;--&nbsp;handle&nbsp;end&nbsp;tag</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-handle_entityref"><strong>handle_entityref</strong></a>(self, name)</dt><dd><tt>Handle&nbsp;entity&nbsp;references,&nbsp;no&nbsp;need&nbsp;to&nbsp;override.</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-handle_pi"><strong>handle_pi</strong></a>(self, data)</dt><dd><tt>#&nbsp;Example&nbsp;--&nbsp;handle&nbsp;processing&nbsp;instruction,&nbsp;could&nbsp;be&nbsp;overridden</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-handle_starttag"><strong>handle_starttag</strong></a>(self, tag, method, attrs)</dt><dd><tt>#&nbsp;Overridable&nbsp;--&nbsp;handle&nbsp;start&nbsp;tag</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-parse_endtag"><strong>parse_endtag</strong></a>(self, i)</dt><dd><tt>#&nbsp;Internal&nbsp;--&nbsp;parse&nbsp;endtag</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-parse_pi"><strong>parse_pi</strong></a>(self, i)</dt><dd><tt>#&nbsp;Internal&nbsp;--&nbsp;parse&nbsp;processing&nbsp;instr,&nbsp;return&nbsp;length&nbsp;or&nbsp;-1&nbsp;if&nbsp;not&nbsp;terminated</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-parse_starttag"><strong>parse_starttag</strong></a>(self, i)</dt><dd><tt>#&nbsp;Internal&nbsp;--&nbsp;handle&nbsp;starttag,&nbsp;return&nbsp;length&nbsp;or&nbsp;-1&nbsp;if&nbsp;not&nbsp;terminated</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-report_unbalanced"><strong>report_unbalanced</strong></a>(self, tag)</dt><dd><tt>#&nbsp;Example&nbsp;--&nbsp;report&nbsp;an&nbsp;unbalanced&nbsp;&lt;/...&gt;&nbsp;tag.</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-setliteral"><strong>setliteral</strong></a>(self, *args)</dt><dd><tt>Enter&nbsp;literal&nbsp;mode&nbsp;(CDATA).<br>
+&nbsp;<br>
+Intended&nbsp;for&nbsp;derived&nbsp;classes&nbsp;only.</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-setnomoretags"><strong>setnomoretags</strong></a>(self)</dt><dd><tt>Enter&nbsp;literal&nbsp;mode&nbsp;(CDATA)&nbsp;till&nbsp;EOF.<br>
+&nbsp;<br>
+Intended&nbsp;for&nbsp;derived&nbsp;classes&nbsp;only.</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-unknown_charref"><strong>unknown_charref</strong></a>(self, ref)</dt></dl>
+
+<dl><dt><a name="LinkParser-unknown_endtag"><strong>unknown_endtag</strong></a>(self, tag)</dt></dl>
+
+<dl><dt><a name="LinkParser-unknown_entityref"><strong>unknown_entityref</strong></a>(self, ref)</dt></dl>
+
+<dl><dt><a name="LinkParser-unknown_starttag"><strong>unknown_starttag</strong></a>(self, tag, attrs)</dt><dd><tt>#&nbsp;To&nbsp;be&nbsp;overridden&nbsp;--&nbsp;handlers&nbsp;for&nbsp;unknown&nbsp;objects</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="sgmllib.html#SGMLParser">sgmllib.SGMLParser</a>:<br>
+<dl><dt><strong>entity_or_charref</strong> = &lt;_sre.SRE_Pattern object&gt;</dl>
+
+<dl><dt><strong>entitydefs</strong> = {'amp': '&amp;', 'apos': "'", 'gt': '&gt;', 'lt': '&lt;', 'quot': '"'}</dl>
+
+<hr>
+Methods inherited from <a href="markupbase.html#ParserBase">markupbase.ParserBase</a>:<br>
+<dl><dt><a name="LinkParser-getpos"><strong>getpos</strong></a>(self)</dt><dd><tt>Return&nbsp;current&nbsp;line&nbsp;number&nbsp;and&nbsp;offset.</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-parse_comment"><strong>parse_comment</strong></a>(self, i, report<font color="#909090">=1</font>)</dt><dd><tt>#&nbsp;Internal&nbsp;--&nbsp;parse&nbsp;comment,&nbsp;return&nbsp;length&nbsp;or&nbsp;-1&nbsp;if&nbsp;not&nbsp;terminated</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-parse_declaration"><strong>parse_declaration</strong></a>(self, i)</dt><dd><tt>#&nbsp;Internal&nbsp;--&nbsp;parse&nbsp;declaration&nbsp;(for&nbsp;use&nbsp;by&nbsp;subclasses).</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-parse_marked_section"><strong>parse_marked_section</strong></a>(self, i, report<font color="#909090">=1</font>)</dt><dd><tt>#&nbsp;Internal&nbsp;--&nbsp;parse&nbsp;a&nbsp;marked&nbsp;section<br>
+#&nbsp;Override&nbsp;this&nbsp;to&nbsp;handle&nbsp;MS-word&nbsp;extension&nbsp;syntax&nbsp;&lt;![if&nbsp;word]&gt;content&lt;![endif]&gt;</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-unknown_decl"><strong>unknown_decl</strong></a>(self, data)</dt><dd><tt>#&nbsp;To&nbsp;be&nbsp;overridden&nbsp;--&nbsp;handlers&nbsp;for&nbsp;unknown&nbsp;objects</tt></dd></dl>
+
+<dl><dt><a name="LinkParser-updatepos"><strong>updatepos</strong></a>(self, i, j)</dt><dd><tt>#&nbsp;Internal&nbsp;--&nbsp;update&nbsp;line&nbsp;number&nbsp;and&nbsp;offset.&nbsp;&nbsp;This&nbsp;should&nbsp;be<br>
+#&nbsp;called&nbsp;for&nbsp;each&nbsp;piece&nbsp;of&nbsp;data&nbsp;exactly&nbsp;once,&nbsp;in&nbsp;order&nbsp;--&nbsp;in&nbsp;other<br>
+#&nbsp;words&nbsp;the&nbsp;concatenation&nbsp;of&nbsp;all&nbsp;the&nbsp;input&nbsp;strings&nbsp;to&nbsp;this<br>
+#&nbsp;function&nbsp;should&nbsp;be&nbsp;exactly&nbsp;the&nbsp;entire&nbsp;input.</tt></dd></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-getRSSLink"><strong>getRSSLink</strong></a>(url)</dt></dl>
+ <dl><dt><a name="-getRSSLinkFromHTMLSource"><strong>getRSSLinkFromHTMLSource</strong></a>(htmlSource)</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>BUFFERSIZE</strong> = 1024<br>
+<strong>__author__</strong> = 'Mark Pilgrim (f8dy@diveintomark.org)'<br>
+<strong>__copyright__</strong> = 'Copyright 2002, Mark Pilgrim'<br>
+<strong>__license__</strong> = 'Python'</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Mark&nbsp;Pilgrim&nbsp;(f8dy@diveintomark.org)</td></tr></table>
+</body></html>
