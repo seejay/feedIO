@@ -4,7 +4,7 @@ notifier module for feedIO. Used to notify the user of new feed updates and othe
  events of the application.
 """
 
-__version__ = "0.0.3"
+__version__ = "0.0.5"
 
 __license__ = """
     Copyright (C) 2011 Sri Lanka Institute of Information Technology.
