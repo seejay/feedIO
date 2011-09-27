@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'feedIO.ui'
 #
-# Created: Thu Aug 25 14:07:51 2011
+# Created: Wed Sep 28 00:29:14 2011
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -296,6 +296,8 @@ class Ui_feedIO(object):
         self.actionSignInToRIL.setObjectName("actionSignInToRIL")
         self.actionSignOffFromRIL = QtGui.QAction(feedIO)
         self.actionSignOffFromRIL.setObjectName("actionSignOffFromRIL")
+        self.actionTranslate_the_article = QtGui.QAction(feedIO)
+        self.actionTranslate_the_article.setObjectName("actionTranslate_the_article")
         self.menuFile.addAction(self.actionAddFeed)
         self.menuFile.addAction(self.actionRemoveFeed)
         self.menuFile.addAction(self.actionFetchFeed)
@@ -326,6 +328,8 @@ class Ui_feedIO(object):
         self.menuArticle.addSeparator()
         self.menuArticle.addAction(self.actionPostToTwitter)
         self.menuArticle.addAction(self.actionReadItLater)
+        self.menuArticle.addSeparator()
+        self.menuArticle.addAction(self.actionTranslate_the_article)
         self.menuFeedIO.addAction(self.actionMinimizeToTray)
         self.menuFeedIO.addAction(self.actionExit)
         self.menuTopics.addAction(self.actionAddTopic)
@@ -412,6 +416,7 @@ class Ui_feedIO(object):
         self.actionSignOffFromTwitter.setText(QtGui.QApplication.translate("feedIO", "Sign &off", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSignInToRIL.setText(QtGui.QApplication.translate("feedIO", "Sign &into RIL", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSignOffFromRIL.setText(QtGui.QApplication.translate("feedIO", "Sign &off", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionTranslate_the_article.setText(QtGui.QApplication.translate("feedIO", "Translate the article", None, QtGui.QApplication.UnicodeUTF8))
 
 from PyQt4 import QtWebKit
 import feedIOicons_rc
