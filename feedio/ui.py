@@ -53,6 +53,7 @@ from UI.about_ui import Ui_About
 from UI.license_ui import Ui_License
 from UI.credits_ui import Ui_Credits
 from UI.settings_ui import Ui_settings
+from lib.translate import Translator
 
 from UI.systray import SystemTrayIcon
 import feedmanager as fm
@@ -767,6 +768,33 @@ class mainUI(QMainWindow):
                 # TODO: do something like bookmarking the selected article.
                 self.parent.status = selected.article.title + "Added to Read It Later List."
                 self.parent.sendNotification()
+
+
+    def on_actionTranslate_the_article_activated(self, i = None):
+        """
+        Translate the given article in a different language into English language.
+        
+        """
+        if i is None: return
+        try:
+            toTranslate = self.currentItem
+            selectedItem = toTranslate.article
+            #thisOne = selectedItem.description
+            v1 = purify.cleanText(str(selectedItem.title))
+            vx = purify.cleanText(str(selectedItem.description))
+            v2 = ' '.join(vx.split())
+            translate = Translator().translate
+            translatedTitle = translate(v1, lang_to="en")
+            translatedDescription = translate(v2, lang_to="en")                
+            selectedItem.title = translatedTitle
+            selectedItem.description = translatedDescription
+            self.displayArticle()
+            
+            
+
+        except:
+            text = "Error Translating the article"
+
 
 
 class AddFeedDialog(QDialog):

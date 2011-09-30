@@ -463,6 +463,8 @@
     <addaction name="separator"/>
     <addaction name="actionPostToTwitter"/>
     <addaction name="actionReadItLater"/>
+    <addaction name="separator"/>
+    <addaction name="actionTranslate_the_article"/>
    </widget>
    <widget class="QMenu" name="menuFeedIO">
     <property name="title">
@@ -784,6 +786,11 @@
   <action name="actionSignOffFromRIL">
    <property name="text">
     <string>Sign &amp;off</string>
+   </property>
+  </action>
+  <action name="actionTranslate_the_article">
+   <property name="text">
+    <string>Translate the article</string>
    </property>
   </action>
  </widget>
