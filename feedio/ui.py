@@ -772,21 +772,22 @@ class mainUI(QMainWindow):
 
     def on_actionTranslate_the_article_activated(self, i = None):
         """
-        Translate the given article in to English language.
-        Note - Currently for the testing purpose , english language is translated to Russian language
+        Translate the given article in a different language into English language.
+        
         """
         if i is None: return
         try:
             toTranslate = self.currentItem
             selectedItem = toTranslate.article
             #thisOne = selectedItem.description
-            v1 = selectedItem.title
-            v2 = selectedItem.description
+            v1 = purify.cleanText(str(selectedItem.title))
+            vx = purify.cleanText(str(selectedItem.description))
+            v2 = ' '.join(vx.split())
             translate = Translator().translate
-            translatedTitle = translate(v1, lang_to="ru")
-            #translatedDescription = translate(v2, lang_to="ru")                
+            translatedTitle = translate(v1, lang_to="en")
+            translatedDescription = translate(v2, lang_to="en")                
             selectedItem.title = translatedTitle
-            #selectedItem.description = translatedDescription
+            selectedItem.description = translatedDescription
             self.displayArticle()
             
             
