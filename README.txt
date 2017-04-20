@@ -1,7 +1,6 @@
-feedIO - A feed aggregator that tracks the user's reading tastes and prioritizes 
-the content from future feed updates according to the recorded user preferences.
-Written in Python and Qt.
+feedIO - A News Aggregator that Knows What You Want to Read. Written in Python and Qt.
 
+(Soon to be ported to Mac OS X. Currently runs on GNU/Linux and Microsoft Windows.)
 
 -------------------------------------------------------------------------------
 How to run feedIO in GNU/Linux.
