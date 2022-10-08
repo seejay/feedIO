@@ -32,7 +32,7 @@ __developers__ = ["Chanaka Jayamal",
                   "Kolitha Gajanayake", 
                   "Chamika Viraj"]
 
-
+import logging
 import os
 from elixir import *
 from sqlalchemy.ext.associationproxy import AssociationProxy
@@ -147,5 +147,5 @@ def main():
     initDB()
 
 if __name__ == "__main__":
-    print __doc__
+    logging.debug(__doc__)
     main()

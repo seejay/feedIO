@@ -32,7 +32,7 @@ __developers__ = ["Chanaka Jayamal",
                   "Kolitha Gajanayake",
                   "Chamika Viraj"]
 
-
+import logging
 import sys
 import time
 from PyQt4.QtGui import *
@@ -172,7 +172,7 @@ class mainUI(QMainWindow):
 
         selectedTopicIndex = self.ui.comboTopic.currentIndex()
         self.currentTopic = self.topicList[selectedTopicIndex]
-        print self.currentTopic
+        logging.debug(self.currentTopic)
 
         if len(self.feedList) == 0:
             self.scoreItemList = []
@@ -359,10 +359,10 @@ class mainUI(QMainWindow):
 #        self.displayItems()
 
     def fetchAll(self):
-        print "fetching Updates..."
+        logging.debug("fetching Updates...")
         fm.updateAll()
 
-        print "Calculating priority Scores"
+        logging.debug("Calculating priority Scores")
         self.parent.setNewItemScores()
 
 
@@ -398,18 +398,12 @@ class mainUI(QMainWindow):
         selected = self.currentItem
 
         if selected == None:
-            print "Nothing to vote!"
+            logging.debug("Nothing to vote!")
         else:
             selectedTopicIndex = self.ui.comboTopic.currentIndex()
             selectedTopic = self.topicList[selectedTopicIndex]
 
-            #call the classifier module
             classifier.voteArticle("up",selected.article, selectedTopic)
-
-#            #upVote the feed
-#            classifier.voteFeed("up", selected.article.feed)
-#            print "Up Voted %s" % selected.article.title
-
             self.parent.status = "Up Voted %s under %s" % (selected.article.title, selectedTopic.title)
             self.parent.sendNotification()
 
@@ -421,17 +415,12 @@ class mainUI(QMainWindow):
         selected = self.currentItem
 
         if selected == None:
-            print "Nothing to vote!"
+            logging.debug("Nothing to vote!")
         else:
             selectedTopicIndex = self.ui.comboTopic.currentIndex()
             selectedTopic = self.topicList[selectedTopicIndex]
 
-            #call the classifier module
             classifier.voteArticle("down", selected.article, selectedTopic)
-
-#            #downVote the feed
-#            classifier.voteFeed("down", selected.article.feed)
-#            print "Down Voted %s" % selected.article.title
 
             self.parent.status = "Down Voted %s under %s" % (selected.article.title, selectedTopic.title)
             self.parent.sendNotification()
@@ -440,7 +429,7 @@ class mainUI(QMainWindow):
         """
         calls the parent.reCalculateAllScores inside a thread.
         """
-        print "reCalculateAllScores called"
+        logging.debug("reCalculateAllScores called")
         thread = threading.Thread(target=self.parent.reCalculateAllScores, args=())
 #        thread.setDaemon(True)
         thread.start()
@@ -568,7 +557,7 @@ class mainUI(QMainWindow):
 
         if twitterPlugin.ACCESS_KEY is '':
             try:
-                print "signing into twitter using the browser..."
+                logging.debug("signing into twitter using the browser...")
                 tp = twitterPlugin.TwitterPlugin()
 
                 auth_url = tp.authenticate()
@@ -588,7 +577,7 @@ class mainUI(QMainWindow):
 
 
             except tweepy.TweepError:
-                print "Not authenticated properly. check the PIN number"
+                logging.debug("Not authenticated properly. check the PIN number")
                 self.parent.status = "Error Logging to twitter.com!"
                 self.parent.sendNotification()
             else:
@@ -615,7 +604,7 @@ class mainUI(QMainWindow):
         self.parent.status = "You have Signed Off from twitter."
         self.parent.sendNotification()
 
-        print "Signed off from twitter."
+        logging.debug("Signed off from twitter.")
 
 
     def on_actionPostToTwitter_activated(self, i = None):
@@ -643,7 +632,7 @@ class mainUI(QMainWindow):
 
         if twitterPlugin.ACCESS_KEY is '':
             try:
-                print "signing into twitter using the browser..."
+                logging.debug("signing into twitter using the browser...")
                 tp = twitterPlugin.TwitterPlugin()
 
                 auth_url = tp.authenticate()
@@ -661,7 +650,7 @@ class mainUI(QMainWindow):
                 s.setValue("TWITTER_ACCESS_SECRET", twitterPlugin.ACCESS_SECRET)
 
             except tweepy.TweepError:
-                print "Not authenticated properly. check the PIN number"
+                logging.debug("Not authenticated properly. check the PIN number")
                 self.parent.status = "Error Logging to twitter.com!"
                 self.parent.sendNotification()
 
@@ -675,7 +664,7 @@ class mainUI(QMainWindow):
                 tp = twitterPlugin.TwitterPlugin()
                 tp.tweet(message)
             except:
-                print "Error in tweeting"
+                logging.debug("Error in tweeting")
             else:
                 self.parent.status = message + " posted to twitter."
                 self.parent.sendNotification()
@@ -688,7 +677,7 @@ class mainUI(QMainWindow):
         if i is None: return
         rilPlugin.SESSION = None
 
-        print "Asking to Sign into RIL..."
+        logging.debug("Asking to Sign into RIL...")
         RilLoginDialog(self).exec_()
 
         if rilPlugin.SESSION is None: return
@@ -713,7 +702,7 @@ class mainUI(QMainWindow):
         self.parent.status = "You have Signed Off from Read It Later."
         self.parent.sendNotification()
 
-        print "Signed off from RIL."
+        logging.debug("Signed off from RIL.")
 
 
     def on_actionReadItLater_activated(self, i = None):
@@ -736,7 +725,7 @@ class mainUI(QMainWindow):
                     rilPlugin.SESSION = rilPlugin.RilSession(username, pw)
                     rilPlugin.SESSION.submitItem(selected.article)
                 except rilPlugin.LogInError:
-                    print "LoginError! invalid username/pw."
+                    logging.debug("LoginError! invalid username/pw.")
                     ## invalid credentials. prompt to re-enter username/pw.
                     #self.on_actionSignOffFromRIL_activated()
                 else:
@@ -746,14 +735,14 @@ class mainUI(QMainWindow):
 
             else:
                 # Not logged in and the username and pw is not stored.
-                print "Asking to Sign into RIL..."
+                logging.debug("Asking to Sign into RIL...")
                 RilLoginDialog(self).exec_()
 
                 if rilPlugin.SESSION is not None:
                     try:
                         rilPlugin.SESSION.submitItem(selected.article)
                     except:
-                        print "Error in Submitting to RIL"
+                        logging.debug("Error in Submitting to RIL")
                     else:
                         # TODO: do something like bookmarking the selected article.
                         self.parent.status = selected.article.title + "Added to Read It Later List."
@@ -763,7 +752,7 @@ class mainUI(QMainWindow):
             try:
                 rilPlugin.SESSION.submitItem(selected.article)
             except:
-                print "Error in Submitting to RIL"
+                logging.debug("Error in Submitting to RIL")
             else:
                 # TODO: do something like bookmarking the selected article.
                 self.parent.status = selected.article.title + "Added to Read It Later List."
@@ -1044,7 +1033,7 @@ class RilLoginDialog(QDialog):
              rilPlugin.SESSION = rilPlugin.RilSession(username, password)
         except rilPlugin.LogInError:
             self.ui.lblStatus.setText("Invalid username/password!. Please retry.")
-            print "LoginError! invalid username/password."
+            logging.debug("LoginError! invalid username/password.")
 
         else:
             if self.ui.chkKeepSigned.isChecked():
@@ -1107,7 +1096,7 @@ class CreditsDialog(QDialog):
 class FeedIO(QWidget):
     def __init__(self, parent = None):
         QWidget.__init__(self)
-        print "FeedIO instance created"
+        logging.debug("FeedIO instance created")
 
         self.status = "Running..."
 
@@ -1134,7 +1123,7 @@ class FeedIO(QWidget):
             fm.addFeed(feedUrl)
         except:
             self.status = "Error adding feed!"
-            print self.status
+            logging.debug(self.status)
             self.sendNotification()
         else:
             self.refreshDisplay = True
@@ -1163,12 +1152,12 @@ class FeedIO(QWidget):
         #assign the newly fetched articles to the topics
         newList = fm.listNew()
         classifier.assignItemsToTopics(newList)
-        print "Assigned the new articles to topics"
+        logging.debug("Assigned the new articles to topics")
         #calculate the priority scores of the new articles for each topic.
         self.setNewItemScores()
 
         self.status = "All feeds updated."
-        print self.status
+        logging.debug(self.status)
         self.sendNotification()
 
 
@@ -1184,14 +1173,14 @@ class FeedIO(QWidget):
             scoreItemsList = pri.listScoreItems()
             scoreItemList = [scoreItem for scoreItem in scoreItemsList if scoreItem.item.age is 0]
             pri.setScores(scoreItemList)
-            print "calculated New article scores for %s" % topic.title
+            logging.debug("calculated New article scores for %s" % topic.title)
 
     def reCalculateAllScores(self):
         """
         Function to get all the Unread Articles and calculate their scores under all the topics.
         """
         #get all the topics
-        print "reCalculating All Scores"
+        logging.debug("reCalculating All Scores")
         topicsList = classifier.listTopics()
 
         for topic in topicsList:
@@ -1202,29 +1191,29 @@ class FeedIO(QWidget):
         """
         Function to get all the Unread Articles and calculate their scores under the given topic.
         """
-        print "calculating New article scores for %s" % topic.title
+        logging.debug("calculating New article scores for %s" % topic.title)
         pri = prioritizer.Prioritizer(topic)
         scoreItemsList = pri.listScoreItems()
 #        scoreItemList = [scoreItem for scoreItem in scoreItemsList if scoreItem.item.isUnread is True]
         pri.setScores(scoreItemsList)
-        print "calculated New article scores for %s" % topic.title
+        logging.debug("calculated New article scores for %s" % topic.title)
         self.status = "Calculated New article scores for %s" % topic.title
         self.sendNotification()
 
 
 
     def closeEvent(self, event):
-        print "marking all new Items as old before exit"
+        logging.debug("marking all new Items as old before exit")
         newItems = fm.listNew()
         for item in newItems:
             fm.setItemFlag(item, 1, False)
-            print "marked %s new to unread" % item.title
+            logging.debug("marked %s new to unread" % item.title)
 
         #check whether text to speech is still working
         if (self.playerState == 'playing'):
             self.sp.stop()
             self.playerState='standby'
-            print "speech engine terminated on exit"
+            logging.debug("speech engine terminated on exit"
         else:
             pass
 
@@ -1243,22 +1232,14 @@ def initUI():
     app.setOrganizationDomain("feedio.org")
     app.setApplicationName("feedIO")
 
-
-#    #add following 3 lines to enable sinhala
-#    translator = QTranslator(app)
-#    translator.load("UI/feedio_sinhala")
-#    app.installTranslator(translator)
-
-    #Splash screen implementation
+    # Splash screen implementation
     splash_pix = QPixmap(":/images/splash.png")
-#    splash_pix = QPixmap('./images/feedIO-splash.png')
+    # splash_pix = QPixmap('./images/feedIO-splash.png')
     splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
     splash.setMask(splash_pix.mask())
 
     splash.show()
     app.processEvents()
-
-#    time.sleep(2)
 
     # create a feedIO QWidget instance
     feedIO = FeedIO()

@@ -70,12 +70,12 @@ def addTopic(topic):
         session.commit()
     except:
         session.rollback()
-        print "Error adding topic"
+        logging.debug("Error adding topic")
     else:
         topic = topic.replace(" ", "_")
         c = Classifier(classifierDir, [topic, "not"+topic])
         c2 = Classifier(classifierDir, [topic+"Title", "not"+topic+"Title"])
-        print "Added new topic %s" % unicode(topic)
+        logging.debug("Added new topic %s" % unicode(topic))
 
         #Now append the topic to every article in the db
         try:
@@ -90,7 +90,7 @@ def addTopic(topic):
             session.commit()
         except:
             session.rollback()
-            print "Error Assigning new topic to all Items!"
+            logging.debug("Error Assigning new topic to all Items!")
 
 
 def removeTopic(topic):
@@ -116,9 +116,9 @@ def removeTopic(topic):
         session.commit()
     except:
         session.rollback()
-        print "Error removing Items"
+        logging.debug("Error removing Items")
     else:
-        print "removed Topic %s" % topicTitle
+        logging.debug("removed Topic %s" % topicTitle)
 
 
 def assignItemsToTopics(itemList):
@@ -128,7 +128,7 @@ def assignItemsToTopics(itemList):
     the priority score of an Item under a particular topic.
     """
     allTopics = Topic.query.all()
-    print "assigning the new articles to topics.."
+    logging.debug("assigning the new articles to topics..")
 
     for item in itemList:
         for topic in allTopics:
@@ -137,7 +137,7 @@ def assignItemsToTopics(itemList):
         session.commit()
     except:
         session.rollback()
-        print "Error Assigning Topics"
+        logging.debug("Error Assigning Topics")
 
 
 def setItemTopic(item, topic, commit=True):
@@ -148,14 +148,14 @@ def setItemTopic(item, topic, commit=True):
     """
     if item.topics.count(topic) == 0:
         item.topics.append(topic)
-        print "Added %s to %s" % (topic.title, item.title)
+        logging.debug("Added %s to %s" % (topic.title, item.title))
 
         if commit is True:
             try:
                 session.commit() # disable individual commits to increse performance.
             except:
                 session.rollback()
-                print "Error in setItemTopic"
+                logging.debug("Error in setItemTopic")
                 return None
 
 
@@ -166,7 +166,7 @@ def assignFeedsToTopics(feedList):
     the reputation score (number of votes) of an Feed under a particular topic.
     """
     allTopics = Topic.query.all()
-    print "assigning the new feed to topics.."
+    logging.debug("assigning the new feed to topics..")
 
     for feed in feedList:
         for topic in allTopics:
@@ -175,7 +175,7 @@ def assignFeedsToTopics(feedList):
         session.commit()
     except:
         session.rollback()
-        print "Error Assigning Topics to feed"
+        logging.debug("Error Assigning Topics to feed")
         return None
 
 
@@ -187,14 +187,14 @@ def setFeedTopic(feed, topic, commit=True):
     """
     if feed.topics.count(topic) == 0:
         feed.topics.append(topic)
-        print "Added %s to %s" % (topic.title, feed.title)
+        logging.debug("Added %s to %s" % (topic.title, feed.title))
 
         if commit is True:
             try:
                 session.commit() # disable individual commits to increse performance.
             except:
                 session.rollback()
-                print "Error in setItemTopic"
+                logging.debug("Error in setItemTopic")
                 return None
 
 
@@ -221,11 +221,11 @@ def _voteFeed(upOrDown, feed, topic):
     try:
         if upOrDown is "up":
             scoreFeed.score += 1
-            print "Up voted %s under %s new score is  %d" % (feed.title, topic.title, scoreFeed.score)
+            logging.debug("Up voted %s under %s new score is  %d" % (feed.title, topic.title, scoreFeed.score))
 
         elif upOrDown is "down":
             scoreFeed.score -= 1
-            print "Down voted %s under %s new score is  %d" % (feed.title, topic.title, scoreFeed.score)
+            logging.debug("Down voted %s under %s new score is  %d" % (feed.title, topic.title, scoreFeed.score))
 
         session.commit()
     except:
@@ -252,9 +252,9 @@ def removeItemScores(itemToRemove):
         item.delete()
     try:
         session.commit()
-        print "removed from Scores"
+        logging.debug("removed from Scores")
     except:
-        print "Error removing Scores"
+        logging.debug("Error removing Scores")
 
 
 def removefromScoreFeeds(feed):
@@ -274,9 +274,9 @@ def removeFeedScores(feedToRemove):
         feed.delete()
     try:
         session.commit()
-        print "removed from Scores"
+        logging.debug("removed from Scores")
     except:
-        print "Error removing Scores"
+        logging.debug("Error removing Scores")
 
 
 def voteArticle(upOrDown, item, topic):
@@ -319,7 +319,7 @@ def voteArticle(upOrDown, item, topic):
 #                d.learn("notGeneral", text)
 #                d2.learn("notGeneralTitle", title)
     except UnicodeEncodeError:
-        print "Article content contains invalid characters!"
+        logging.debug("Article content contains invalid characters!")
 
 
 def classifyArticleText(topic,text):
@@ -382,5 +382,5 @@ def main():
     initTopics()
 
 if __name__ == "__main__":
-    print __doc__
+    logging.debug(__doc__)
     main()

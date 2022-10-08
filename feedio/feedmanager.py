@@ -30,7 +30,7 @@ __developers__ = ["Chanaka Jayamal",
                   "Kolitha Gajanayake",
                   "Chamika Viraj"]
 
-
+import logging
 import sys
 import os
 import time
@@ -56,7 +56,7 @@ def addFeed(feedUrl):
         feedData = feedparser.parse(feedUrl)
     except:
         #this never occurs since parser does not raise any exceptions when invalid url is sent
-        print "Invalid feed Url!"
+        logging.debug("Invalid feed Url!")
         raise FeedError
 
     else:
@@ -69,11 +69,11 @@ def addFeed(feedUrl):
 
         except AttributeError:
             session.rollback()
-            print "Error! Invalid feed URL"
+            logging.debug("Error! Invalid feed URL")
             raise FeedError
         except:
             session.rollback()
-            print "%s \t Feed already subscribed" % (feedData.feed.title)
+            logging.debug("%s \t Feed already subscribed" % (feedData.feed.title))
             raise FeedError
 
         else:
@@ -83,13 +83,13 @@ def addFeed(feedUrl):
                 for topic in topicsList:
                     setFeedTopic(newFeed, topic, False)
                 session.commit()
-                print "Added %s to all topics" % newFeed.title
+                logging.debug("Added %s to all topics" % newFeed.title)
             except:
                 session.rollback()
-                print "Error setting up topics to the Feed"
+                logging.debug("Error setting up topics to the Feed")
                 raise FeedError
 
-            print "Subscribed to \t %s " % (feedData.feed.title)
+            logging.debug("Subscribed to \t %s " % (feedData.feed.title))
             fetchFeeds(newFeed, feedData)
             topicsList = Topic.query.all()
 
@@ -100,14 +100,14 @@ def setFeedTopic(feed, topic, commit=True):
     """
     if feed.topics.count(topic) == 0:
         feed.topics.append(topic)
-        print "Added %s to %s" % (topic.title, feed.title)
+        logging.debug("Added %s to %s" % (topic.title, feed.title))
 
         if commit is True:
             try:
                 session.commit() # disable individual commits to increse performance.
             except:
                 session.rollback()
-                print "Error in setItemTopic"
+                logging.debug("Error in setItemTopic")
                 return None
 
 
@@ -129,7 +129,7 @@ def _addItem(feed, item):
         session.commit()
     except:
         session.rollback()
-        print " %s \t already exists" % (item.title)
+        logging.debug(" %s \t already exists" % (item.title))
 
 def removeFeed(feed):
     """
@@ -140,7 +140,7 @@ def removeFeed(feed):
         itemList = listItems(feed)
 
         for item in itemList:
-            print "deleted %s" % item.title
+            logging.debug("deleted %s" % item.title)
             _removeItem(item)
 
         # First delete all the scoreFeeds from the ScoreFeed table
@@ -151,11 +151,11 @@ def removeFeed(feed):
         # Now remove the feed from the database
         feed.delete()
         session.commit()
-        print "deleted %s" % feed.title
+        logging.debug("deleted %s" % feed.title)
 
     except:
         session.rollback()
-        print "error deleting feed!"
+        logging.debug("error deleting feed!")
 
 def _removeItem(item):
     """
@@ -171,7 +171,7 @@ def _removeItem(item):
         item.delete()
 #        session.commit() #slows down the delete process when we commit each delete.
     except:
-        print "Error deleting %s" % item.title
+        logging.debug("Error deleting %s" % item.title)
 #        session.rollback()
 
 
@@ -181,14 +181,14 @@ def updateAll():
     """
     try:
         for feed in Feed.query.all():
-            print "fetching updates for %s..." % feed.title
+            logging.debug("fetching updates for %s..." % feed.title)
             updateFeed(feed)
         session.commit()
     except:
         session.commit()
-        print "Error updating feeds"
+        logging.debug("Error updating feeds")
     else:
-        print "all %d feeds are up to date" % len(Feed.query.all())
+        logging.debug("all %d feeds are up to date" % len(Feed.query.all()))
 
 
 def updateFeed(feed):
@@ -199,14 +199,14 @@ def updateFeed(feed):
     feedData = feedparser.parse(feed.url, etag = feed.etag, modified = time.localtime(feed.lastModified))
     try:
         if feedData.status == 301:
-            print "feed url modified. trying the new url..."
+            logging.debug("feed url modified. trying the new url...")
             feedData = feedparser.parse(feedData.url, etag = feed.etag, modified = time.localtime(feed.lastModified))
 
         if feedData.status == 304:
-            print "No updates"
+            logging.debug("No updates")
 
         else:
-            print feedData.status
+            logging.debug(feedData.status)
 
             lastModified = time.localtime(feed.lastModified)
             feed.lastModified = time.mktime(feedData.modified)
@@ -214,12 +214,12 @@ def updateFeed(feed):
             for item in feedData.entries:
                 if item.updated_parsed > lastModified:
                     _addItem(feed, item)
-                    print "Added %s to the database." % item.title #comment this later
+                    logging.debug("Added %s to the database." % item.title)  # comment this later
     except AttributeError:
-        print " Error fetching feeds, Network error???"
+        logging.debug("Error fetching feeds, Network error???")
 
     #if feedData.status == 200:
-    #    print "Site content has not been updated."
+    #    logging.debug("Site content has not been updated.")
     #    pass
 
 
@@ -348,7 +348,7 @@ def setItemFlag(item, age = 2, commit = True):
             session.commit() # disabled individual commits to increse performance.
         except:
             session.rollback()
-            print "Error in setItemFlags"
+            logging.debug("Error in setItemFlags")
 
 
 def main():

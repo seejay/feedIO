@@ -30,6 +30,7 @@ __developers__ = ["Chanaka Jayamal",
                   "Kolitha Gajanayake",
                   "Viraj Senarathna"]
 
+import logging
 import subprocess
 import os
 
@@ -79,13 +80,13 @@ class SpeechEngine:
             self.textFileMaker(self.festivalText(text))
             call= ["festival", "--tts","test.txt"]
         else :
-            print "text to speech engine not found. please install espeak."
-        print call
+            logging.debug("text to speech engine not found. please install espeak.")
+        logging.debug(call)
         startupinfo = None
         try:
             self.proc = subprocess.Popen(call,startupinfo=startupinfo) # calling speech engine in a subprocess.
         except OSError:
-            print "Calling to speech engine from operating system failed."
+            logging.debug("Calling to speech engine from operating system failed.")
 
     def stop(self):
         """

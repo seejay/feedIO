@@ -32,7 +32,7 @@ __developers__ = ["Chanaka Jayamal",
                   "Kolitha Gajanayake",
                   "Chamika Viraj"]
 
-
+import logging
 import classifier
 import feedmanager
 import purify
@@ -94,10 +94,10 @@ class Prioritizer:
 
         try:
             session.commit()
-            print "Saved article scores"
+            logging.debug("Saved article scores")
         except:
             session.rollback()
-            print "Error Commiting scores to the db"
+            logging.debug("Error Commiting scores to the db")
 
 
     def calcScore(self, article):
@@ -115,13 +115,10 @@ class Prioritizer:
         #Calculate the Score for the texual content of the article
         (textTopic, textScore) = classifier.classifyArticleText(self.topic.title, text)
         textTopic = textTopic.replace("_", " ")
-#        print "text : %s, %s" % (textTopic, textScore)
 
         #Calculate the Score for the title of the article.
         (titleTopic,titleScore) = classifier.classifyArticleTitle(self.topic.title, titleText)
         titleTopic = titleTopic.replace("_", " ")
-
-#        print "Title : %s, %s" % (titleTopic,titleScore)
 
         #Now set the textual scores to minus values if the article "notTopic"
         if textTopic ==self.topic.title:
@@ -162,5 +159,5 @@ def main():
     pass
 
 if __name__ == "__main__":
-    print __doc__
+    logging.debug(__doc__)
     main()
