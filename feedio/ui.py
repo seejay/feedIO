@@ -436,7 +436,7 @@ class mainUI(QMainWindow):
 
 
 
-    def on_actionManageFeeds_activated(self, i = None):
+    def on_actionManageFeeds_activated(self, i=None):
         """
         Manage feeds action implementataion. displays the manageFeeds dialog box.
         """
@@ -448,14 +448,14 @@ class mainUI(QMainWindow):
             self.parent.refreshDisplay = False
 
 
-    def on_actionAddFeed_activated(self, i = None):
+    def on_actionAddFeed_activated(self, i=None):
         if i is None: return
 
         AddFeedDialog(self).exec_()
         #self.displayFeeds()
 
 
-    def on_actionRemoveFeed_activated(self, i = None):
+    def on_actionRemoveFeed_activated(self, i=None):
         if i is None: return
 
         RemoveFeedDialog(self).exec_()
@@ -464,7 +464,7 @@ class mainUI(QMainWindow):
             self.displayFeeds()
             self.parent.refreshDisplay = False
 
-    def on_actionManageTopics_activated(self, i = None):
+    def on_actionManageTopics_activated(self, i=None):
         """
         Manage feeds action implementataion. displays the manageFeeds dialog box.
         """
@@ -477,7 +477,7 @@ class mainUI(QMainWindow):
             self.parent.refreshDisplay = False
 
 
-    def on_actionAddTopic_activated(self, i = None):
+    def on_actionAddTopic_activated(self, i=None):
         if i is None: return
 
         AddTopicDialog(self).exec_()
@@ -487,7 +487,7 @@ class mainUI(QMainWindow):
             self.parent.refreshDisplay = False
 
 
-    def on_actionRemoveTopic_activated(self, i = None):
+    def on_actionRemoveTopic_activated(self, i=None):
         if i is None: return
 
         RemoveTopicDialog(self).exec_()
@@ -497,7 +497,7 @@ class mainUI(QMainWindow):
             self.parent.refreshDisplay = False
 
 
-    def on_actionExit_activated(self, i = None):
+    def on_actionExit_activated(self, i=None):
         """
         Exit action implementataion. Exits the application.
         """
@@ -505,7 +505,7 @@ class mainUI(QMainWindow):
         self.parent.close()
 
 
-    def on_actionMinimizeToTray_activated(self, i = None):
+    def on_actionMinimizeToTray_activated(self, i=None):
         """
         Exit action implementataion. Exits the application.
         """
@@ -513,14 +513,14 @@ class mainUI(QMainWindow):
         self.close()
 
 
-    def on_actionAbout_activated(self, i = None):
+    def on_actionAbout_activated(self, i=None):
         """
         About action implementataion.
         """
         if i is None: return
         AboutDialog(self).exec_()
 
-    def on_actionRead_activated(self, i = None):
+    def on_actionRead_activated(self, i=None):
         """
         Read article implementataion.Can play or stop the selected article.
         """
@@ -535,7 +535,7 @@ class mainUI(QMainWindow):
             self.parent.sp.stop()
             self.parent.playerState='standby'
 
-    def on_actionPreferences_activated(self, i = None):
+    def on_actionPreferences_activated(self, i=None):
         """
         Settings  action implementataion.
         """
@@ -543,7 +543,7 @@ class mainUI(QMainWindow):
         SettingsDialog(self).exec_()
 
 
-    def on_actionSignInToTwitter_activated(self, i = None):
+    def on_actionSignInToTwitter_activated(self, i=None):
         """
         Sign into twitter.
         """
@@ -585,7 +585,7 @@ class mainUI(QMainWindow):
                 self.parent.sendNotification()
 
 
-    def on_actionSignOffFromTwitter_activated(self, i = None):
+    def on_actionSignOffFromTwitter_activated(self, i=None):
         """
         Sign off from the twitter session.
         """
@@ -607,7 +607,7 @@ class mainUI(QMainWindow):
         logging.debug("Signed off from twitter.")
 
 
-    def on_actionPostToTwitter_activated(self, i = None):
+    def on_actionPostToTwitter_activated(self, i=None):
         """
         post to twitter action implementataion.
         """
@@ -670,7 +670,7 @@ class mainUI(QMainWindow):
                 self.parent.sendNotification()
 
 
-    def on_actionSignInToRIL_activated(self, i = None):
+    def on_actionSignInToRIL_activated(self, i=None):
         """
         Sign in to Read It Later, action implementataion.
         """
@@ -687,7 +687,7 @@ class mainUI(QMainWindow):
         self.parent.sendNotification()
 
 
-    def on_actionSignOffFromRIL_activated(self, i = None):
+    def on_actionSignOffFromRIL_activated(self, i=None):
         """
         Sign off from Read It Later, action implementataion.
         """
@@ -705,7 +705,7 @@ class mainUI(QMainWindow):
         logging.debug("Signed off from RIL.")
 
 
-    def on_actionReadItLater_activated(self, i = None):
+    def on_actionReadItLater_activated(self, i=None):
         """
         Read It Later, action implementataion.
         """
@@ -759,7 +759,7 @@ class mainUI(QMainWindow):
                 self.parent.sendNotification()
 
 
-    def on_actionTranslate_the_article_activated(self, i = None):
+    def on_actionTranslate_the_article_activated(self, i=None):
         """
         Translate the given article in a different language into English language.
         
@@ -799,7 +799,7 @@ class AddFeedDialog(QDialog):
 
 
     def addFeed(self):
-        feedUrl = unicode(self.ui.UrlLineEdit.text())
+        feedUrl = self.ui.UrlLineEdit.text()
 
         thread = threading.Thread(target=self.parent.parent.addFeed, args=(feedUrl,))
         thread.setDaemon(True)
@@ -880,7 +880,7 @@ class ManageFeedsDialog(QDialog):
 
 
     def addFeed(self):
-        feedUrl = unicode(self.ui.urlLine.text())
+        feedUrl = self.ui.urlLine.text()
         #Run the addFeed function in a new thread so that the ui is responsive.
         thread = threading.Thread(target=self.parent.parent.addFeed, args=(feedUrl,))
         thread.setDaemon(True)
@@ -908,7 +908,7 @@ class AddTopicDialog(QDialog):
         self.connect(self.ui.btnAdd, SIGNAL('clicked()'), self.addTopic)
 
     def addTopic(self):
-        topic = unicode(self.ui.addTopicLinedit.text())
+        topic = self.ui.addTopicLinedit.text()
         #topic = purify.cleanText(topic) # gave an error when adding
         classifier.addTopic(topic)
 
@@ -990,7 +990,7 @@ class ManageTopicsDialog(QDialog):
 
 
     def addTopic(self):
-        topic = unicode(self.ui.topicLine.text())
+        topic = self.ui.topicLine.text()
         classifier.addTopic(topic)
         self.ui.topicLine.clear()
 
@@ -1213,7 +1213,7 @@ class FeedIO(QWidget):
         if (self.playerState == 'playing'):
             self.sp.stop()
             self.playerState='standby'
-            logging.debug("speech engine terminated on exit"
+            logging.debug("speech engine terminated on exit")
         else:
             pass
 

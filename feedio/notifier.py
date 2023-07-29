@@ -35,8 +35,8 @@ import sys
 import pynotify
 import time
 
-class Notifier:
-	def __init__(self, title = "feedIO", description = "", icon = "notification-message-email"):
+class Notifier(object):
+	def __init__(self, title="feedIO", description="", icon="notification-message-email"):
 		self.title = title
 		self.description = description
 		self.icon = icon
@@ -45,36 +45,36 @@ class Notifier:
 		if not pynotify.init("x-canonical-append"):
 			logging.debug("Error initializing pynotify")
 
-		n = pynotify.Notification(self.title, self.description,self.icon);
-		n.set_hint_string ("x-canonical-append", "true");
+		n = pynotify.Notification(self.title, self.description,self.icon)
+		n.set_hint_string ("x-canonical-append", "true")
 
 		n.show ()
-		time.sleep (1)
+		time.sleep(1)
 
 	def basicNotification(self):
 		if not pynotify.init ("summary-body"):
- 			logging.debug("Error initializing pynotify")
+			logging.debug("Error initializing pynotify")
 
 		n = pynotify.Notification(self.title,self.description)
 		n.show ()
 
 	def summeryNotification(self):
 		if not pynotify.init ("summary-only"):
- 			logging.debug("Error initializing pynotify")
+			logging.debug("Error initializing pynotify")
 
 		n = pynotify.Notification(self.description)
 		n.show ()
 
 	def iconNotification(self):
 		if not pynotify.init ("icon-summary"):
- 			logging.debug("Error initializing pynotify")
+			logging.debug("Error initializing pynotify")
 
 		n = pynotify.Notification(self.description,"","notification-audio-play")
 		n.show ()
- 	        
+
 	def feedNotification(self):
 		if not pynotify.init ("icon-summary-body"):
- 			logging.debug("Error initializing pynotify")
+			logging.debug("Error initializing pynotify")
 
 		n = pynotify.Notification(self.title, self.description, self.icon)
 		n.show ()

@@ -67,17 +67,16 @@ class Item(Entity):
     """
     The Item entity to store a fetched article (a feed item)
     """
-
     title = Field(Unicode(100))
     url = Field(Unicode(255), primary_key=True)
     description = Field(UnicodeText)
     updated = Field(Float) # Stores the seconds since EPOCH
     author = Field(Unicode(100))
-    generalScore = Field(Integer, default =1000)
-    numVotes = Field(Integer, default =1)
+    generalScore = Field(Integer, default=1000)
+    numVotes = Field(Integer, default=1)
     isUnread = Field(Boolean, default=True)
     bookMarked = Field(Boolean, default=False)
-    age = Field(Integer, default = 0)
+    age = Field(Integer, default=0)
     favourite = Field(Boolean,default=False)
     feed = ManyToOne('Feed')
 
@@ -91,7 +90,7 @@ class Item(Entity):
 
 class Topic(Entity):
     title = Field(Unicode(100), required=True, primary_key=True)
-    numVotes = Field(Integer, default =1)
+    numVotes = Field(Integer, default=1)
 
     score_item = OneToMany('ScoreItem')
     items = AssociationProxy('score_item', 'item',
@@ -109,7 +108,7 @@ class ScoreItem(Entity):
     """
     The ScoreItem entity to store the particular scores for an article under each topic.
     """
-    score = Field(Integer, default =1000)
+    score = Field(Integer, default=1000)
     topic = ManyToOne('Topic', primary_key=True)
     item = ManyToOne('Item', primary_key=True)
 

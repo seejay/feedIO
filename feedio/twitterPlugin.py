@@ -54,9 +54,6 @@ class TwitterPlugin():
 
 
     def verify(self):
-        """
-
-        """
         verifier = VERIFIER
         logging.debug(verifier)
         try:
@@ -72,7 +69,7 @@ class TwitterPlugin():
 
     def tweet(self, status):
         """
-        Function to twitter an article.
+        Function to tweet an article.
         """
         logging.debug(ACCESS_KEY)
         logging.debug(ACCESS_SECRET)

@@ -46,11 +46,9 @@ FEED_SCORE_WEIGHT = 0.1
 UPDATE_FREQUENCY_WEIGHT = 0.1
 
 
-
-class Prioritizer:
+class Prioritizer(object):
     def __init__(self, topic="General"):
             self.topic = topic
-
 
     def prioritize(self, scoreItemsList):
         """
@@ -64,7 +62,6 @@ class Prioritizer:
 
         return priorityList
 
-
     def listScoreItems(self, feed=-1):
         """
         Lists all the ScoreItem objects under the self.topic of the Prioritizer instance.
@@ -72,17 +69,16 @@ class Prioritizer:
         scoreItemList = []
 
         if feed is (-1):
-            scoreItemList = ScoreItem.query.filter_by(topic = self.topic).all()
+            scoreItemList = ScoreItem.query.filter_by(topic=self.topic).all()
             # Generator to return only the unread Items.
             scoreItemList = [scoreItem for scoreItem in scoreItemList if scoreItem.item.isUnread is True]
 
         else:
-            scoreItemList = ScoreItem.query.filter_by(topic = self.topic).all()
+            scoreItemList = ScoreItem.query.filter_by(topic=self.topic).all()
             # Implement a generator here to get only the feeds of the "feed"
             scoreItemList = [scoreItem for scoreItem in scoreItemList if (scoreItem.item.feed is feed and scoreItem.item.isUnread is True)]
 
         return scoreItemList
-
 
     def setScores(self, scoreItemsList):
         """
@@ -99,12 +95,11 @@ class Prioritizer:
             session.rollback()
             logging.debug("Error Commiting scores to the db")
 
-
     def calcScore(self, article):
         """
         when an article is passed this function calculates its overall score, by
         adding content score + feed score + feed update frequency(should be
-        caluculated by taking the deviation from the mean update friquency.)
+        calculated by taking the deviation from the mean update frequency.)
 
         """
         # Get the Article title and content in plain text.
@@ -112,15 +107,15 @@ class Prioritizer:
 
         titleText = purify.cleanText(article.title)
 
-        #Calculate the Score for the texual content of the article
+        # Calculate the Score for the texual content of the article
         (textTopic, textScore) = classifier.classifyArticleText(self.topic.title, text)
         textTopic = textTopic.replace("_", " ")
 
-        #Calculate the Score for the title of the article.
+        # Calculate the Score for the title of the article.
         (titleTopic,titleScore) = classifier.classifyArticleTitle(self.topic.title, titleText)
         titleTopic = titleTopic.replace("_", " ")
 
-        #Now set the textual scores to minus values if the article "notTopic"
+        # Now set the textual scores to minus values if the article "notTopic"
         if textTopic ==self.topic.title:
             textScore = textScore * 10000
         else:
@@ -131,28 +126,25 @@ class Prioritizer:
         else:
             titleScore = titleScore * (-100)
 
-        #Get the Score for the feed from the db
+        # Get the Score for the feed from the db
         scoreFeed = ScoreFeed.query.filter_by(feed = article.feed, topic = self.topic).first()
         feedScore = scoreFeed.score * 100
 
-        #updateFrequencyScore - score based on the feeds update frequncy.
-        #less frequently updated content would get fairly better scores.
+        # updateFrequencyScore - score based on the feeds update frequncy.
+        # less frequently updated content would get fairly better scores.
 
         # Set weights to be given for the calculated individual scores.
-        #TODO: Give an option for the user to set the weights of these scores from GUI.
+        # TODO: Give an option for the user to set the weights of these scores from GUI.
 
         textScoreWeight = TEXT_SCORE_WEIGHT
         titleScoreWeight = TITLE_SCORE_WEIGHT
         feedScoreWeight = FEED_SCORE_WEIGHT
-#        updateFrequencyWeight = UPDATE_FREQUENCY_WEIGHT
+        # updateFrequencyWeight = UPDATE_FREQUENCY_WEIGHT
 
         finalScore = ( ( textScoreWeight * textScore ) +
                         ( titleScoreWeight * titleScore ) +
                         ( feedScoreWeight * feedScore ) )
-
-#                        ( updateFrequencyWeight * updateFrequencyScore ) )
-
-
+                        # ( updateFrequencyWeight * updateFrequencyScore ) )
         return finalScore
 
 def main():
