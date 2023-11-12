@@ -34,7 +34,7 @@ __developers__ = ["Chanaka Jayamal",
 API_KEY = 'f9fT6t40g092alT6a7d908ch34p1Ux04'
 SESSION = None
 
-
+import logging
 import lib.readitlater.api as ril
 import sys
 
@@ -53,7 +53,7 @@ class RilSession:
         try:
             self.session.auth()
         except:
-            print "login Error!"
+            logging.debug("login Error!")
             raise LogInError
 
     def submitItem(self, item):

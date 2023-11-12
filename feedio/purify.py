@@ -37,7 +37,6 @@ __developers__ = ["Chanaka Jayamal",
                   "Kolitha Gajanayake",
                   "Chamika Viraj"]
 
-
 import HTMLParser
 import tinyurl
 
@@ -51,7 +50,6 @@ class Purify(HTMLParser.HTMLParser):
         self.fed.append(d)
     def getData(self):
         return ''.join(self.fed)
-
 
 # Function to clen an article text.
 def cleanText(text):
@@ -77,7 +75,6 @@ def shorten(text, numChars=SHORTEN_LENGTH):
     """
     info = (text[:numChars] + '..') if len(text) > numChars else text
     return info
-
 
 def shortenUrl(url):
     """

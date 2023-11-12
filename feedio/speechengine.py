@@ -30,12 +30,13 @@ __developers__ = ["Chanaka Jayamal",
                   "Kolitha Gajanayake",
                   "Viraj Senarathna"]
 
+import logging
 import subprocess
 import os
 
 class SpeechEngine:
     def __init__(self,pitch,speed):
-            #assigning the values for the speech engine.
+            # assigning the values for the speech engine.
             self.pitch = "-p" + pitch
             self.speed = "-s" + speed
             self.engine = "espeak"
@@ -47,7 +48,7 @@ class SpeechEngine:
         mList={'u\'re':'u are','ey\'re':'ey are'}
         # mList contains the words to be replaced and replace words.
         for i, j in mList.iteritems():
-            	text = text.replace(i, j)#replacing each word mentioned in mList.
+            text = text.replace(i, j)  # replacing each word mentioned in mList.
         return text
 
     def espeakText(self,text):
@@ -57,14 +58,14 @@ class SpeechEngine:
         mList={'\n':'...','\t':' '}
         # mList contains the words to be replaced and replace words.
         for i, j in mList.iteritems():
-            	text = text.replace(i, j)#replacing each word mentioned in mList.
+            text = text.replace(i, j)  # replacing each word mentioned in mList.
         return text
 
     def textFileMaker(self,text):
         """
         function to make a text file for the provided text.
         """
-        text_file = open("test.txt", "w")# opening text file for writing.
+        text_file = open("test.txt", "w")  # opening text file for writing.
         text_file.writelines(text)
         text_file.close()
 
@@ -73,19 +74,19 @@ class SpeechEngine:
         function to select the speech engine and speaking out the text.
         """
         if (self.engine == "espeak"):
-            text=self.espeakText(text) # get a more espeak friendly text
-            call = [self.engine, self.pitch, self.speed, "%s" %  text] # command to call the speech engine.
+            text=self.espeakText(text)  # get a more espeak friendly text
+            call = [self.engine, self.pitch, self.speed, "%s" %  text]  # command to call the speech engine.
         elif (self.engine == "festival"):
             self.textFileMaker(self.festivalText(text))
             call= ["festival", "--tts","test.txt"]
         else :
-            print "text to speech engine not found. please install espeak."
-        print call
+            logging.debug("text to speech engine not found. please install espeak.")
+        logging.debug(call)
         startupinfo = None
         try:
-            self.proc = subprocess.Popen(call,startupinfo=startupinfo) # calling speech engine in a subprocess.
+            self.proc = subprocess.Popen(call,startupinfo=startupinfo)  # calling speech engine in a subprocess.
         except OSError:
-            print "Calling to speech engine from operating system failed."
+            logging.debug("Calling to speech engine from operating system failed.")
 
     def stop(self):
         """

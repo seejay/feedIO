@@ -37,6 +37,7 @@ ACCESS_KEY = ''
 ACCESS_SECRET = ''
 VERIFIER = ''
 
+import logging
 import sys
 import tweepy
 
@@ -53,35 +54,32 @@ class TwitterPlugin():
 
 
     def verify(self):
-        """
-
-        """
         verifier = VERIFIER
-        print verifier
+        logging.debug(verifier)
         try:
             self.auth.get_access_token(verifier)
             ACCESS_KEY = self.auth.access_token.key
             ACCESS_SECRET = self.auth.access_token.secret
 
         except tweepy.TweepError:
-            print "Invalid verifier"
+            logging.debug("Invalid verifier")
             raise
 
         return (ACCESS_KEY, ACCESS_SECRET)
 
     def tweet(self, status):
         """
-        Function to twitter an article.
+        Function to tweet an article.
         """
-        print ACCESS_KEY
-        print ACCESS_SECRET
-        print "are the keys"
+        logging.debug(ACCESS_KEY)
+        logging.debug(ACCESS_SECRET)
+        logging.debug("are the keys")
 
         try:
             self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
             self.auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
             api = tweepy.API(self.auth)
-            print "twitter.tweet() called"
+            logging.debug("twitter.tweet() called")
             api.update_status(status)
         except AttributeError:
-            print "Error in tweeting from plugin."
+            logging.debug("Error in tweeting from plugin.")
