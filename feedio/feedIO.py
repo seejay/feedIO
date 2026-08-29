@@ -1,62 +1,34 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """
 feedIO - A feed aggregator that tracks the user's reading tastes and prioritizes 
 the content from future feed updates according to the recorded user preferences.
 Written in Python and Qt.
-
 """
 
-__version__ = "0.0.5"
-
-__license__ = """
-    Copyright (C) 2011 Sri Lanka Institute of Information Technology.
-
-    feedIO is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    feedIO is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with feedIO.  If not, see <http://www.gnu.org/licenses/>.
-"""
-
-__author__ = "Chanaka Jayamal <seejay@seejay.net>"
-
-__developers__ = ["Chanaka Jayamal", 
-                  "Lanka Amarasekara", 
-                  "Kolitha Gajanayake", 
-                  "Chamika Viraj"]
-
+__version__ = "2.0.0"
 
 import os
 import sys
+import logging
 
+# Ensure feedio is in the path if running directly
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-USERDIR = os.path.join(os.path.expanduser("~"),".feedIO")
-DBFILE = os.path.join(USERDIR,"feedIO.sqlite")
-
-
-import ui
-import models
-import classifier
-
+from feedio import config
+from feedio import ui
+from feedio import models
+from feedio import classifier
 
 def main():
     """
-    feedIO main method. Creates the user profile directory in ~/.feedIO ,
+    feedIO main method. Creates the user profile directory,
     initializes the database, and loads the main user interface.
     """
-    if not os.path.isdir(USERDIR):
-        os.mkdir(USERDIR)
+    logging.basicConfig(level=logging.DEBUG)
+    config.ensure_dirs()
     models.initDB()
     classifier.initTopics()
     ui.initUI()
-
 
 if __name__ == "__main__":
     main()

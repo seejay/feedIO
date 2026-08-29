@@ -1,30 +1,37 @@
-from distutils.core import setup
-import sys
-
-sys.path.append('feedio')
-import feedIO
-
+from setuptools import setup, find_packages
 
 setup(name='feedio',
-      version='0.0.5',
+      version='2.0.0',
       author='Chanaka Jayamal',
       author_email='seejay@seejay.net',
       url='http://feedio.org',
       download_url='https://github.com/seejay/feedIO',
       description='feedIO - A News Aggregator that Knows What You Want to Read.',
-      long_description=feedio.feedIO.__doc__,
-      package_dir={'': 'feedio'},
-      py_modules=['feedIO'],
-      provides=['feedIO'],
+      long_description='Modernized feedIO 2.0 with cross-platform support.',
+      packages=find_packages(),
+      install_requires=[
+          'PyQt6',
+          'PyQt6-WebEngine',
+          'SQLAlchemy>=2.0.0',
+          'pyttsx3',
+          'textblob',
+          'platformdirs',
+          'feedparser',
+          'tweepy',
+          'beautifulsoup4',
+          'requests',
+          'python-dateutil',
+      ],
       keywords='feed rss atom aggregator blogs web ',
       license='GNU General Public License v3',
-      classifiers=['Development Status :: 3 - Alpha',
+      classifiers=['Development Status :: 4 - Beta',
                    'Environment :: X11 Applications :: Qt',
                    'Intended Audience :: End Users/Desktop',
                    'Natural Language :: English',
+                   'Operating System :: MacOS',
                    'Operating System :: POSIX :: Linux',
                    'Operating System :: Microsoft :: Windows',
-                   'Programming Language :: Python :: 2',
+                   'Programming Language :: Python :: 3',
                    'License :: OSI Approved :: GNU General Public License (GPL)',
                    'Topic :: Text Processing',
                    'Topic :: Internet :: RSS/ATOM',
@@ -32,5 +39,9 @@ setup(name='feedio',
                    'Topic :: Internet :: WWW/HTTP :: Dynamic Content :: News/Diary',
                    'Topic :: Multimedia :: Sound/Audio :: Speech',
                   ],
+      entry_points={
+          'console_scripts': [
+              'feedio = feedio.feedIO:main',
+          ],
+      },
      )
-

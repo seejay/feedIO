@@ -9,9 +9,7 @@ SOURCES =   about.ui \
             manageTopics.ui \
             removeFeed.ui \
             removeTopic.ui \
-            rilLogin.ui \
-            settings.ui \
-            twitterPIN.ui
+            settings.ui
 
 TRANSLATIONS = feedio_sinhala.ts
  

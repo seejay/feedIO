@@ -35,55 +35,57 @@ __developers__ = ["Chanaka Jayamal",
 import logging
 import sys
 import time
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from PyQt6 import QtWidgets, QtGui, QtCore
+from PyQt6.QtWidgets import QMainWindow, QWidget, QTreeWidgetItem, QMessageBox, QDialog, QApplication, QSplashScreen
+from PyQt6.QtGui import QFont, QColor, QAction, QPixmap, QIcon
+from PyQt6.QtCore import Qt, QThread, pyqtSignal, QTimer, QUrl
 import threading
 import time
 
-from UI.feedIO_ui import Ui_feedIO
-from UI.addFeed_ui import Ui_addFeed
-from UI.manageFeeds_ui import Ui_manageFeeds
-from UI.removeFeed_ui import Ui_removeFeed
-from UI.addTopic_ui import Ui_addTopic
-from UI.removeTopic_ui import Ui_removeTopic
-from UI.manageTopics_ui import Ui_manageTopics
-from UI.twitterPIN_ui import Ui_twitterPIN
-from UI.rilLogin_ui import Ui_rilLogin
-from UI.about_ui import Ui_About
-from UI.license_ui import Ui_License
-from UI.credits_ui import Ui_Credits
-from UI.settings_ui import Ui_settings
-from lib.translate import Translator
+from .UI.feedIO_ui import Ui_feedIO
+from .UI.addFeed_ui import Ui_addFeed
+from .UI.manageFeeds_ui import Ui_manageFeeds
+from .UI.removeFeed_ui import Ui_removeFeed
+from .UI.addTopic_ui import Ui_addTopic
+from .UI.removeTopic_ui import Ui_removeTopic
+from .UI.manageTopics_ui import Ui_manageTopics
+from .UI.twitterPIN_ui import Ui_twitterPIN
+from .UI.rilLogin_ui import Ui_rilLogin
+from .UI.about_ui import Ui_About
+from .UI.license_ui import Ui_License
+from .UI.credits_ui import Ui_Credits
+from .UI.settings_ui import Ui_settings
+from .lib.translate import Translator
 
-from UI.systray import SystemTrayIcon
-import feedmanager as fm
-import classifier
-import prioritizer
-import purify
-import notifier
-import twitterPlugin
-import rilPlugin
+from .UI.systray import SystemTrayIcon
+from . import feedmanager as fm
+from . import classifier
+from . import prioritizer
+from . import purify
+from . import notifier
+from . import twitterPlugin
+from . import rilPlugin
 import tweepy
 import webbrowser
-import speechengine
+from . import speechengine
 
 
 class mainUI(QMainWindow):
     def __init__(self, parent=None):
-        QWidget.__init__(self, parent)
+        super().__init__(parent)
         self.parent = parent
         self.ui = Ui_feedIO()
         self.ui.setupUi(self)
         self.raise_()
 
         self.newFont = QFont()
-        self.newFont.setWeight(75)
+        self.newFont.setWeight(QFont.Weight.Bold)
 
         self.unreadFont = QFont()
-        self.unreadFont.setWeight(75)
+        self.unreadFont.setWeight(QFont.Weight.Bold)
 
         self.readFont = QFont()
-        self.readFont.setWeight(50)
+        self.readFont.setWeight(QFont.Weight.Normal)
 
         self.readColor = QColor("#666666")
         self.unreadColor = QColor("#444444")
@@ -104,30 +106,23 @@ class mainUI(QMainWindow):
         self.ui.listOld.setFocus()
         self.ui.comboFeed.setCurrentIndex(len(self.feedList))
 
+        self.ui.comboFeed.currentIndexChanged.connect(self.displayItems)
+        self.ui.comboTopic.currentIndexChanged.connect(self.displayItems)
+        self.ui.listUnread.currentItemChanged.connect(self.setCurrentFromUnread)
 
-        # Twitter authentication details.
-#        self.twitterAuthenticated = False
-#        self.twitterAuthKey = ''
-#        self.twitterAuthSecret = ''
+        self.ui.listUnread.itemDoubleClicked.connect(self.on_actionReadItLater_activated)
+        self.ui.listOld.itemDoubleClicked.connect(self.on_actionReadItLater_activated)
 
-        self.connect(self.ui.comboFeed, SIGNAL("currentIndexChanged(int)"), self.displayItems)
-        self.connect(self.ui.comboTopic, SIGNAL("currentIndexChanged(int)"), self.displayItems)
-        self.connect(self.ui.listUnread, SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.setCurrentFromUnread)
-
-        self.connect(self.ui.listUnread, SIGNAL("itemDoubleClicked(QTreeWidgetItem *,int)"), self.on_actionReadItLater_activated)
-        self.connect(self.ui.listOld, SIGNAL("itemDoubleClicked(QTreeWidgetItem *,int)"), self.on_actionReadItLater_activated)
-
-        self.connect(self.ui.listOld, SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.setCurrentFromOld)
-        self.connect(self.ui.actionVisitPage, SIGNAL("activated()"), self.visitPage)
-        self.connect(self.ui.actionFetchAllFeeds, SIGNAL("activated()"), parent.fetchAllFeeds)
-        self.connect(self.ui.actionReCalculateScores, SIGNAL("activated()"), self.reCalculateAllScores)
-        self.connect(self.ui.actionFetchFeed, SIGNAL("activated()"), self.fetchFeed)
-        self.connect(self.ui.actionUpVote, SIGNAL("activated()"), self.upVoteArticle)
-        self.connect(self.ui.actionDownVote, SIGNAL("activated()"), self.downVoteArticle)
-        self.connect(self.ui.actionUnread, SIGNAL("activated()"), self.markAsUnread)
-#        self.connect(self, SIGNAL('triggered()'), self.closeEvent)
-        self.connect(self.ui.btnUp, SIGNAL('clicked()'), self.upVoteArticle)
-        self.connect(self.ui.btnDown, SIGNAL('clicked()'), self.downVoteArticle)
+        self.ui.listOld.currentItemChanged.connect(self.setCurrentFromOld)
+        self.ui.actionVisitPage.triggered.connect(self.visitPage)
+        self.ui.actionFetchAllFeeds.triggered.connect(parent.fetchAllFeeds)
+        self.ui.actionReCalculateScores.triggered.connect(self.reCalculateAllScores)
+        self.ui.actionFetchFeed.triggered.connect(self.fetchFeed)
+        self.ui.actionUpVote.triggered.connect(self.upVoteArticle)
+        self.ui.actionDownVote.triggered.connect(self.downVoteArticle)
+        self.ui.actionUnread.triggered.connect(self.markAsUnread)
+        self.ui.btnUp.clicked.connect(self.upVoteArticle)
+        self.ui.btnDown.clicked.connect(self.downVoteArticle)
 
 
     def closeEvent(self, event):
@@ -183,7 +178,7 @@ class mainUI(QMainWindow):
                 self.scoreItemList = pri.listScoreItems()
                 # Now filter out the Old items using a generator
                 #this is being done in the prioritizer now
-#                self.scoreItemList = [scoreItem for scoreItem in self.scoreItemList if scoreItem.item.isUnread is True]
+#                self.scoreItemList = [scoreItem for scoreItem in self.scoreItemList if scoreItem.item.isUnread == True]
 
                 # prioritize the list according to the scores
                 self.scoreItemList = pri.prioritize(self.scoreItemList)
@@ -197,7 +192,7 @@ class mainUI(QMainWindow):
                 self.scoreItemList = pri.listScoreItems(selectedFeed)
                 # Now filter out the items for the current Feed using a generator
                 #this is being done in the prioritizer now
-#                self.scoreItemList = [scoreItem for scoreItem in self.scoreItemList if (scoreItem.item.feed is selectedFeed and scoreItem.item.isUnread is True)]
+#                self.scoreItemList = [scoreItem for scoreItem in self.scoreItemList if (scoreItem.item.feed is selectedFeed and scoreItem.item.isUnread == True)]
 
                 self.scoreItemList = pri.prioritize(self.scoreItemList)
 
@@ -208,7 +203,7 @@ class mainUI(QMainWindow):
         self.ui.listUnread.clear()
 
         itemIcon = QIcon()
-        itemIcon.addPixmap(QPixmap(":/images/article.png"), QIcon.Normal, QIcon.Off)
+        itemIcon.addPixmap(QPixmap(":/images/article.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
 
         # Sort self.scoreItemList according to "isNew" property as primary
         # Secondary sort it by isUnread
@@ -228,17 +223,17 @@ class mainUI(QMainWindow):
 #            tip = purify.shorten(itemTip, 200)
             treeItem.setToolTip(0, itemTip)
 
-            if scoreItem.item.age is 0:
+            if scoreItem.item.age == 0:
                 treeItem.setFont(0, self.newFont)
-                treeItem.setTextColor(0, self.newColor)
+                treeItem.setForeground(0, self.newColor)
 
-            elif scoreItem.item.age is 1:
+            elif scoreItem.item.age == 1:
                 treeItem.setFont(0, self.unreadFont)
-                treeItem.setTextColor(0, self.unreadColor)
+                treeItem.setForeground(0, self.unreadColor)
 
             else:
                 treeItem.setFont(0, self.readFont)
-                treeItem.setTextColor(0, self.readColor)
+                treeItem.setForeground(0, self.readColor)
 
             self.ui.listUnread.addTopLevelItem(treeItem)
 
@@ -268,7 +263,7 @@ class mainUI(QMainWindow):
         self.ui.listOld.clear()
 
         itemIcon = QIcon()
-        itemIcon.addPixmap(QPixmap(":/images/article.png"), QIcon.Normal, QIcon.Off)
+        itemIcon.addPixmap(QPixmap(":/images/article.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
 
         for article in self.readList:
             treeItem=QTreeWidgetItem([article.title,])
@@ -277,7 +272,7 @@ class mainUI(QMainWindow):
             treeItem.setIcon(0, itemIcon)
 
             treeItem.setFont(0, self.readFont)
-            treeItem.setTextColor(0, self.readColor)
+            treeItem.setForeground(0, self.readColor)
 
             self.ui.listOld.addTopLevelItem(treeItem)
 
@@ -328,7 +323,7 @@ class mainUI(QMainWindow):
 
             if selectedItem.age == 0 or selectedItem.age == 1:
                 selected.setFont(0, self.readFont)
-                selected.setTextColor(0, self.readColor)
+                selected.setForeground(0, self.readColor)
                 fm.setItemFlag(selectedItem, 2)
 
 
@@ -336,7 +331,7 @@ class mainUI(QMainWindow):
         # create font with normal weight to show the read articles
         selected = self.currentItem
         selected.setFont(0, self.readFont)
-        selected.setTextColor(0,self.readColor)
+        selected.setForeground(0,self.readColor)
         fm.setItemFlag(selected.article, 2)
 
 
@@ -344,7 +339,7 @@ class mainUI(QMainWindow):
         # create font with heavy weight to show the unread articles
         selected = self.currentItem
         selected.setFont(0, self.unreadFont)
-        selected.setTextColor(0, self.unreadColor)
+        selected.setForeground(0, self.unreadColor)
         fm.setItemFlag(selected.article, 1)
 
 
@@ -441,9 +436,9 @@ class mainUI(QMainWindow):
         Manage feeds action implementataion. displays the manageFeeds dialog box.
         """
         if i is None: return
-        ManageFeedsDialog(self).exec_()
+        ManageFeedsDialog(self).exec()
 
-        if self.parent.refreshDisplay is True:
+        if self.parent.refreshDisplay == True:
             self.displayFeeds()
             self.parent.refreshDisplay = False
 
@@ -451,16 +446,16 @@ class mainUI(QMainWindow):
     def on_actionAddFeed_activated(self, i=None):
         if i is None: return
 
-        AddFeedDialog(self).exec_()
+        AddFeedDialog(self).exec()
         #self.displayFeeds()
 
 
     def on_actionRemoveFeed_activated(self, i=None):
         if i is None: return
 
-        RemoveFeedDialog(self).exec_()
+        RemoveFeedDialog(self).exec()
 
-        if self.parent.refreshDisplay is True:
+        if self.parent.refreshDisplay == True:
             self.displayFeeds()
             self.parent.refreshDisplay = False
 
@@ -470,9 +465,9 @@ class mainUI(QMainWindow):
         """
         if i is None: return
 
-        ManageTopicsDialog(self).exec_()
+        ManageTopicsDialog(self).exec()
 
-        if self.parent.refreshDisplay is True:
+        if self.parent.refreshDisplay == True:
             self.displayTopics()
             self.parent.refreshDisplay = False
 
@@ -480,9 +475,9 @@ class mainUI(QMainWindow):
     def on_actionAddTopic_activated(self, i=None):
         if i is None: return
 
-        AddTopicDialog(self).exec_()
+        AddTopicDialog(self).exec()
 
-        if self.parent.refreshDisplay is True:
+        if self.parent.refreshDisplay == True:
             self.displayTopics()
             self.parent.refreshDisplay = False
 
@@ -490,9 +485,9 @@ class mainUI(QMainWindow):
     def on_actionRemoveTopic_activated(self, i=None):
         if i is None: return
 
-        RemoveTopicDialog(self).exec_()
+        RemoveTopicDialog(self).exec()
 
-        if self.parent.refreshDisplay is True:
+        if self.parent.refreshDisplay == True:
             self.displayTopics()
             self.parent.refreshDisplay = False
 
@@ -518,7 +513,7 @@ class mainUI(QMainWindow):
         About action implementataion.
         """
         if i is None: return
-        AboutDialog(self).exec_()
+        AboutDialog(self).exec()
 
     def on_actionRead_activated(self, i=None):
         """
@@ -540,7 +535,7 @@ class mainUI(QMainWindow):
         Settings  action implementataion.
         """
         if i is None: return
-        SettingsDialog(self).exec_()
+        SettingsDialog(self).exec()
 
 
     def on_actionSignInToTwitter_activated(self, i=None):
@@ -555,7 +550,7 @@ class mainUI(QMainWindow):
         twitterPlugin.ACCESS_SECRET = str(s.value("TWITTER_ACCESS_SECRET").toString())
 
 
-        if twitterPlugin.ACCESS_KEY is '':
+        if twitterPlugin.ACCESS_KEY == '':
             try:
                 logging.debug("signing into twitter using the browser...")
                 tp = twitterPlugin.TwitterPlugin()
@@ -564,9 +559,9 @@ class mainUI(QMainWindow):
 
                 webbrowser.open_new(auth_url)
 
-                TwitterPinDialog(self).exec_()
+                TwitterPinDialog(self).exec()
                 # return is the VERIFIER code is not set.
-                if twitterPlugin.VERIFIER is '': return
+                if twitterPlugin.VERIFIER == '': return
 
                 (twitterPlugin.ACCESS_KEY, twitterPlugin.ACCESS_SECRET) = tp.verify()
                 #Store the values using in a QSettings object.
@@ -576,7 +571,7 @@ class mainUI(QMainWindow):
                 s.setValue("TWITTER_ACCESS_SECRET", twitterPlugin.ACCESS_SECRET)
 
 
-            except tweepy.TweepError:
+            except tweepy.TweepyException:
                 logging.debug("Not authenticated properly. check the PIN number")
                 self.parent.status = "Error Logging to twitter.com!"
                 self.parent.sendNotification()
@@ -615,7 +610,7 @@ class mainUI(QMainWindow):
 
         selected = self.currentItem
         shortUrl = purify.shortenUrl(selected.article.url)
-        if shortUrl is False: return
+        if shortUrl == False: return
 
 #        # Dirty hack to make the tweet limit to 140 chars.
 #        urlWidth = len(selected.article.url)
@@ -630,7 +625,7 @@ class mainUI(QMainWindow):
         twitterPlugin.ACCESS_KEY  = str(s.value("TWITTER_ACCESS_KEY").toString())
         twitterPlugin.ACCESS_SECRET = str(s.value("TWITTER_ACCESS_SECRET").toString())
 
-        if twitterPlugin.ACCESS_KEY is '':
+        if twitterPlugin.ACCESS_KEY == '':
             try:
                 logging.debug("signing into twitter using the browser...")
                 tp = twitterPlugin.TwitterPlugin()
@@ -639,9 +634,9 @@ class mainUI(QMainWindow):
 
                 webbrowser.open_new(auth_url)
 
-                TwitterPinDialog(self).exec_()
+                TwitterPinDialog(self).exec()
                 # return is the VERIFIER code is not set.
-                if twitterPlugin.VERIFIER is '': return
+                if twitterPlugin.VERIFIER == '': return
 
                 (twitterPlugin.ACCESS_KEY, twitterPlugin.ACCESS_SECRET) = tp.verify()
                 #Store the values using in a QSettings object.
@@ -649,7 +644,7 @@ class mainUI(QMainWindow):
                 s.setValue("TWITTER_ACCESS_KEY", twitterPlugin.ACCESS_KEY)
                 s.setValue("TWITTER_ACCESS_SECRET", twitterPlugin.ACCESS_SECRET)
 
-            except tweepy.TweepError:
+            except tweepy.TweepyException:
                 logging.debug("Not authenticated properly. check the PIN number")
                 self.parent.status = "Error Logging to twitter.com!"
                 self.parent.sendNotification()
@@ -678,7 +673,7 @@ class mainUI(QMainWindow):
         rilPlugin.SESSION = None
 
         logging.debug("Asking to Sign into RIL...")
-        RilLoginDialog(self).exec_()
+        RilLoginDialog(self).exec()
 
         if rilPlugin.SESSION is None: return
 
@@ -719,7 +714,7 @@ class mainUI(QMainWindow):
             username = str(s.value("RIL_USER").toString())
             pw = str(s.value("RIL_PW").toString())
 
-            if username is not '' and pw is not '':
+            if username != '' and pw != '':
                 # Not logged in but the username and pw is there.
                 try:
                     rilPlugin.SESSION = rilPlugin.RilSession(username, pw)
@@ -736,7 +731,7 @@ class mainUI(QMainWindow):
             else:
                 # Not logged in and the username and pw is not stored.
                 logging.debug("Asking to Sign into RIL...")
-                RilLoginDialog(self).exec_()
+                RilLoginDialog(self).exec()
 
                 if rilPlugin.SESSION is not None:
                     try:
@@ -788,14 +783,14 @@ class mainUI(QMainWindow):
 
 class AddFeedDialog(QDialog):
     def __init__(self, parent):
-        QDialog.__init__(self, parent)
+        super().__init__(parent)
         self.ui = Ui_addFeed()
         self.ui.setupUi(self)
         self.parent = parent
 
-        self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
-        self.connect(self.ui.btnAdd, SIGNAL("clicked()"), self.addFeed)
-        self.connect(self.ui.UrlLineEdit, SIGNAL("returnPressed()"), self.addFeed)
+        self.ui.btnCancel.clicked.connect(self.close)
+        self.ui.btnAdd.clicked.connect(self.addFeed)
+        self.ui.UrlLineEdit.returnPressed.connect(self.addFeed)
 
 
     def addFeed(self):
@@ -806,7 +801,7 @@ class AddFeedDialog(QDialog):
         thread.start()
         thread.join()
 
-        if self.parent.parent.refreshDisplay is True:
+        if self.parent.parent.refreshDisplay == True:
             itemList = fm.listNew()
             classifier.assignItemsToTopics(itemList)
             self.parent.parent.setNewItemScores()
@@ -816,14 +811,14 @@ class AddFeedDialog(QDialog):
 
 class RemoveFeedDialog(QDialog):
     def __init__(self, parent):
-        QDialog.__init__(self, parent)
+        super().__init__(parent)
         self.ui=Ui_removeFeed()
         self.ui.setupUi(self)
         self.feedList = []
         self.displayFeeds()
         self.parent = parent
-        self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
-        self.connect(self.ui.btnRemove, SIGNAL("clicked()"), self.removeFeed)
+        self.ui.btnCancel.clicked.connect(self.close)
+        self.ui.btnRemove.clicked.connect(self.removeFeed)
 
 
     def displayFeeds(self):
@@ -850,16 +845,16 @@ class RemoveFeedDialog(QDialog):
 
 class ManageFeedsDialog(QDialog):
     def __init__(self, parent):
-        QDialog.__init__(self, parent)
+        super().__init__(parent)
         self.ui=Ui_manageFeeds()
         self.ui.setupUi(self)
         self.feedList = []
         self.displayFeeds()
         self.parent = parent
 
-        self.connect(self.ui.btnExit, SIGNAL('clicked()'), SLOT('close()'))
-        self.connect(self.ui.btnRemove, SIGNAL('clicked()'), self.removeFeed)
-        self.connect(self.ui.btnAdd, SIGNAL('clicked()'), self.addFeed)
+        self.ui.btnExit.clicked.connect(self.close)
+        self.ui.btnRemove.clicked.connect(self.removeFeed)
+        self.ui.btnAdd.clicked.connect(self.addFeed)
 
 
     def displayFeeds(self):
@@ -887,7 +882,7 @@ class ManageFeedsDialog(QDialog):
         thread.start()
         thread.join()
 
-        if self.parent.parent.refreshDisplay is True:
+        if self.parent.parent.refreshDisplay == True:
             itemList = fm.listNew()
             classifier.assignItemsToTopics(itemList)
             self.parent.parent.setNewItemScores()
@@ -898,14 +893,14 @@ class ManageFeedsDialog(QDialog):
 
 class AddTopicDialog(QDialog):
     def __init__(self, parent):
-        QDialog.__init__(self, parent)
+        super().__init__(parent)
         self.ui = Ui_addTopic()
         self.ui.setupUi(self)
 
         self.parent = parent
 
-        self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
-        self.connect(self.ui.btnAdd, SIGNAL('clicked()'), self.addTopic)
+        self.ui.btnCancel.clicked.connect(self.close)
+        self.ui.btnAdd.clicked.connect(self.addTopic)
 
     def addTopic(self):
         topic = self.ui.addTopicLinedit.text()
@@ -920,7 +915,7 @@ class AddTopicDialog(QDialog):
 
 class RemoveTopicDialog(QDialog):
     def __init__(self, parent):
-        QDialog.__init__(self, parent)
+        super().__init__(parent)
         self.ui=Ui_removeTopic()
         self.ui.setupUi(self)
 
@@ -929,8 +924,8 @@ class RemoveTopicDialog(QDialog):
         self.topicList = []
         self.displayTopics()
 
-        self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
-        self.connect(self.ui.btnRemove, SIGNAL("clicked()"), self.removeTopic)
+        self.ui.btnCancel.clicked.connect(self.close)
+        self.ui.btnRemove.clicked.connect(self.removeTopic)
 
 
     def displayTopics(self):
@@ -957,7 +952,7 @@ class RemoveTopicDialog(QDialog):
 
 class ManageTopicsDialog(QDialog):
     def __init__(self, parent):
-        QDialog.__init__(self, parent)
+        super().__init__(parent)
         self.ui=Ui_manageTopics()
         self.ui.setupUi(self)
         self.topicList = []
@@ -965,9 +960,9 @@ class ManageTopicsDialog(QDialog):
 
         self.parent = parent
 
-        self.connect(self.ui.btnExit, SIGNAL('clicked()'), SLOT('close()'))
-        self.connect(self.ui.btnRemove, SIGNAL('clicked()'), self.removeTopic)
-        self.connect(self.ui.btnAdd, SIGNAL('clicked()'), self.addTopic)
+        self.ui.btnExit.clicked.connect(self.close)
+        self.ui.btnRemove.clicked.connect(self.removeTopic)
+        self.ui.btnAdd.clicked.connect(self.addTopic)
 
 
     def displayTopics(self):
@@ -1002,11 +997,11 @@ class ManageTopicsDialog(QDialog):
 
 class TwitterPinDialog(QDialog):
     def __init__(self, parent):
-        QDialog.__init__(self, parent)
+        super().__init__(parent)
         self.ui = Ui_twitterPIN()
         self.ui.setupUi(self)
-        self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
-        self.connect(self.ui.btnOK, SIGNAL('clicked()'), self.getPin)
+        self.ui.btnCancel.clicked.connect(self.close)
+        self.ui.btnOK.clicked.connect(self.getPin)
 
     def getPin(self):
         twitterPlugin.VERIFIER = self.ui.pinLineEdit.text()
@@ -1015,13 +1010,13 @@ class TwitterPinDialog(QDialog):
 
 class RilLoginDialog(QDialog):
     def __init__(self, parent):
-        QDialog.__init__(self, parent)
+        super().__init__(parent)
         self.ui = Ui_rilLogin()
         self.ui.setupUi(self)
-        self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
-        self.connect(self.ui.btnOk, SIGNAL('clicked()'), self.login)
-        self.connect(self.ui.passwordLineEdit, SIGNAL("returnPressed()"), self.login)
-        self.connect(self.ui.userNameLineEdit, SIGNAL("returnPressed()"), self.login)
+        self.ui.btnCancel.clicked.connect(self.close)
+        self.ui.btnOk.clicked.connect(self.login)
+        self.ui.passwordLineEdit.returnPressed.connect(self.login)
+        self.ui.userNameLineEdit.returnPressed.connect(self.login)
 
     def login(self):
         """
@@ -1047,49 +1042,49 @@ class RilLoginDialog(QDialog):
 
 class SettingsDialog(QDialog):
     def __init__(self, parent):
-        QDialog.__init__(self, parent)
+        super().__init__(parent)
         self.ui=Ui_settings()
         self.ui.setupUi(self)
 
-        self.connect(self.ui.btnCancel, SIGNAL('clicked()'), SLOT('close()'))
-        self.connect(self.ui.btnSave, SIGNAL("clicked()"), SLOT('close()'))
+        self.ui.btnCancel.clicked.connect(self.close)
+        self.ui.btnSave.clicked.connect(self.close)
 
 
 class AboutDialog(QDialog):
     def __init__(self, parent):
-        QDialog.__init__(self, parent)
+        super().__init__(parent)
         self.ui=Ui_About()
         self.ui.setupUi(self)
 
-        self.connect(self.ui.btnClose, SIGNAL('clicked()'), SLOT('close()'))
-        self.connect(self.ui.btnLicense, SIGNAL('clicked()'), self.loadLicense)
-        self.connect(self.ui.btnCredits, SIGNAL('clicked()'), self.loadCredits)
+        self.ui.btnClose.clicked.connect(self.close)
+        self.ui.btnLicense.clicked.connect(self.loadLicense)
+        self.ui.btnCredits.clicked.connect(self.loadCredits)
 
 
     def loadLicense(self):
-        LicenseDialog(self).exec_()
+        LicenseDialog(self).exec()
 
 
     def loadCredits(self):
-        CreditsDialog(self).exec_()
+        CreditsDialog(self).exec()
 
 
 class LicenseDialog(QDialog):
     def __init__(self, parent):
-        QDialog.__init__(self, parent)
+        super().__init__(parent)
         self.ui=Ui_License()
         self.ui.setupUi(self)
 
-        self.connect(self.ui.btnClose, SIGNAL('clicked()'), SLOT('close()'))
+        self.ui.btnClose.clicked.connect(self.close)
 
 
 class CreditsDialog(QDialog):
     def __init__(self, parent):
-        QDialog.__init__(self, parent)
+        super().__init__(parent)
         self.ui=Ui_Credits()
         self.ui.setupUi(self)
 
-        self.connect(self.ui.btnClose, SIGNAL('clicked()'), SLOT('close()'))
+        self.ui.btnClose.clicked.connect(self.close)
 
 
 
@@ -1109,7 +1104,7 @@ class FeedIO(QWidget):
         self.updateInterval = 1800000 # time in miliseconds (30 minutes)
 
         timer = QTimer(self) # timer to fetch feeds automatically
-        self.connect(timer, SIGNAL('timeout()'), self.fetchAllFeeds)
+        timer.timeout.connect(self.fetchAllFeeds)
         timer.start(self.updateInterval)
 
 
@@ -1171,7 +1166,7 @@ class FeedIO(QWidget):
         for topic in topicsList:
             pri = prioritizer.Prioritizer(topic)
             scoreItemsList = pri.listScoreItems()
-            scoreItemList = [scoreItem for scoreItem in scoreItemsList if scoreItem.item.age is 0]
+            scoreItemList = [scoreItem for scoreItem in scoreItemsList if scoreItem.item.age == 0]
             pri.setScores(scoreItemList)
             logging.debug("calculated New article scores for %s" % topic.title)
 
@@ -1194,7 +1189,7 @@ class FeedIO(QWidget):
         logging.debug("calculating New article scores for %s" % topic.title)
         pri = prioritizer.Prioritizer(topic)
         scoreItemsList = pri.listScoreItems()
-#        scoreItemList = [scoreItem for scoreItem in scoreItemsList if scoreItem.item.isUnread is True]
+#        scoreItemList = [scoreItem for scoreItem in scoreItemsList if scoreItem.item.isUnread == True]
         pri.setScores(scoreItemsList)
         logging.debug("calculated New article scores for %s" % topic.title)
         self.status = "Calculated New article scores for %s" % topic.title
@@ -1235,7 +1230,7 @@ def initUI():
     # Splash screen implementation
     splash_pix = QPixmap(":/images/splash.png")
     # splash_pix = QPixmap('./images/feedIO-splash.png')
-    splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
+    splash = QSplashScreen(splash_pix, QtCore.Qt.WindowType.WindowStaysOnTopHint)
     splash.setMask(splash_pix.mask())
 
     splash.show()
@@ -1249,7 +1244,7 @@ def initUI():
 
     # system tray icon
     icon = QIcon()
-    icon.addPixmap(QPixmap(":/images/feedIO.png"), QIcon.Normal, QIcon.Off)
+    icon.addPixmap(QPixmap(":/images/feedIO.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
 
     # Pass the feedIO instance as the parent and the mainWindow instance as the child.
     trayIcon = SystemTrayIcon(icon, feedIO, mainWindow)
@@ -1261,7 +1256,7 @@ def initUI():
 
     mainWindow.show()
     splash.finish(mainWindow)
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 
 

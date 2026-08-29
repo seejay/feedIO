@@ -1,2 +1,14 @@
-*.pyc
-*.sh
+__pycache__/
+*.py[cod]
+.DS_Store
+.idea/
+.venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+*.sqlite*
+*.log

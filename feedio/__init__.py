@@ -1,4 +1,4 @@
-__version__ = "0.0.5"
+__version__ = "2.0.0.dev0"
 
 __license__ = """
     Copyright (C) 2011 Sri Lanka Institute of Information Technology.
@@ -23,4 +23,3 @@ __developers__ = ["Chanaka Jayamal",
                   "Lanka Amarasekara", 
                   "Kolitha Gajanayake", 
                   "Chamika Viraj"]
-

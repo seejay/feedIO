@@ -1,66 +1,41 @@
-#!/usr/bin/python
-
+#!/usr/bin/python3
 """
 Read It Later (RIL) module for feedIO.
 """
 
-__version__ = "0.0.5"
-
-__license__ = """
-    Copyright (C) 2011 Sri Lanka Institute of Information Technology.
-
-    feedIO is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    feedIO is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with feedIO.  If not, see <http://www.gnu.org/licenses/>.
-"""
-
-__author__ = "Chanaka Jayamal <seejay@seejay.net>"
-
-__developers__ = ["Chanaka Jayamal",
-                  "Lanka Amarasekara",
-                  "Kolitha Gajanayake",
-                  "Chamika Viraj"]
-
-
-API_KEY = 'f9fT6t40g092alT6a7d908ch34p1Ux04'
-SESSION = None
+__version__ = "2.0.0"
 
 import logging
-import lib.readitlater.api as ril
-import sys
+import os
+from .lib.readitlater import api as ril
 
+API_KEY = os.environ.get('FEEDIO_RIL_API_KEY', '')
+SESSION = None
 
 class FeedIOError(Exception): pass
 class LogInError(FeedIOError): pass
 
-
 class RilSession:
     """
-        RilSession class to sync items from the Database with Read It Later
-        servers.
+        RilSession class to sync items with Read It Later servers.
     """
-    def __init__ (self, user, pw):
+    def __init__(self, user, pw):
         self.session = ril.API(API_KEY, user, pw)
         try:
             self.session.auth()
-        except:
-            logging.debug("login Error!")
+        except Exception as e:
+            logging.error(f"Login error: {e}")
             raise LogInError
 
     def submitItem(self, item):
-        self.session.add(item.url,item.title)
+        try:
+            self.session.add(item.url, item.title)
+        except Exception as e:
+            logging.error(f"Error submitting item to RIL: {e}")
 
-    def getItems(state="unread"):
-        self.session.get(state)
-
-    def setItemTag(self, item, tags):
-        pass
+    def getItems(self, state="unread"):
+        try:
+            return self.session.get(state)
+        except Exception as e:
+            logging.error(f"Error getting items from RIL: {e}")
+            return None

@@ -1,80 +1,42 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """
-notifier module for feedIO. Used to notify the user of new feed updates and other
- events of the application.
-"""
-
-__version__ = "0.0.5"
-
-__license__ = """
-    Copyright (C) 2011 Sri Lanka Institute of Information Technology.
-
-    feedIO is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    feedIO is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with feedIO.  If not, see <http://www.gnu.org/licenses/>.
+notifier module for feedIO using PyQt6's QSystemTrayIcon for cross-platform support.
 """
 
-__author__ = "Chamika Viraj"
-
-__developers__ = ["Chanaka Jayamal",
-                  "Lanka Amarasekara",
-                  "Kolitha Gajanayake",
-                  "Chamika Viraj"]
+__version__ = "2.0.0"
 
 import logging
-import sys
-import pynotify
-import time
+from PyQt6.QtWidgets import QSystemTrayIcon
 
 class Notifier(object):
-	def __init__(self, title="feedIO", description="", icon="notification-message-email"):
-		self.title = title
-		self.description = description
-		self.icon = icon
+    def __init__(self, title="feedIO", description="", icon=None, tray_icon=None):
+        self.title = title
+        self.description = description
+        self.icon = icon
+        self.tray_icon = tray_icon
 
-	def pushNotification(self):
-		if not pynotify.init("x-canonical-append"):
-			logging.debug("Error initializing pynotify")
+    def notify(self):
+        """
+        Show a notification using the provided QSystemTrayIcon.
+        """
+        if self.tray_icon:
+            # icon can be QSystemTrayIcon.MessageIcon
+            icon = QSystemTrayIcon.MessageIcon.Information
+            self.tray_icon.showMessage(self.title, self.description, icon, 5000)
+        else:
+            logging.debug(f"Notification (no tray icon): {self.title} - {self.description}")
 
-		n = pynotify.Notification(self.title, self.description,self.icon)
-		n.set_hint_string ("x-canonical-append", "true")
+    def pushNotification(self):
+        self.notify()
 
-		n.show ()
-		time.sleep(1)
+    def basicNotification(self):
+        self.notify()
 
-	def basicNotification(self):
-		if not pynotify.init ("summary-body"):
-			logging.debug("Error initializing pynotify")
+    def summeryNotification(self):
+        self.notify()
 
-		n = pynotify.Notification(self.title,self.description)
-		n.show ()
+    def iconNotification(self):
+        self.notify()
 
-	def summeryNotification(self):
-		if not pynotify.init ("summary-only"):
-			logging.debug("Error initializing pynotify")
-
-		n = pynotify.Notification(self.description)
-		n.show ()
-
-	def iconNotification(self):
-		if not pynotify.init ("icon-summary"):
-			logging.debug("Error initializing pynotify")
-
-		n = pynotify.Notification(self.description,"","notification-audio-play")
-		n.show ()
-
-	def feedNotification(self):
-		if not pynotify.init ("icon-summary-body"):
-			logging.debug("Error initializing pynotify")
-
-		n = pynotify.Notification(self.title, self.description, self.icon)
-		n.show ()
+    def feedNotification(self):
+        self.notify()

@@ -1,85 +1,60 @@
-#!/usr/bin/python
-
+#!/usr/bin/python3
 """
-twitter module for feedIO.
-"""
-
-__version__ = "0.0.5"
-
-__license__ = """
-    Copyright (C) 2011 Sri Lanka Institute of Information Technology.
-
-    feedIO is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    feedIO is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with feedIO.  If not, see <http://www.gnu.org/licenses/>.
+Twitter module for feedIO using modern tweepy.
 """
 
-__author__ = "Chanaka Jayamal <seejay@seejay.net>"
+__version__ = "2.0.0"
 
-__developers__ = ["Chanaka Jayamal",
-                  "Lanka Amarasekara",
-                  "Kolitha Gajanayake",
-                  "Chamika Viraj"]
+import logging
+import os
+import tweepy
 
-
-CONSUMER_KEY = 'XnvjuONm8m7RNiKHf2mBw'
-CONSUMER_SECRET = 'HnCtS1qWwpq5NFrUB6x76ONFlZ9LdnLk8UjLxVrw'
+CONSUMER_KEY = os.environ.get('FEEDIO_TWITTER_CONSUMER_KEY', '')
+CONSUMER_SECRET = os.environ.get('FEEDIO_TWITTER_CONSUMER_SECRET', '')
 ACCESS_KEY = ''
 ACCESS_SECRET = ''
 VERIFIER = ''
-
-import logging
-import sys
-import tweepy
-
 
 class TwitterPlugin():
     def __init__(self):
         self.auth = None
 
-
     def authenticate(self):
-        self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-        auth_url = self.auth.get_authorization_url()
-        return auth_url
-
+        self.auth = tweepy.OAuth1UserHandler(CONSUMER_KEY, CONSUMER_SECRET, callback='oob')
+        try:
+            auth_url = self.auth.get_authorization_url()
+            return auth_url
+        except Exception as e:
+            logging.error(f"Twitter auth error: {e}")
+            return None
 
     def verify(self):
-        verifier = VERIFIER
-        logging.debug(verifier)
+        global ACCESS_KEY, ACCESS_SECRET
         try:
-            self.auth.get_access_token(verifier)
-            ACCESS_KEY = self.auth.access_token.key
-            ACCESS_SECRET = self.auth.access_token.secret
-
-        except tweepy.TweepError:
-            logging.debug("Invalid verifier")
+            access_token, access_token_secret = self.auth.get_access_token(VERIFIER)
+            ACCESS_KEY = access_token
+            ACCESS_SECRET = access_token_secret
+            return (ACCESS_KEY, ACCESS_SECRET)
+        except Exception as e:
+            logging.error(f"Invalid verifier: {e}")
             raise
-
-        return (ACCESS_KEY, ACCESS_SECRET)
 
     def tweet(self, status):
         """
         Function to tweet an article.
         """
-        logging.debug(ACCESS_KEY)
-        logging.debug(ACCESS_SECRET)
-        logging.debug("are the keys")
-
+        global ACCESS_KEY, ACCESS_SECRET
         try:
-            self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-            self.auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
-            api = tweepy.API(self.auth)
-            logging.debug("twitter.tweet() called")
-            api.update_status(status)
-        except AttributeError:
-            logging.debug("Error in tweeting from plugin.")
+            api = self.get_api()
+            if api:
+                api.update_status(status=status)
+                logging.debug("Tweet posted successfully")
+        except Exception as e:
+            logging.error(f"Error tweeting: {e}")
+
+    def get_api(self):
+        global ACCESS_KEY, ACCESS_SECRET
+        if ACCESS_KEY and ACCESS_SECRET:
+            auth = tweepy.OAuth1UserHandler(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_KEY, ACCESS_SECRET)
+            return tweepy.API(auth)
+        return None

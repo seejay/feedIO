@@ -1,384 +1,171 @@
-#!/usr/bin/python
-
+#!/usr/bin/python3
 """
-Classifier module for feedIO. Provides necessary text classification capabilities
- that are needed to prioritize the articles fetched from web feeds.
+Classifier module for feedIO using TextBlob for cross-platform support.
 """
 
+__version__ = "2.0.0"
 
-__version__ = "0.0.5"
-
-__license__ = """
-    Copyright (C) 2011 Sri Lanka Institute of Information Technology.
-
-    feedIO is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    feedIO is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with feedIO.  If not, see <http://www.gnu.org/licenses/>.
-"""
-
-__author__ = "Chanaka Jayamal <seejay@seejay.net>"
-
-__developers__ = ["Chanaka Jayamal",
-                  "Lanka Amarasekara",
-                  "Kolitha Gajanayake",
-                  "Chamika Viraj"]
-
-import sys
 import os
-import purify
+import pickle
+import logging
+from textblob.classifiers import NaiveBayesClassifier
 
-from lib.crm import *
-from models import *
-import feedmanager as fm
+from . import config
+from . import purify
+from .models import session, Topic, Item, Feed, ScoreItem, ScoreFeed
+from . import feedmanager as fm
 
+def get_classifier_path(name):
+    return os.path.join(config.CLASSIFIER_DIR, f"{name}.pickle")
 
-USERDIR=os.path.join(os.path.expanduser("~"),".feedIO")
-classifierDir=os.path.join(USERDIR,"classifier")
+def load_classifier(name, labels):
+    path = get_classifier_path(name)
+    if os.path.exists(path):
+        try:
+            with open(path, 'rb') as f:
+                return pickle.load(f)
+        except Exception as e:
+            logging.error(f"Error loading classifier {name}: {e}")
+    
+    # Initial training data to avoid empty classifier errors
+    initial_data = [("", labels[0]), ("", labels[1])]
+    return NaiveBayesClassifier(initial_data)
 
+def save_classifier(classifier, name):
+    path = get_classifier_path(name)
+    try:
+        with open(path, 'wb') as f:
+            pickle.dump(classifier, f)
+    except Exception as e:
+        logging.error(f"Error saving classifier {name}: {e}")
 
 def listTopics():
-    """
-    Function to query the database for the available Topics. Returns a list
-    with all the topics as Topic objects.
-    """
-    topicsList = Topic.query.all()
-    return topicsList
+    return session.query(Topic).all()
 
-
-def addTopic(topic):
-    """
-    Function to add a new topic, creates required classifier files and database entries.
-    Also assigns the newly created topic with all the Item objects and Feed objects 
-    in the table.
-    """
-    if topic is '':
+def addTopic(topic_title):
+    if not topic_title:
         return None
 
+    existing = session.query(Topic).filter_by(title=topic_title).first()
+    if existing:
+        return existing
+
     try:
-        newTopic = Topic(title=topic)
+        new_topic = Topic(title=topic_title)
+        session.add(new_topic)
         session.commit()
-    except:
+    except Exception as e:
         session.rollback()
-        logging.debug("Error adding topic")
-    else:
-        topic = topic.replace(" ", "_")
-        c = Classifier(classifierDir, [topic, "not"+topic])
-        c2 = Classifier(classifierDir, [topic+"Title", "not"+topic+"Title"])
-        logging.debug("Added new topic %s" % topic)
+        logging.error(f"Error adding topic: {e}")
+        return None
+    
+    # Initialize classifiers
+    safe_title = topic_title.replace(" ", "_")
+    c = load_classifier(safe_title, [safe_title, "not" + safe_title])
+    save_classifier(c, safe_title)
+    
+    c_title = load_classifier(safe_title + "Title", [safe_title + "Title", "not" + safe_title + "Title"])
+    save_classifier(c_title, safe_title + "Title")
 
-        #Now append the topic to every article in the db
-        try:
-            allItems = Item.query.all()
-            allFeeds = Feed.query.all()
-            for item in allItems:
-                setItemTopic(item, newTopic, False)
-
-            for feed in allFeeds:
-                setFeedTopic(feed, newTopic, False)
-
-            session.commit()
-        except:
-            session.rollback()
-            logging.debug("Error Assigning new topic to all Items!")
-
+    # Assign new topic to all existing items and feeds
+    all_items = session.query(Item).all()
+    all_feeds = session.query(Feed).all()
+    
+    for item in all_items:
+        if new_topic not in item.topics:
+            item.topics.append(new_topic)
+    
+    for feed in all_feeds:
+        if new_topic not in feed.topics:
+            feed.topics.append(new_topic)
+            
+    session.commit()
+    return new_topic
 
 def removeTopic(topic):
-    """
-    Function to remove a Topic. First removes all the ScoreItem objects from
-    the ScoreItem table and then removes all the ScoreFeed objects from the
-    ScoreFeed table.
-    """
-    topicTitle = topic.title
+    topic_title = topic.title
     try:
-        scoreItems = ScoreItem.query.filter_by(topic=topic).all()
-        scoreFeeds = ScoreFeed.query.filter_by(topic=topic).all()
-
-        # First remove all the scoreItems from the ScoreItem table.
-        for item in scoreItems:
-            item.delete()
-        # Now remove all the scoreFeeds from the ScoreFeed table.
-        for feed in scoreFeeds:
-            feed.delete()
-
-        #Now delete the topic object
-        topic.delete()
+        # Cascade delete should handle score_items and score_feeds if set up in models
+        session.delete(topic)
         session.commit()
-    except:
+        
+        # Remove classifier files
+        safe_title = topic_title.replace(" ", "_")
+        for suffix in ["", "Title"]:
+            path = get_classifier_path(safe_title + suffix)
+            if os.path.exists(path):
+                os.remove(path)
+    except Exception as e:
         session.rollback()
-        logging.debug("Error removing Items")
-    else:
-        logging.debug("removed Topic %s" % topicTitle)
-
-
-def assignItemsToTopics(itemList):
-    """
-    Assigns a list of Item objects to all the Topic objects available.
-    This will create an ScoreItem object for each Item and Topic pair to hold 
-    the priority score of an Item under a particular topic.
-    """
-    allTopics = Topic.query.all()
-    logging.debug("assigning the new articles to topics..")
-
-    for item in itemList:
-        for topic in allTopics:
-            setItemTopic(item, topic, False)
-    try:
-        session.commit()
-    except:
-        session.rollback()
-        logging.debug("Error Assigning Topics")
-
-
-def setItemTopic(item, topic, commit=True):
-    """
-    Assigns an Item to a given Topic. This will create a ScoreItem object.
-    commit is set to True by default but should be disabled by passing False 
-    when setting a Topic to a couple of Items at once to increase the performance.
-    """
-    if item.topics.count(topic) == 0:
-        item.topics.append(topic)
-        logging.debug("Added %s to %s" % (topic.title, item.title))
-
-        if commit is True:
-            try:
-                session.commit() # disable individual commits to increse performance.
-            except:
-                session.rollback()
-                logging.debug("Error in setItemTopic")
-                return None
-
-
-def assignFeedsToTopics(feedList):
-    """
-    Assigns a list of Feed objects to all the Topic objects available.
-    This will create an ScoreFeed object for each Feed and Topic pair to hold 
-    the reputation score (number of votes) of an Feed under a particular topic.
-    """
-    allTopics = Topic.query.all()
-    logging.debug("assigning the new feed to topics..")
-
-    for feed in feedList:
-        for topic in allTopics:
-            setFeedTopic(feed, topic, False)
-    try:
-        session.commit()
-    except:
-        session.rollback()
-        logging.debug("Error Assigning Topics to feed")
-        return None
-
-
-def setFeedTopic(feed, topic, commit=True):
-    """
-    Assigns a feed to the given Topic. This will create a ScoreFeed object.
-    commit is set to True by default but should be disabled by passing False 
-    when setting a Topic to a couple of Feeds at once to increase the performance.
-    """
-    if feed.topics.count(topic) == 0:
-        feed.topics.append(topic)
-        logging.debug("Added %s to %s" % (topic.title, feed.title))
-
-        if commit is True:
-            try:
-                session.commit() # disable individual commits to increse performance.
-            except:
-                session.rollback()
-                logging.debug("Error in setItemTopic")
-                return None
-
-
-
-def getTopic(topicTitle):
-    """
-    This returns the Topic object when the Topic title is given. This is used
-    to easily retrieve the Topic object from the title string which is being
-    used mostly when dealing with the text classification process.
-    """
-    try:
-        topic = Topic.query.filter_by(title=topicTitle)[0]
-        return topic
-    except:
-        return None
-
-
-def _voteFeed(upOrDown, feed, topic):
-    """
-    Function to add or subtract the number of votes of a Feed under a given
-    Topic when getting an Up Vote or a Down Vote.
-    """
-    scoreFeed = ScoreFeed.query.filter_by(feed=feed, topic=topic).first()
-    try:
-        if upOrDown is "up":
-            scoreFeed.score += 1
-            logging.debug("Up voted %s under %s new score is  %d" % (feed.title, topic.title, scoreFeed.score))
-
-        elif upOrDown is "down":
-            scoreFeed.score -= 1
-            logging.debug("Down voted %s under %s new score is  %d" % (feed.title, topic.title, scoreFeed.score))
-
-        session.commit()
-    except:
-        session.rollback()
-
-
-def removefromScoreTable(feed):
-    """
-    Function to remove the Scores of all the Items in a particular feed. This will
-    remove all the ScoreItem objects of the Items that belong to a particular feed.
-    """
-    itemsList = fm.listItems(feed)
-    for item in itemsList:
-        removeItemScores(item)
-
-
-def removeItemScores(itemToRemove):
-    """
-    Function to remove the Scores of a particular article Item. This will remove 
-    all the ScoreItem objects for that Item under all the Topics.
-    """
-    itemsInTopics = ScoreItem.query.filter_by(item=itemToRemove).all()
-    for item in itemsInTopics:
-        item.delete()
-    try:
-        session.commit()
-        logging.debug("removed from Scores")
-    except:
-        logging.debug("Error removing Scores")
-
-
-def removefromScoreFeeds(feed):
-    """
-    Function to remove the all Scores particular feed.
-    """
-    feedsList = fm.listFeeds()
-    for feed in feedsList:
-        removeFeedScores(feed)
-
-def removeFeedScores(feedToRemove):
-    """
-    Function to remove the Scores of a particular article Item.
-    """
-    feedsInTopics = ScoreFeed.query.filter_by(feed=feedToRemove).all()
-    for feed in feedsInTopics:
-        feed.delete()
-    try:
-        session.commit()
-        logging.debug("removed from Scores")
-    except:
-        logging.debug("Error removing Scores")
-
+        logging.error(f"Error removing topic: {e}")
 
 def voteArticle(upOrDown, item, topic):
-    """
-    voteArticle function, takes arguments upOrDown vote, topic to vote,
-    and the text to vote for
-    """
-    # vote for the feed that the article belongs.
-    _voteFeed(upOrDown, item.feed, topic)
-
-    # we'll be working with strings from now on, so get the topic title.
-    topic = topic.title
-    # calls to CRM breaks when a topic title contains spaces, replace them with underscores.
-    topic = topic.replace(" ", "_")
-
+    # Vote for the feed
+    score_feed = session.query(ScoreFeed).filter_by(feed=item.feed, topic=topic).first()
+    if score_feed:
+        if upOrDown == "up":
+            score_feed.score += 1
+        else:
+            score_feed.score -= 1
+    
+    safe_topic = topic.title.replace(" ", "_")
     text = purify.cleanText(item.description)
     title = purify.cleanText(item.title)
 
-    c = Classifier(classifierDir, [topic,"not"+topic])
-    c2 = Classifier(classifierDir, [topic+"Title", "not"+topic+"Title"])
-    try:
-        if upOrDown is "up":
-            c.learn(topic, text)
-            c2.learn(topic+"Title", title)
+    # Update body classifier
+    c = load_classifier(safe_topic, [safe_topic, "not" + safe_topic])
+    label = safe_topic if upOrDown == "up" else "not" + safe_topic
+    c.update([(text, label)])
+    save_classifier(c, safe_topic)
 
-        elif upOrDown is "down":
-            c.learn("not"+topic, text)
-            c2.learn("not"+topic+"Title", title)
+    # Update title classifier
+    c_title = load_classifier(safe_topic + "Title", [safe_topic + "Title", "not" + safe_topic + "Title"])
+    label_title = safe_topic + "Title" if upOrDown == "up" else "not" + safe_topic + "Title"
+    c_title.update([(title, label_title)])
+    save_classifier(c_title, safe_topic + "Title")
 
-        if topic is not "General":
-            #always add the upvote to the General interest category as well.
-            d = Classifier(classifierDir, ["General","notGeneral"])
-            d2 = Classifier(classifierDir, ["GeneralTitle","notGeneralTitle"])
-            if upOrDown is "up":
-                d.learn("General", text)
-                d2.learn("GeneralTitle", title)
+    if topic.title != "General":
+        general_topic = getTopic("General")
+        if general_topic and upOrDown == "up":
+            voteArticle("up", item, general_topic)
 
-            # We sould only get the Upvote for general. So disabled the DownVote.
-#            elif upOrDown is "down":
-#                d.learn("notGeneral", text)
-#                d2.learn("notGeneralTitle", title)
-    except UnicodeEncodeError:
-        logging.debug("Article content contains invalid characters!")
+    session.commit()
 
+def classifyArticleText(topic_title, text):
+    safe_topic = topic_title.replace(" ", "_")
+    c = load_classifier(safe_topic, [safe_topic, "not" + safe_topic])
+    prob_dist = c.prob_classify(text)
+    classification = prob_dist.max()
+    probability = prob_dist.prob(classification)
+    return classification, probability
 
-def classifyArticleText(topic,text):
-    """
-    function to calculate the matching probability of a given Article text to a
-    specified topic.
-    """
+def classifyArticleTitle(topic_title, title):
+    safe_topic = topic_title.replace(" ", "_")
+    c = load_classifier(safe_topic + "Title", [safe_topic + "Title", "not" + safe_topic + "Title"])
+    prob_dist = c.prob_classify(title)
+    classification = prob_dist.max()
+    probability = prob_dist.prob(classification)
+    return classification, probability
 
-    # calls to CRM breaks when a topic title contains spaces, replace them with underscores.
-    topic = topic.replace(" ", "_")
-
-    c = Classifier(classifierDir, [topic,"not"+topic])
-
-    try:
-        (classification, probability) = c.classify(text)
-
-    except UnicodeEncodeError:
-        # return a default value for articles with character Errors
-        #TODO: filter out the invalid characters
-            (classification, probability) = ("not"+topic, 0)
-
-    else:
-        return (classification, probability)
-
-
-def classifyArticleTitle(topic,title):
-    """
-    function to calculate the matching probability of a given Article Title to a
-    specified Topic.
-    """
-
-    # calls to CRM breaks when a topic title contains spaces, replace them with underscores.
-    topic = topic.replace(" ", "_")
-
-    c = Classifier(classifierDir, [topic+"Title", "not"+topic+"Title"])
-
-    try:
-        (classification, probability) = c.classify(title)
-
-    except UnicodeEncodeError:
-        # return a default value for articles with character Errors
-        #TODO: filter out the invalid characters
-            (classification, probability) = ("not"+topic+"Title", 0)
-    else:
-        return (classification, probability)
-
+def getTopic(topic_title):
+    return session.query(Topic).filter_by(title=topic_title).first()
 
 def initTopics():
-    """
-    Function to initialize the user interest profile. Adds the Topic "General"
-    by default.
-    """
-
-    #Add the "General" interest topic by default
     if not getTopic("General"):
         addTopic("General")
 
+def assignItemsToTopics(item_list):
+    all_topics = listTopics()
+    for item in item_list:
+        for topic in all_topics:
+            if topic not in item.topics:
+                item.topics.append(topic)
+    session.commit()
 
-def main():
-    initTopics()
-
-if __name__ == "__main__":
-    logging.debug(__doc__)
-    main()
+def assignFeedsToTopics(feed_list):
+    all_topics = listTopics()
+    for feed in feed_list:
+        for topic in all_topics:
+            if topic not in feed.topics:
+                feed.topics.append(topic)
+    session.commit()

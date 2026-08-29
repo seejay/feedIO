@@ -353,7 +353,7 @@
         </column>
        </widget>
       </widget>
-      <widget class="QWebView" name="viewArticle" native="true">
+      <widget class="QWebEngineView" name="viewArticle" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -796,10 +796,11 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QWebView</class>
+   <class>QWebEngineView</class>
    <extends>QWidget</extends>
-   <header>QtWebKit/QWebView</header>
+   <header>PyQt6.QtWebEngineWidgets</header>
   </customwidget>
+
  </customwidgets>
  <resources>
   <include location="feedIOicons.qrc"/>
