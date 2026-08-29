@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel><title>Example RSS</title><link>https://example.test/</link><description>Fixture</description>
+<item><guid>one</guid><title>Python &amp; Linux</title><link>https://example.test/one</link><description><![CDATA[<p>Python desktop development</p>]]></description><pubDate>Tue, 14 Nov 2023 22:13:20 GMT</pubDate></item>
+<item><guid>undated</guid><title>සිංහල</title><description>Unicode without a date or URL</description></item>
+</channel></rss>
