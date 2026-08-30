@@ -27,7 +27,6 @@ def test_feed_and_score_cascade():
     assert m.session.query(m.ScoreItem).count() == 0
 
 
-@pytest.mark.xfail(strict=True, reason='classifier needs undeclared corpora')
 def test_fresh_topics_offline():
     classifier.initTopics()
     assert classifier.getTopic('General') is not None

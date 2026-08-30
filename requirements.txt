@@ -1,10 +1,2 @@
-PyQt6>=6.0.0
-SQLAlchemy>=2.0.0
-pyttsx3>=2.90
-textblob>=0.17.1
-platformdirs>=4.0.0
-feedparser>=6.0.0
-tweepy>=4.0.0
-beautifulsoup4>=4.12.0
-requests>=2.31.0
-python-dateutil>=2.8.2
+# One source of dependency metadata: pyproject.toml
+-e .

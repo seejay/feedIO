@@ -8,6 +8,7 @@ __version__ = "2.0.0"
 import os
 import pickle
 import logging
+import re
 from textblob.classifiers import NaiveBayesClassifier
 
 from . import config
@@ -28,7 +29,7 @@ def load_classifier(name, labels):
             logging.error(f"Error loading classifier {name}: {e}")
     
     # Initial training data to avoid empty classifier errors
-    initial_data = [("", labels[0]), ("", labels[1])]
+    initial_data = [([], labels[0]), ([], labels[1])]
     return NaiveBayesClassifier(initial_data)
 
 def save_classifier(classifier, name):
@@ -115,13 +116,13 @@ def voteArticle(upOrDown, item, topic):
     # Update body classifier
     c = load_classifier(safe_topic, [safe_topic, "not" + safe_topic])
     label = safe_topic if upOrDown == "up" else "not" + safe_topic
-    c.update([(text, label)])
+    c.update([(re.findall(r"\w+", text.lower()), label)])
     save_classifier(c, safe_topic)
 
     # Update title classifier
     c_title = load_classifier(safe_topic + "Title", [safe_topic + "Title", "not" + safe_topic + "Title"])
     label_title = safe_topic + "Title" if upOrDown == "up" else "not" + safe_topic + "Title"
-    c_title.update([(title, label_title)])
+    c_title.update([(re.findall(r"\w+", title.lower()), label_title)])
     save_classifier(c_title, safe_topic + "Title")
 
     if topic.title != "General":
@@ -134,7 +135,7 @@ def voteArticle(upOrDown, item, topic):
 def classifyArticleText(topic_title, text):
     safe_topic = topic_title.replace(" ", "_")
     c = load_classifier(safe_topic, [safe_topic, "not" + safe_topic])
-    prob_dist = c.prob_classify(text)
+    prob_dist = c.prob_classify(re.findall(r"\w+", text.lower()))
     classification = prob_dist.max()
     probability = prob_dist.prob(classification)
     return classification, probability
@@ -142,7 +143,7 @@ def classifyArticleText(topic_title, text):
 def classifyArticleTitle(topic_title, title):
     safe_topic = topic_title.replace(" ", "_")
     c = load_classifier(safe_topic + "Title", [safe_topic + "Title", "not" + safe_topic + "Title"])
-    prob_dist = c.prob_classify(title)
+    prob_dist = c.prob_classify(re.findall(r"\w+", title.lower()))
     classification = prob_dist.max()
     probability = prob_dist.prob(classification)
     return classification, probability

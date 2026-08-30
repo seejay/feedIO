@@ -1,3 +1,7 @@
+from . import feedIOicons_rc
+
+__all__ = ["feedIOicons_rc"]
+
 """
     feedIO - An intelligent feed aggregator that tracks the user's reading tastes.
     Copyright (C) 2011 Chanaka Jayamal

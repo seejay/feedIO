@@ -38,7 +38,7 @@ import time
 from PyQt6 import QtWidgets, QtGui, QtCore
 from PyQt6.QtWidgets import QMainWindow, QWidget, QTreeWidgetItem, QMessageBox, QDialog, QApplication, QSplashScreen
 from PyQt6.QtGui import QFont, QColor, QAction, QPixmap, QIcon
-from PyQt6.QtCore import Qt, QThread, pyqtSignal, QTimer, QUrl
+from PyQt6.QtCore import Qt, QThread, pyqtSignal, QTimer, QUrl, QSettings
 import threading
 import time
 
@@ -123,6 +123,11 @@ class mainUI(QMainWindow):
         self.ui.actionUnread.triggered.connect(self.markAsUnread)
         self.ui.btnUp.clicked.connect(self.upVoteArticle)
         self.ui.btnDown.clicked.connect(self.downVoteArticle)
+        for name in dir(self):
+            if name.startswith('on_action') and name.endswith('_activated'):
+                action = getattr(self.ui, name[3:-10], None)
+                if action is not None:
+                    action.triggered.connect(lambda checked=False, handler=getattr(self, name): handler(checked))
 
 
     def closeEvent(self, event):
@@ -1262,4 +1267,3 @@ def initUI():
 
 if __name__ == "__main__":
     initUI()
-

@@ -1,41 +1,40 @@
-"""
-SpeechEngine module for feedIO. Provides the interface to communicate with speech engine
-using pyttsx3 for cross-platform support.
-"""
-
-__version__ = "2.0.0"
-
-import logging
-import pyttsx3
+"""Optional speech: no native backend is initialized during startup."""
 import threading
+
+
+class SpeechUnavailable(RuntimeError):
+    pass
+
 
 class SpeechEngine:
     def __init__(self, pitch=None, speed=200):
-        self.engine = pyttsx3.init()
-        # pyttsx3 doesn't have a direct 'pitch' setting in a cross-platform way 
-        # that's consistent, but we can set rate.
-        self.engine.setProperty('rate', speed)
-        self._stop_event = threading.Event()
+        self.speed = int(speed)
+        self.engine = None
+        self._worker = None
+        self.error = None
 
     def say(self, text):
-        """
-        Speak the provided text.
-        """
-        def _speak():
+        if self.playing:
+            raise SpeechUnavailable("Speech is already playing. Stop it before starting again.")
+        self.error = None
+        def speak():
             try:
+                import pyttsx3
+                self.engine = pyttsx3.init()
+                self.engine.setProperty('rate', self.speed)
                 self.engine.say(text)
                 self.engine.runAndWait()
-            except Exception as e:
-                logging.error(f"Speech engine error: {e}")
-
-        # Running in a separate thread to avoid blocking the UI
-        threading.Thread(target=_speak, daemon=True).start()
+            except Exception:
+                self.error = 'Speech unavailable. Install feedio[speech] and a native speech backend.'
+            finally:
+                self.engine = None
+        self._worker = threading.Thread(target=speak, daemon=True)
+        self._worker.start()
 
     def stop(self):
-        """
-        Stop the speech engine.
-        """
-        try:
+        if self.engine:
             self.engine.stop()
-        except Exception as e:
-            logging.error(f"Error stopping speech engine: {e}")
+
+    @property
+    def playing(self):
+        return bool(self._worker and self._worker.is_alive())

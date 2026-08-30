@@ -2,7 +2,7 @@ import os
 from platformdirs import user_data_dir
 
 APP_NAME = "feedIO"
-USER_DIR = user_data_dir(APP_NAME)
+USER_DIR = os.environ.get("FEEDIO_PROFILE", user_data_dir(APP_NAME))
 DB_FILE = os.path.join(USER_DIR, "feedIO.sqlite")
 CLASSIFIER_DIR = os.path.join(USER_DIR, "classifier")
 
