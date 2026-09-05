@@ -1,31 +1,19 @@
-"""Find RSS feed from site's LINK tag using BeautifulSoup."""
-
-__version__ = "2.0.0"
-
-import requests
+"""Feed discovery resolves links against the final document URL."""
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
+from ..network import retrieve
+from ..portability import http_url
+
+
+def discover(response):
+    soup = BeautifulSoup(response.content, 'html.parser')
+    for link in soup.find_all('link', rel='alternate'):
+        if link.get('type', '').lower() in ('application/rss+xml', 'application/atom+xml'):
+            href = link.get('href')
+            if href:
+                return http_url(urljoin(response.url, href))
+    return response.url
+
 
 def getRSSLink(url):
-    try:
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'html.parser')
-        
-        # Look for alternate links
-        links = soup.find_all('link', rel='alternate')
-        for link in links:
-            link_type = link.get('type', '')
-            if 'application/rss+xml' in link_type or 'application/atom+xml' in link_type:
-                href = link.get('href')
-                if href:
-                    return urljoin(url, href)
-        
-        return url
-    except Exception:
-        return url
-
-if __name__ == '__main__':
-    import sys
-    if len(sys.argv) > 1:
-        print(getRSSLink(sys.argv[1]))
+    return discover(retrieve(url))
