@@ -7,7 +7,6 @@ os.environ.setdefault("QT_QPA_PLATFORMTHEME", "generic")
 
 import pytest
 import requests
-from sqlalchemy import create_engine
 from feedio import config, models
 
 
@@ -16,14 +15,9 @@ def profile(tmp_path, monkeypatch):
     monkeypatch.setattr(config, "USER_DIR", str(tmp_path))
     monkeypatch.setattr(config, "DB_FILE", str(tmp_path / "feedIO.sqlite"))
     monkeypatch.setattr(config, "CLASSIFIER_DIR", str(tmp_path / "classifier"))
-    models.session.close()
-    engine = create_engine(f"sqlite:///{config.DB_FILE}")
-    monkeypatch.setattr(models, "engine", engine)
-    models.session.bind = engine
-    models.initDB()
+    models.initDB(config.DB_FILE)
     yield Path(tmp_path)
-    models.session.close()
-    engine.dispose()
+    models.close()
 
 
 @pytest.fixture(autouse=True)

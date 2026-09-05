@@ -178,10 +178,13 @@ def listRead(feed=None):
         query = query.filter_by(feed=feed)
     return query.order_by(Item.updated.desc()).all()
 
-def setItemFlag(item, age=2):
+def setItemFlag(item, age=2, commit=True):
+    if age not in (0, 1, 2):
+        raise ValueError('Invalid read state')
     item.age = age
     if age == 2:
         item.isUnread = False
     else:
         item.isUnread = True
-    session.commit()
+    if commit:
+        session.commit()

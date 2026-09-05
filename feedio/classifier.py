@@ -9,6 +9,8 @@ import os
 import pickle
 import logging
 import re
+import hashlib
+import tempfile
 from textblob.classifiers import NaiveBayesClassifier
 
 from . import config
@@ -16,11 +18,12 @@ from . import purify
 from .models import session, Topic, Item, Feed, ScoreItem, ScoreFeed
 from . import feedmanager as fm
 
-def get_classifier_path(name):
-    return os.path.join(config.CLASSIFIER_DIR, f"{name}.pickle")
+def get_classifier_path(name, kind='body'):
+    key = hashlib.sha256((kind + '\0' + name).encode('utf-8')).hexdigest()
+    return os.path.join(config.CLASSIFIER_DIR, key + '.pickle')
 
-def load_classifier(name, labels):
-    path = get_classifier_path(name)
+def load_classifier(name, labels, kind='body'):
+    path = get_classifier_path(name, kind)
     if os.path.exists(path):
         try:
             with open(path, 'rb') as f:
@@ -32,13 +35,18 @@ def load_classifier(name, labels):
     initial_data = [([], labels[0]), ([], labels[1])]
     return NaiveBayesClassifier(initial_data)
 
-def save_classifier(classifier, name):
-    path = get_classifier_path(name)
+def save_classifier(classifier, name, kind='body'):
+    path = get_classifier_path(name, kind)
+    descriptor, temporary = tempfile.mkstemp(dir=config.CLASSIFIER_DIR)
     try:
-        with open(path, 'wb') as f:
+        with os.fdopen(descriptor, 'wb') as f:
             pickle.dump(classifier, f)
-    except Exception as e:
-        logging.error(f"Error saving classifier {name}: {e}")
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
 
 def listTopics():
     return session.query(Topic).all()
@@ -61,12 +69,12 @@ def addTopic(topic_title):
         return None
     
     # Initialize classifiers
-    safe_title = topic_title.replace(" ", "_")
+    safe_title = topic_title
     c = load_classifier(safe_title, [safe_title, "not" + safe_title])
     save_classifier(c, safe_title)
     
-    c_title = load_classifier(safe_title + "Title", [safe_title + "Title", "not" + safe_title + "Title"])
-    save_classifier(c_title, safe_title + "Title")
+    c_title = load_classifier(safe_title, [safe_title + "Title", "not" + safe_title + "Title"], kind="title")
+    save_classifier(c_title, safe_title, kind="title")
 
     # Assign new topic to all existing items and feeds
     all_items = session.query(Item).all()
@@ -91,9 +99,9 @@ def removeTopic(topic):
         session.commit()
         
         # Remove classifier files
-        safe_title = topic_title.replace(" ", "_")
-        for suffix in ["", "Title"]:
-            path = get_classifier_path(safe_title + suffix)
+        safe_title = topic_title
+        for suffix in ["body", "title"]:
+            path = get_classifier_path(safe_title, suffix)
             if os.path.exists(path):
                 os.remove(path)
     except Exception as e:
@@ -109,7 +117,7 @@ def voteArticle(upOrDown, item, topic):
         else:
             score_feed.score -= 1
     
-    safe_topic = topic.title.replace(" ", "_")
+    safe_topic = topic.title
     text = purify.cleanText(item.description)
     title = purify.cleanText(item.title)
 
@@ -120,10 +128,10 @@ def voteArticle(upOrDown, item, topic):
     save_classifier(c, safe_topic)
 
     # Update title classifier
-    c_title = load_classifier(safe_topic + "Title", [safe_topic + "Title", "not" + safe_topic + "Title"])
+    c_title = load_classifier(safe_topic, [safe_topic + "Title", "not" + safe_topic + "Title"], kind="title")
     label_title = safe_topic + "Title" if upOrDown == "up" else "not" + safe_topic + "Title"
     c_title.update([(re.findall(r"\w+", title.lower()), label_title)])
-    save_classifier(c_title, safe_topic + "Title")
+    save_classifier(c_title, safe_topic, kind="title")
 
     if topic.title != "General":
         general_topic = getTopic("General")
@@ -133,7 +141,7 @@ def voteArticle(upOrDown, item, topic):
     session.commit()
 
 def classifyArticleText(topic_title, text):
-    safe_topic = topic_title.replace(" ", "_")
+    safe_topic = topic_title
     c = load_classifier(safe_topic, [safe_topic, "not" + safe_topic])
     prob_dist = c.prob_classify(re.findall(r"\w+", text.lower()))
     classification = prob_dist.max()
@@ -141,8 +149,8 @@ def classifyArticleText(topic_title, text):
     return classification, probability
 
 def classifyArticleTitle(topic_title, title):
-    safe_topic = topic_title.replace(" ", "_")
-    c = load_classifier(safe_topic + "Title", [safe_topic + "Title", "not" + safe_topic + "Title"])
+    safe_topic = topic_title
+    c = load_classifier(safe_topic, [safe_topic + "Title", "not" + safe_topic + "Title"], kind="title")
     prob_dist = c.prob_classify(re.findall(r"\w+", title.lower()))
     classification = prob_dist.max()
     probability = prob_dist.prob(classification)

@@ -1,112 +1,136 @@
-#!/usr/bin/python3
-"""
-Database models for feedIO using SQLAlchemy 2.0.
-"""
-
-__version__ = "2.0.0"
-
-import logging
-import os
-from sqlalchemy import create_engine, Column, Integer, String, Float, Boolean, Unicode, UnicodeText, ForeignKey, Table
+"""Versioned SQLite persistence with stable identities and per-thread sessions."""
+from pathlib import Path
+from sqlalchemy import (create_engine, Column, Integer, Float, Boolean, Text,
+                        ForeignKey, UniqueConstraint, event, text)
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker, scoped_session
 from sqlalchemy.ext.associationproxy import association_proxy
-
 from . import config
 
 Base = declarative_base()
+SCHEMA_VERSION = 1
 
-class ScoreFeed(Base):
-    __tablename__ = 'score_feed'
-    score = Column(Integer, default=1)
-    topic_title = Column(Unicode(100), ForeignKey('topic.title'), primary_key=True)
-    feed_url = Column(Unicode(255), ForeignKey('feed.url'), primary_key=True)
-    
-    topic = relationship("Topic", back_populates="score_feeds")
-    feed = relationship("Feed", back_populates="score_feeds")
-
-    def __repr__(self):
-        return f'<ScoreFeed "{self.topic_title} - {self.feed_url} - {self.score}">'
-
-class ScoreItem(Base):
-    __tablename__ = 'score_item'
-    score = Column(Integer, default=1000)
-    topic_title = Column(Unicode(100), ForeignKey('topic.title'), primary_key=True)
-    item_url = Column(Unicode(255), ForeignKey('item.url'), primary_key=True)
-    
-    topic = relationship("Topic", back_populates="score_items")
-    item = relationship("Item", back_populates="score_items")
-
-    def __repr__(self):
-        return f'<ScoreItem "{self.topic_title} - {self.item_url} - {self.score}">'
 
 class Feed(Base):
     __tablename__ = 'feed'
-    title = Column(Unicode(100))
-    url = Column(Unicode(255), primary_key=True)
-    description = Column(UnicodeText)
-    etag = Column(Unicode(100))
+    id = Column(Integer, primary_key=True)
+    url = Column(Text, unique=True, nullable=False)
+    title = Column(Text, nullable=False)
+    description = Column(Text, default='')
+    etag = Column(Text, default='')
+    modified = Column(Text, default='')
     lastModified = Column(Float)
+    last_success = Column(Float)
+    last_error = Column(Text, default='')
     numVotes = Column(Integer, default=1)
     frequency = Column(Integer, default=1)
     fetchInterval = Column(Integer, default=1)
-    
-    items = relationship("Item", back_populates="feed", cascade="all, delete-orphan")
-    score_feeds = relationship("ScoreFeed", back_populates="feed", cascade="all, delete-orphan")
-    
-    topics = association_proxy('score_feeds', 'topic',
-                             creator=lambda topic: ScoreFeed(topic=topic))
+    items = relationship('Item', back_populates='feed', cascade='all, delete-orphan')
+    score_feeds = relationship('ScoreFeed', back_populates='feed', cascade='all, delete-orphan')
+    topics = association_proxy('score_feeds', 'topic', creator=lambda t: ScoreFeed(topic=t))
 
-    def __repr__(self):
-        return f'<Feed "{self.title}" - ({self.url})>'
 
 class Item(Base):
     __tablename__ = 'item'
-    title = Column(Unicode(100))
-    url = Column(Unicode(255), primary_key=True)
-    description = Column(UnicodeText)
-    updated = Column(Float)
-    author = Column(Unicode(100))
+    __table_args__ = (UniqueConstraint('feed_id', 'entry_id'),)
+    id = Column(Integer, primary_key=True)
+    entry_id = Column(Text, nullable=False, default=lambda: __import__('uuid').uuid4().hex)
+    url = Column(Text, default='')
+    title = Column(Text, default='Untitled article')
+    description = Column(Text, default='')
+    updated = Column(Float, default=0)
+    author = Column(Text, default='')
     generalScore = Column(Integer, default=1000)
     numVotes = Column(Integer, default=1)
     isUnread = Column(Boolean, default=True)
     bookMarked = Column(Boolean, default=False)
     age = Column(Integer, default=0)
     favourite = Column(Boolean, default=False)
-    feed_url = Column(Unicode(255), ForeignKey('feed.url'))
-    
-    feed = relationship("Feed", back_populates="items")
-    score_items = relationship("ScoreItem", back_populates="item", cascade="all, delete-orphan")
-    
-    topics = association_proxy('score_items', 'topic',
-                            creator=lambda topic: ScoreItem(topic=topic))
+    feed_id = Column(Integer, ForeignKey('feed.id', ondelete='CASCADE'), nullable=False)
+    feed = relationship('Feed', back_populates='items')
+    score_items = relationship('ScoreItem', back_populates='item', cascade='all, delete-orphan')
+    topics = association_proxy('score_items', 'topic', creator=lambda t: ScoreItem(topic=t))
 
-    def __repr__(self):
-        return f'<Item "{self.title}" - ({self.url})>'
 
 class Topic(Base):
     __tablename__ = 'topic'
-    title = Column(Unicode(100), primary_key=True)
+    id = Column(Integer, primary_key=True)
+    title = Column(Text, unique=True, nullable=False)
     numVotes = Column(Integer, default=1)
+    score_items = relationship('ScoreItem', back_populates='topic', cascade='all, delete-orphan')
+    score_feeds = relationship('ScoreFeed', back_populates='topic', cascade='all, delete-orphan')
+    items = association_proxy('score_items', 'item', creator=lambda i: ScoreItem(item=i))
+    feeds = association_proxy('score_feeds', 'feed', creator=lambda f: ScoreFeed(feed=f))
 
-    score_items = relationship("ScoreItem", back_populates="topic", cascade="all, delete-orphan")
-    items = association_proxy('score_items', 'item',
-                             creator=lambda item: ScoreItem(item=item))
 
-    score_feeds = relationship("ScoreFeed", back_populates="topic", cascade="all, delete-orphan")
-    feeds = association_proxy('score_feeds', 'feed',
-                             creator=lambda feed: ScoreFeed(feed=feed))
+class ScoreFeed(Base):
+    __tablename__ = 'score_feed'
+    topic_id = Column(Integer, ForeignKey('topic.id', ondelete='CASCADE'), primary_key=True)
+    feed_id = Column(Integer, ForeignKey('feed.id', ondelete='CASCADE'), primary_key=True)
+    score = Column(Integer, default=1)
+    topic = relationship('Topic', back_populates='score_feeds')
+    feed = relationship('Feed', back_populates='score_feeds')
 
-    def __repr__(self):
-        return f'<Topic "{self.title}">'
 
-engine = create_engine(f"sqlite:///{config.DB_FILE}")
-Session = scoped_session(sessionmaker(bind=engine))
-session = Session()
+class ScoreItem(Base):
+    __tablename__ = 'score_item'
+    topic_id = Column(Integer, ForeignKey('topic.id', ondelete='CASCADE'), primary_key=True)
+    item_id = Column(Integer, ForeignKey('item.id', ondelete='CASCADE'), primary_key=True)
+    score = Column(Integer, default=1000)
+    topic = relationship('Topic', back_populates='score_items')
+    item = relationship('Item', back_populates='score_items')
 
-def initDB():
-    config.ensure_dirs()
+
+class Vote(Base):
+    __tablename__ = 'vote'
+    __table_args__ = (UniqueConstraint('topic_id', 'item_key'),)
+    id = Column(Integer, primary_key=True)
+    topic_id = Column(Integer, ForeignKey('topic.id', ondelete='CASCADE'), nullable=False)
+    item_key = Column(Text, nullable=False)
+    title = Column(Text, nullable=False)
+    body = Column(Text, nullable=False)
+    feed_url = Column(Text, nullable=False)
+    value = Column(Integer, nullable=False)
+
+
+class Setting(Base):
+    __tablename__ = 'setting'
+    key = Column(Text, primary_key=True)
+    value = Column(Text, nullable=False)
+
+
+engine = None
+session = scoped_session(sessionmaker(expire_on_commit=False))
+Session = session
+
+
+def make_engine(path):
+    result = create_engine('sqlite:///' + str(path), connect_args={'timeout': 10})
+    @event.listens_for(result, 'connect')
+    def configure(connection, record):
+        connection.execute('PRAGMA foreign_keys=ON')
+        connection.execute('PRAGMA busy_timeout=10000')
+    return result
+
+
+def initDB(path=None):
+    """Only call while no workers are active. Upgrade a known legacy schema safely."""
+    global engine
+    destination = Path(path or config.DB_FILE)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    session.remove()
+    if engine is not None:
+        engine.dispose()
+    from .migration import prepare_database
+    prepare_database(destination)
+    engine = make_engine(destination)
+    session.configure(bind=engine)
     Base.metadata.create_all(engine)
-    logging.info("Database initialized.")
+    with engine.begin() as connection:
+        connection.execute(text(f'PRAGMA user_version={SCHEMA_VERSION}'))
+    config.ensure_dirs()
 
-if __name__ == "__main__":
-    initDB()
+
+def close():
+    session.remove()
+    if engine is not None:
+        engine.dispose()

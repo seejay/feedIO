@@ -32,14 +32,12 @@ def test_fresh_topics_offline():
     assert classifier.getTopic('General') is not None
 
 
-@pytest.mark.xfail(strict=True, reason='removed batch flag argument')
 def test_batch_flags():
     item = SimpleNamespace()
     fm.setItemFlag(item, 1, False)
     assert item.age == 1 and item.isUnread
 
 
-@pytest.mark.xfail(strict=True, reason='shared session instance')
 def test_worker_session_is_separate():
     identities = []
     def identity():
