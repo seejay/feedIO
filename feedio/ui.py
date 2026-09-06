@@ -15,7 +15,7 @@ def refresh_job(feed_id=None, cancel=None):
         if cancel.is_set():
             break
         p = prioritizer.Prioritizer(topic)
-        p.setScores(p.listScoreItems())
+        p.setScores(p.listScoreItems(), cancel)
     return result
 
 
@@ -25,7 +25,7 @@ def rank_job(topic_id=None, cancel=None):
             break
         if topic_id is None or topic.id == topic_id:
             p = prioritizer.Prioritizer(topic)
-            p.setScores(p.listScoreItems())
+            p.setScores(p.listScoreItems(), cancel)
     return 'Ranking recalculated'
 
 
@@ -397,7 +397,13 @@ class MainWindow(QtWidgets.QMainWindow):
             self.statusBar().showMessage('Profile imported. Legacy model binaries are preserved but not loaded.')
 
     def reset_learning(self):
-        self.statusBar().showMessage('Learning reset is available after the learning service upgrade.')
+        if self.topic_id() is not None:
+            answer = QtWidgets.QMessageBox.question(self, 'Reset learning',
+                'Remove this topic’s votes and reset its ranking? Reading history is preserved.')
+            if answer == QtWidgets.QMessageBox.StandardButton.Yes:
+                classifier.reset(self.topic_id())
+                self.display_items()
+                self.statusBar().showMessage('Topic learning reset.')
 
     def preferences(self):
         QtWidgets.QMessageBox.information(self, 'Preferences', 'Preferences are being migrated to profile storage.')
