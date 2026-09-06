@@ -1,1269 +1,469 @@
-#!/usr/bin/python
-"""
-Author  : Chanaka Jayamal
-Date    : 20/05/2011
-GUI for the feedIO feed aggregator
-
-"""
-
-__version__ = "0.0.5"
-
-__license__ = """
-    Copyright (C) 2011 Sri Lanka Institute of Information Technology.
-
-    feedIO is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    feedIO is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with feedIO.  If not, see <http://www.gnu.org/licenses/>.
-"""
-
-__author__ = "Chanaka Jayamal <seejay@seejay.net>"
-
-__developers__ = ["Chanaka Jayamal",
-                  "Lanka Amarasekara",
-                  "Kolitha Gajanayake",
-                  "Chamika Viraj"]
-
-import logging
+"""Qt application controller. Designer owns layout; services own persistence."""
 import sys
-import time
-from PyQt6 import QtWidgets, QtGui, QtCore
-from PyQt6.QtWidgets import QMainWindow, QWidget, QTreeWidgetItem, QMessageBox, QDialog, QApplication, QSplashScreen
-from PyQt6.QtGui import QFont, QColor, QAction, QPixmap, QIcon
-from PyQt6.QtCore import Qt, QThread, pyqtSignal, QTimer, QUrl, QSettings
-import threading
-import time
-
+from PyQt6 import QtCore, QtGui, QtWidgets
 from .UI.feedIO_ui import Ui_feedIO
-from .UI.addFeed_ui import Ui_addFeed
-from .UI.manageFeeds_ui import Ui_manageFeeds
-from .UI.removeFeed_ui import Ui_removeFeed
-from .UI.addTopic_ui import Ui_addTopic
-from .UI.removeTopic_ui import Ui_removeTopic
-from .UI.manageTopics_ui import Ui_manageTopics
-from .UI.twitterPIN_ui import Ui_twitterPIN
-from .UI.rilLogin_ui import Ui_rilLogin
-from .UI.about_ui import Ui_About
-from .UI.license_ui import Ui_License
-from .UI.credits_ui import Ui_Credits
-from .UI.settings_ui import Ui_settings
-from .lib.translate import Translator
-
-from .UI.systray import SystemTrayIcon
-from . import feedmanager as fm
-from . import classifier
-from . import prioritizer
-from . import purify
-from . import notifier
-from . import twitterPlugin
-from . import rilPlugin
-import tweepy
-import webbrowser
-from . import speechengine
+from . import models as m, classifier, feedmanager as fm, prioritizer, purify
+from . import portability, migration, reader
+from .workers import TaskRunner
+from .speechengine import SpeechEngine, SpeechUnavailable
+from . import __version__
 
 
-class mainUI(QMainWindow):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.parent = parent
+def refresh_job(feed_id=None, cancel=None):
+    result = fm.updateFeed(feed_id, cancel) if feed_id else fm.updateAll(cancel)
+    for topic in classifier.listTopics():
+        if cancel.is_set():
+            break
+        p = prioritizer.Prioritizer(topic)
+        p.setScores(p.listScoreItems())
+    return result
+
+
+def rank_job(topic_id=None, cancel=None):
+    for topic in classifier.listTopics():
+        if cancel.is_set():
+            break
+        if topic_id is None or topic.id == topic_id:
+            p = prioritizer.Prioritizer(topic)
+            p.setScores(p.listScoreItems())
+    return 'Ranking recalculated'
+
+
+class MainWindow(QtWidgets.QMainWindow):
+    def __init__(self):
+        super().__init__()
         self.ui = Ui_feedIO()
         self.ui.setupUi(self)
+        reader.configure(self.ui.viewArticle)
+        self.runner = TaskRunner(self)
+        self.runner.succeeded.connect(self.finished)
+        self.runner.failed.connect(self.failed)
+        self.runner.busyChanged.connect(self.busy_changed)
+        self._quitting = False
+        self._ready_to_close = False
+        self.current_id = None
+        self.bookmarks_only = False
+        self.speech = SpeechEngine()
+        self.close_to_tray = False
+        self.notifications_enabled = True
+        self.timer = QtCore.QTimer(self)
+        self.timer.timeout.connect(self.fetch_all)
+        self.timer.start(30 * 60 * 1000)
+        self.speech_timer = QtCore.QTimer(self)
+        self.speech_timer.timeout.connect(self.speech_status)
+        self.speech_timer.start(500)
+        self.tray = None
+        self._setup_tray()
+        bindings = {
+            'actionAddFeed': self.add_feed, 'actionRemoveFeed': self.remove_feed,
+            'actionManageFeeds': self.manage_feeds, 'actionFetchFeed': self.fetch_feed,
+            'actionFetchAllFeeds': self.fetch_all, 'actionAddTopic': self.add_topic,
+            'actionRemoveTopic': self.remove_topic, 'actionManageTopics': self.manage_topics,
+            'actionExit': self.quit_app, 'actionMinimizeToTray': self.minimize,
+            'actionVisitPage': self.visit_page, 'actionUpVote': lambda: self.vote('up'),
+            'actionDownVote': lambda: self.vote('down'), 'actionUnread': self.mark_unread,
+            'actionReCalculateScores': lambda: self.runner.submit(rank_job),
+            'actionReCalculateTopicScores': lambda: self.runner.submit(rank_job, self.topic_id()),
+            'actionRead': self.speak, 'actionFavorite': self.bookmark,
+            'actionReadItLater': self.bookmark, 'actionPostToTwitter': self.copy_link,
+            'actionPreferences': self.preferences, 'actionHelp': self.help,
+            'actionAbout': self.about, 'actionTurnOffNotifications': lambda: self.notifications(False),
+            'actionTurnOnNotifications': lambda: self.notifications(True),
+        }
+        for name, handler in bindings.items():
+            getattr(self.ui, name).triggered.connect(lambda checked=False, fn=handler: self.invoke(fn))
+        for name in ('actionSignInToTwitter', 'actionSignOffFromTwitter', 'actionSignInToRIL',
+                     'actionSignOffFromRIL', 'actionTranslate_the_article'):
+            getattr(self.ui, name).setVisible(False)
+        self.ui.menu_Twitter.menuAction().setVisible(False)
+        self.ui.menu_Read_It_Later.menuAction().setVisible(False)
+        self.ui.actionReadItLater.setText('Save / unsave locally')
+        self.ui.actionFavorite.setText('Toggle bookmark')
+        self.ui.actionPostToTwitter.setText('Copy article link')
+        self.ui.actionVisitPage.setText('Open original in browser')
+        self.ui.actionMinimizeToTray.setEnabled(self.tray is not None)
+        self.ui.btnUp.clicked.connect(lambda: self.invoke(lambda: self.vote('up')))
+        self.ui.btnDown.clicked.connect(lambda: self.invoke(lambda: self.vote('down')))
+        self.ui.comboFeed.currentIndexChanged.connect(self.display_items)
+        self.ui.comboTopic.currentIndexChanged.connect(self.display_items)
+        self.ui.listUnread.currentItemChanged.connect(lambda item, old: self.select_item(item))
+        self.ui.listOld.currentItemChanged.connect(lambda item, old: self.select_item(item))
+        self.ui.listUnread.itemDoubleClicked.connect(lambda item, column: self.visit_page())
+        self.ui.listOld.itemDoubleClicked.connect(lambda item, column: self.visit_page())
+        self._add_action(self.ui.menuFile, 'Import subscriptions (OPML)…', self.import_opml)
+        self._add_action(self.ui.menuFile, 'Export subscriptions (OPML)…', self.export_opml)
+        self._add_action(self.ui.menuFile, 'Back up profile…', self.backup)
+        self._add_action(self.ui.menuFile, 'Import / restore profile…', self.import_profile)
+        self.bookmark_action = self._add_action(self.ui.menuArticle, 'Show bookmarks only', self.toggle_bookmarks)
+        self.bookmark_action.setCheckable(True)
+        self._add_action(self.ui.menuArticle, 'Mark displayed articles read', self.mark_all_read)
+        self._add_action(self.ui.menuTopics, 'Reset current topic learning', self.reset_learning)
+        self.refresh_views()
+        legacy = migration.legacy_profile()
+        if legacy and not fm.listFeeds():
+            self.statusBar().showMessage('Legacy profile found. Use Feeds → Import / restore profile to preserve your history.')
+        notice = m.session.get(m.Setting, 'migration_notice')
+        if notice:
+            self.statusBar().showMessage(notice.value)
+        self.setWindowTitle('feedIO ' + __version__)
+
+    def _add_action(self, menu, title, handler):
+        action = menu.addAction(title)
+        action.triggered.connect(lambda checked=False: self.invoke(handler))
+        return action
+
+    def invoke(self, function):
+        try:
+            function()
+        except Exception as error:
+            m.session.rollback()
+            self.failed(str(error) if isinstance(error, (ValueError, fm.FeedError, SpeechUnavailable))
+                        else 'The operation failed. Saved data has been retained.')
+
+    def _setup_tray(self):
+        if not QtWidgets.QSystemTrayIcon.isSystemTrayAvailable():
+            return
+        self.tray = QtWidgets.QSystemTrayIcon(QtGui.QIcon(':/images/feedIO.png'), self)
+        menu = QtWidgets.QMenu(self)
+        self._add_action(menu, 'Show feedIO', self.show_normal)
+        self._add_action(menu, 'Refresh feeds', self.fetch_all)
+        self._add_action(menu, 'Preferences', self.preferences)
+        self._add_action(menu, 'Quit', self.quit_app)
+        self.tray.setContextMenu(menu)
+        self.tray.activated.connect(lambda reason: self.show_normal()
+            if reason == QtWidgets.QSystemTrayIcon.ActivationReason.Trigger else None)
+        self.tray.setToolTip('feedIO')
+        self.tray.show()
+
+    def show_normal(self):
+        self.showNormal()
         self.raise_()
+        self.activateWindow()
 
-        self.newFont = QFont()
-        self.newFont.setWeight(QFont.Weight.Bold)
+    def feed_id(self):
+        return self.ui.comboFeed.currentData()
 
-        self.unreadFont = QFont()
-        self.unreadFont.setWeight(QFont.Weight.Bold)
+    def topic_id(self):
+        return self.ui.comboTopic.currentData()
 
-        self.readFont = QFont()
-        self.readFont.setWeight(QFont.Weight.Normal)
+    def refresh_views(self):
+        m.session.expire_all()
+        feed_id, topic_id = self.feed_id(), self.topic_id()
+        for combo, values, previous, all_feeds in (
+            (self.ui.comboFeed, fm.listFeeds(), feed_id, True),
+            (self.ui.comboTopic, classifier.listTopics(), topic_id, False)):
+            blocker = QtCore.QSignalBlocker(combo)
+            combo.clear()
+            if all_feeds:
+                combo.addItem('All feeds', None)
+            for value in values:
+                combo.addItem(value.title, value.id)
+            index = combo.findData(previous)
+            combo.setCurrentIndex(index if index >= 0 else 0)
+            del blocker
+        self.display_items()
 
-        self.readColor = QColor("#666666")
-        self.unreadColor = QColor("#444444")
-        self.newColor = QColor("#070788")
-
-        self.feedList = []
-        self.itemList = []
-        self.topicList = []
-        self.readList = []
-        self.currentItem = None
-        self.currentTopic = classifier.getTopic("General")
-
-        self.updated = True
-        self.displayTopics()
-        self.displayFeeds()
-        self.displayItems()
-
-        self.ui.listOld.setFocus()
-        self.ui.comboFeed.setCurrentIndex(len(self.feedList))
-
-        self.ui.comboFeed.currentIndexChanged.connect(self.displayItems)
-        self.ui.comboTopic.currentIndexChanged.connect(self.displayItems)
-        self.ui.listUnread.currentItemChanged.connect(self.setCurrentFromUnread)
-
-        self.ui.listUnread.itemDoubleClicked.connect(self.on_actionReadItLater_activated)
-        self.ui.listOld.itemDoubleClicked.connect(self.on_actionReadItLater_activated)
-
-        self.ui.listOld.currentItemChanged.connect(self.setCurrentFromOld)
-        self.ui.actionVisitPage.triggered.connect(self.visitPage)
-        self.ui.actionFetchAllFeeds.triggered.connect(parent.fetchAllFeeds)
-        self.ui.actionReCalculateScores.triggered.connect(self.reCalculateAllScores)
-        self.ui.actionFetchFeed.triggered.connect(self.fetchFeed)
-        self.ui.actionUpVote.triggered.connect(self.upVoteArticle)
-        self.ui.actionDownVote.triggered.connect(self.downVoteArticle)
-        self.ui.actionUnread.triggered.connect(self.markAsUnread)
-        self.ui.btnUp.clicked.connect(self.upVoteArticle)
-        self.ui.btnDown.clicked.connect(self.downVoteArticle)
-        for name in dir(self):
-            if name.startswith('on_action') and name.endswith('_activated'):
-                action = getattr(self.ui, name[3:-10], None)
-                if action is not None:
-                    action.triggered.connect(lambda checked=False, handler=getattr(self, name): handler(checked))
-
-
-    def closeEvent(self, event):
-        """
-        Modification to the closeEvent so that pressing the close button in main window will only exit the
-        """
-        self.hide()
-        event.ignore()
-
-
-    def displayTopics(self):
-        self.topicList = classifier.listTopics()
-        topicTitles = [topic.title for topic in self.topicList]
-        self.ui.comboTopic.clear()
-        self.ui.comboTopic.addItems(topicTitles)
-
-
-    def displayFeeds(self):
-        self.feedList = fm.listFeeds()
-        feedTitles = [feed.title for feed in self.feedList]
-        feedTitles.append("All Feeds")
-        self.ui.comboFeed.clear()
-        self.ui.comboFeed.addItems(feedTitles)
-        self.ui.comboFeed.setCurrentIndex(len(self.feedList))
-
-
-    def displayItems(self):
-        """
-        Function to display unread and read article lists in the Two QTreeWidget
-        boxes using two seperate threads to keep the UI responsiveness.
-        """
-        self.displayUnread()
-        self.displayRead()
-
-
-    def displayUnread(self):
-        """
-        function to update the Unread Articles list according to the selected feeds list.
-        """
-
-        selectedFeedIndex = self.ui.comboFeed.currentIndex()
-
-        selectedTopicIndex = self.ui.comboTopic.currentIndex()
-        self.currentTopic = self.topicList[selectedTopicIndex]
-        logging.debug(self.currentTopic)
-
-        if len(self.feedList) == 0:
-            self.scoreItemList = []
-        else:
-
-            if selectedFeedIndex == len(self.feedList):
-                pri = prioritizer.Prioritizer(self.currentTopic)
-                self.scoreItemList = pri.listScoreItems()
-                # Now filter out the Old items using a generator
-                #this is being done in the prioritizer now
-#                self.scoreItemList = [scoreItem for scoreItem in self.scoreItemList if scoreItem.item.isUnread == True]
-
-                # prioritize the list according to the scores
-                self.scoreItemList = pri.prioritize(self.scoreItemList)
-
-                windowTitle = "All Feeds - feedIO"
-                self.setWindowTitle(windowTitle)
-            else:
-                selectedFeed = self.feedList[selectedFeedIndex]
-
-                pri = prioritizer.Prioritizer(self.currentTopic)
-                self.scoreItemList = pri.listScoreItems(selectedFeed)
-                # Now filter out the items for the current Feed using a generator
-                #this is being done in the prioritizer now
-#                self.scoreItemList = [scoreItem for scoreItem in self.scoreItemList if (scoreItem.item.feed is selectedFeed and scoreItem.item.isUnread == True)]
-
-                self.scoreItemList = pri.prioritize(self.scoreItemList)
-
-                #Code to change the window title to the currently viewing feed's title
-                windowTitle = selectedFeed.title + " - feedIO"
-                self.setWindowTitle(windowTitle)
-
+    def display_items(self, *args):
+        previous = self.current_id
+        self.current_id = None
+        blockers = [QtCore.QSignalBlocker(self.ui.listUnread), QtCore.QSignalBlocker(self.ui.listOld)]
         self.ui.listUnread.clear()
-
-        itemIcon = QIcon()
-        itemIcon.addPixmap(QPixmap(":/images/article.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-
-        # Sort self.scoreItemList according to "isNew" property as primary
-        # Secondary sort it by isUnread
-        # Then sort it according to Score
-        # then sort it according to the Article date.
-
-        for scoreItem in self.scoreItemList:
-#            treeItem=QTreeWidgetItem([ str(scoreItem.score), scoreItem.item.title])
-            treeItem=QTreeWidgetItem([scoreItem.item.title,])
-            treeItem.article = scoreItem.item
-
-            treeItem.setIcon(0, itemIcon)
-
-#            # Set a part of the article text as the tooltip of Items
-#            itemTip = purify.cleanText(str(scoreItem.score))
-            itemTip = "Score: <b>" + str(scoreItem.score) + "</b> &nbsp; &nbsp;&nbsp;" + "<br>Topic: " + "<i>" + scoreItem.topic.title + "</i>" + "<br>Via: " + "<i>" + scoreItem.item.feed.title + "</i>"
-#            tip = purify.shorten(itemTip, 200)
-            treeItem.setToolTip(0, itemTip)
-
-            if scoreItem.item.age == 0:
-                treeItem.setFont(0, self.newFont)
-                treeItem.setForeground(0, self.newColor)
-
-            elif scoreItem.item.age == 1:
-                treeItem.setFont(0, self.unreadFont)
-                treeItem.setForeground(0, self.unreadColor)
-
-            else:
-                treeItem.setFont(0, self.readFont)
-                treeItem.setForeground(0, self.readColor)
-
-            self.ui.listUnread.addTopLevelItem(treeItem)
-
-        self.ui.listOld.setFocus()
-
-
-    def displayRead(self):
-        """
-        function to update the read Articles list according to the selected feeds list.
-        """
-        pass
-
-        selectedFeedIndex = self.ui.comboFeed.currentIndex()
-
-        if len(self.feedList) == 0:
-            self.readList = []
-        else:
-
-            if selectedFeedIndex == len(self.feedList):
-                self.readList = fm.listRead()
-
-            else:
-                selectedFeed = self.feedList[selectedFeedIndex]
-
-                self.readList = fm.listRead(selectedFeed)
-
         self.ui.listOld.clear()
-
-        itemIcon = QIcon()
-        itemIcon.addPixmap(QPixmap(":/images/article.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-
-        for article in self.readList:
-            treeItem=QTreeWidgetItem([article.title,])
-            treeItem.article = article
-
-            treeItem.setIcon(0, itemIcon)
-
-            treeItem.setFont(0, self.readFont)
-            treeItem.setForeground(0, self.readColor)
-
-            self.ui.listOld.addTopLevelItem(treeItem)
-
-    def setCurrentFromUnread(self):
-        """
-        Function to set the currently selected Item in the Unread list as the self.currentItem
-        """
-        self.currentItem = self.ui.listUnread.currentItem()
-        self.displayArticle()
-
-
-    def setCurrentFromOld(self):
-        """
-        Function to set the currently selected Item in the Old list as the self.currentItem
-        """
-        self.currentItem = self.ui.listOld.currentItem()
-        self.displayArticle()
-
-
-    def displayArticle(self):
-        """
-        displays the selected article on the viewer.
-        """
-        try:
-            selected = self.currentItem
-            selectedItem = selected.article
-
-            text = "<style>.bg_color {background-color: #f8f8ff ;}.blue {color: #6f6fff;}.big { font-size: 8em; }.bold { font-weight: bold; }.date{ font-weight: bold; color: #066bb6;  }.info     { font-size: .95em; margin: 2px 0 6px !important; color: #148d04; }.headline_font_size {font-size: .80em;}</style>" + \
-                "<div class=\" bg_color \">" + \
-                "<div class=\" blue \">" + \
-                "<H3>" + selectedItem.title + \
-                "</div>" + \
-                "<div class=\" bold headline_font_size\">" + \
-                "</H3>(" + selectedItem.feed.title + ")<br>" + \
-                "</div>" + \
-                "<div class=\"date info\">" + \
-                time.ctime(selectedItem.updated) + "<br>" + \
-                "</div>" + \
-                "<div class = \"bg_color\">" + \
-                selectedItem.description + \
-                "</div>"
-        except:
-            text = "Add some interesting feeds!"
-        else:
-            self.ui.viewArticle.setHtml(text)
-            windowTitle = selectedItem.title + " - " + selectedItem.feed.title + " - feedIO"
-            self.setWindowTitle(windowTitle)
-
-            if selectedItem.age == 0 or selectedItem.age == 1:
-                selected.setFont(0, self.readFont)
-                selected.setForeground(0, self.readColor)
-                fm.setItemFlag(selectedItem, 2)
-
-
-    def markAsRead(self):
-        # create font with normal weight to show the read articles
-        selected = self.currentItem
-        selected.setFont(0, self.readFont)
-        selected.setForeground(0,self.readColor)
-        fm.setItemFlag(selected.article, 2)
-
-
-    def markAsUnread(self):
-        # create font with heavy weight to show the unread articles
-        selected = self.currentItem
-        selected.setFont(0, self.unreadFont)
-        selected.setForeground(0, self.unreadColor)
-        fm.setItemFlag(selected.article, 1)
-
-
-    def fetchAllFeeds(self):
-        """
-        Fetch all action implementataion. Creates a new thread and fetches the updates for them in that thread.
-        """
-
-        thread = threading.Thread(target=self.fetchAll, args=())
-        thread.start()
-#        thread.join()
-#        self.displayItems()
-
-    def fetchAll(self):
-        logging.debug("fetching Updates...")
-        fm.updateAll()
-
-        logging.debug("Calculating priority Scores")
-        self.parent.setNewItemScores()
-
-
-    def fetchFeed(self):
-        """
-        Fetch the selected feed.
-        """
-        selected = self.currentItem
-        thread = threading.Thread(target=fm.updateFeed, args=(selected.article.feed,))
-        thread.start()
-
-
-    def  visitPage(self):
-        """
-        function to visit the original web page of selected article from the built in web browser.
-        """
-        try:
-            selected = self.currentItem
-        except:
-            text = "Not implemented yet."
-        else:
-            self.ui.viewArticle.load(QUrl(selected.article.url))
-
-            self.parent.status = "Visiting %s in browser mode..." % selected.article.feed.title
-            self.parent.sendNotification()
-
-
-
-    def upVoteArticle(self):
-        """
-        Function to upvote the current article
-        """
-        selected = self.currentItem
-
-        if selected == None:
-            logging.debug("Nothing to vote!")
-        else:
-            selectedTopicIndex = self.ui.comboTopic.currentIndex()
-            selectedTopic = self.topicList[selectedTopicIndex]
-
-            classifier.voteArticle("up",selected.article, selectedTopic)
-            self.parent.status = "Up Voted %s under %s" % (selected.article.title, selectedTopic.title)
-            self.parent.sendNotification()
-
-
-    def downVoteArticle(self):
-        """
-        Function to Down Vote the current article
-        """
-        selected = self.currentItem
-
-        if selected == None:
-            logging.debug("Nothing to vote!")
-        else:
-            selectedTopicIndex = self.ui.comboTopic.currentIndex()
-            selectedTopic = self.topicList[selectedTopicIndex]
-
-            classifier.voteArticle("down", selected.article, selectedTopic)
-
-            self.parent.status = "Down Voted %s under %s" % (selected.article.title, selectedTopic.title)
-            self.parent.sendNotification()
-
-    def reCalculateAllScores(self):
-        """
-        calls the parent.reCalculateAllScores inside a thread.
-        """
-        logging.debug("reCalculateAllScores called")
-        thread = threading.Thread(target=self.parent.reCalculateAllScores, args=())
-#        thread.setDaemon(True)
-        thread.start()
-
-
-
-    def on_actionManageFeeds_activated(self, i=None):
-        """
-        Manage feeds action implementataion. displays the manageFeeds dialog box.
-        """
-        if i is None: return
-        ManageFeedsDialog(self).exec()
-
-        if self.parent.refreshDisplay == True:
-            self.displayFeeds()
-            self.parent.refreshDisplay = False
-
-
-    def on_actionAddFeed_activated(self, i=None):
-        if i is None: return
-
-        AddFeedDialog(self).exec()
-        #self.displayFeeds()
-
-
-    def on_actionRemoveFeed_activated(self, i=None):
-        if i is None: return
-
-        RemoveFeedDialog(self).exec()
-
-        if self.parent.refreshDisplay == True:
-            self.displayFeeds()
-            self.parent.refreshDisplay = False
-
-    def on_actionManageTopics_activated(self, i=None):
-        """
-        Manage feeds action implementataion. displays the manageFeeds dialog box.
-        """
-        if i is None: return
-
-        ManageTopicsDialog(self).exec()
-
-        if self.parent.refreshDisplay == True:
-            self.displayTopics()
-            self.parent.refreshDisplay = False
-
-
-    def on_actionAddTopic_activated(self, i=None):
-        if i is None: return
-
-        AddTopicDialog(self).exec()
-
-        if self.parent.refreshDisplay == True:
-            self.displayTopics()
-            self.parent.refreshDisplay = False
-
-
-    def on_actionRemoveTopic_activated(self, i=None):
-        if i is None: return
-
-        RemoveTopicDialog(self).exec()
-
-        if self.parent.refreshDisplay == True:
-            self.displayTopics()
-            self.parent.refreshDisplay = False
-
-
-    def on_actionExit_activated(self, i=None):
-        """
-        Exit action implementataion. Exits the application.
-        """
-        if i is None: return
-        self.parent.close()
-
-
-    def on_actionMinimizeToTray_activated(self, i=None):
-        """
-        Exit action implementataion. Exits the application.
-        """
-        if i is None: return
-        self.close()
-
-
-    def on_actionAbout_activated(self, i=None):
-        """
-        About action implementataion.
-        """
-        if i is None: return
-        AboutDialog(self).exec()
-
-    def on_actionRead_activated(self, i=None):
-        """
-        Read article implementataion.Can play or stop the selected article.
-        """
-        if i is None: return
-        selected = self.currentItem
-        if self.parent.playerState =='standby':
-            self.parent.playerState = 'playing'
-            self.parent.sp.say(purify.cleanText(str(selected.article.title + "....." + selected.article.description)))
-            #self.sp.say(selected.article.description)
-        	
-        else:
-            self.parent.sp.stop()
-            self.parent.playerState='standby'
-
-    def on_actionPreferences_activated(self, i=None):
-        """
-        Settings  action implementataion.
-        """
-        if i is None: return
-        SettingsDialog(self).exec()
-
-
-    def on_actionSignInToTwitter_activated(self, i=None):
-        """
-        Sign into twitter.
-        """
-        if i is None: return
-
-        # create a QSettings object to get twitter auth data.
-        s = QSettings()
-        twitterPlugin.ACCESS_KEY  = str(s.value("TWITTER_ACCESS_KEY").toString())
-        twitterPlugin.ACCESS_SECRET = str(s.value("TWITTER_ACCESS_SECRET").toString())
-
-
-        if twitterPlugin.ACCESS_KEY == '':
-            try:
-                logging.debug("signing into twitter using the browser...")
-                tp = twitterPlugin.TwitterPlugin()
-
-                auth_url = tp.authenticate()
-
-                webbrowser.open_new(auth_url)
-
-                TwitterPinDialog(self).exec()
-                # return is the VERIFIER code is not set.
-                if twitterPlugin.VERIFIER == '': return
-
-                (twitterPlugin.ACCESS_KEY, twitterPlugin.ACCESS_SECRET) = tp.verify()
-                #Store the values using in a QSettings object.
-                s = QSettings()
-
-                s.setValue("TWITTER_ACCESS_KEY", twitterPlugin.ACCESS_KEY)
-                s.setValue("TWITTER_ACCESS_SECRET", twitterPlugin.ACCESS_SECRET)
-
-
-            except tweepy.TweepyException:
-                logging.debug("Not authenticated properly. check the PIN number")
-                self.parent.status = "Error Logging to twitter.com!"
-                self.parent.sendNotification()
-            else:
-                self.parent.status = "You have Signed in to twitter.com"
-                self.parent.sendNotification()
-
-
-    def on_actionSignOffFromTwitter_activated(self, i=None):
-        """
-        Sign off from the twitter session.
-        """
-        if i is None: return
-
-        twitterPlugin.ACCESS_KEY = ''
-        twitterPlugin.ACCESS_SECRET = ''
-        twitterPlugin.VERIFIER = ''
-
-        #Store the values using in a QSettings object.
-        s = QSettings()
-
-        s.setValue("TWITTER_ACCESS_KEY", twitterPlugin.ACCESS_KEY)
-        s.setValue("TWITTER_ACCESS_SECRET", twitterPlugin.ACCESS_SECRET)
-
-        self.parent.status = "You have Signed Off from twitter."
-        self.parent.sendNotification()
-
-        logging.debug("Signed off from twitter.")
-
-
-    def on_actionPostToTwitter_activated(self, i=None):
-        """
-        post to twitter action implementataion.
-        """
-        if i is None: return
-
-        selected = self.currentItem
-        shortUrl = purify.shortenUrl(selected.article.url)
-        if shortUrl == False: return
-
-#        # Dirty hack to make the tweet limit to 140 chars.
-#        urlWidth = len(selected.article.url)
-#        articleTitle = purify.shorten(selected.article.title, (135-urlWidth))
-
-        message = selected.article.title +" "+ shortUrl
-
-#        message = selected.article.url + selected.article.title
-
-        # create a QSettings object to get twitter auth data.
-        s = QSettings()
-        twitterPlugin.ACCESS_KEY  = str(s.value("TWITTER_ACCESS_KEY").toString())
-        twitterPlugin.ACCESS_SECRET = str(s.value("TWITTER_ACCESS_SECRET").toString())
-
-        if twitterPlugin.ACCESS_KEY == '':
-            try:
-                logging.debug("signing into twitter using the browser...")
-                tp = twitterPlugin.TwitterPlugin()
-
-                auth_url = tp.authenticate()
-
-                webbrowser.open_new(auth_url)
-
-                TwitterPinDialog(self).exec()
-                # return is the VERIFIER code is not set.
-                if twitterPlugin.VERIFIER == '': return
-
-                (twitterPlugin.ACCESS_KEY, twitterPlugin.ACCESS_SECRET) = tp.verify()
-                #Store the values using in a QSettings object.
-                s = QSettings()
-                s.setValue("TWITTER_ACCESS_KEY", twitterPlugin.ACCESS_KEY)
-                s.setValue("TWITTER_ACCESS_SECRET", twitterPlugin.ACCESS_SECRET)
-
-            except tweepy.TweepyException:
-                logging.debug("Not authenticated properly. check the PIN number")
-                self.parent.status = "Error Logging to twitter.com!"
-                self.parent.sendNotification()
-
-            else:
-                tp.tweet(message)
-                self.parent.status = message + " posted to twitter."
-                self.parent.sendNotification()
-
-        else:
-            try:
-                tp = twitterPlugin.TwitterPlugin()
-                tp.tweet(message)
-            except:
-                logging.debug("Error in tweeting")
-            else:
-                self.parent.status = message + " posted to twitter."
-                self.parent.sendNotification()
-
-
-    def on_actionSignInToRIL_activated(self, i=None):
-        """
-        Sign in to Read It Later, action implementataion.
-        """
-        if i is None: return
-        rilPlugin.SESSION = None
-
-        logging.debug("Asking to Sign into RIL...")
-        RilLoginDialog(self).exec()
-
-        if rilPlugin.SESSION is None: return
-
-        # TODO: do something like bookmarking the selected article.
-        self.parent.status = "Signed in to Read It Later..."
-        self.parent.sendNotification()
-
-
-    def on_actionSignOffFromRIL_activated(self, i=None):
-        """
-        Sign off from Read It Later, action implementataion.
-        """
-        if i is None: return
-
-        rilPlugin.SESSION = None
-        # create a QSettings object to get RIL auth data.
-        s = QSettings()
-        s.setValue("RIL_USER", '')
-        s.setValue("RIL_PW", '')
-
-        self.parent.status = "You have Signed Off from Read It Later."
-        self.parent.sendNotification()
-
-        logging.debug("Signed off from RIL.")
-
-
-    def on_actionReadItLater_activated(self, i=None):
-        """
-        Read It Later, action implementataion.
-        """
-        if i is None: return
-
-        selected = self.currentItem
-
-
-        if rilPlugin.SESSION is None:
-            s = QSettings()
-            username = str(s.value("RIL_USER").toString())
-            pw = str(s.value("RIL_PW").toString())
-
-            if username != '' and pw != '':
-                # Not logged in but the username and pw is there.
-                try:
-                    rilPlugin.SESSION = rilPlugin.RilSession(username, pw)
-                    rilPlugin.SESSION.submitItem(selected.article)
-                except rilPlugin.LogInError:
-                    logging.debug("LoginError! invalid username/pw.")
-                    ## invalid credentials. prompt to re-enter username/pw.
-                    #self.on_actionSignOffFromRIL_activated()
-                else:
-                    # TODO: do something like bookmarking the selected article.
-                    self.parent.status = selected.article.title + "Added to Read It Later List."
-                    self.parent.sendNotification()
-
-            else:
-                # Not logged in and the username and pw is not stored.
-                logging.debug("Asking to Sign into RIL...")
-                RilLoginDialog(self).exec()
-
-                if rilPlugin.SESSION is not None:
-                    try:
-                        rilPlugin.SESSION.submitItem(selected.article)
-                    except:
-                        logging.debug("Error in Submitting to RIL")
-                    else:
-                        # TODO: do something like bookmarking the selected article.
-                        self.parent.status = selected.article.title + "Added to Read It Later List."
-                        self.parent.sendNotification()
-
-        else:
-            try:
-                rilPlugin.SESSION.submitItem(selected.article)
-            except:
-                logging.debug("Error in Submitting to RIL")
-            else:
-                # TODO: do something like bookmarking the selected article.
-                self.parent.status = selected.article.title + "Added to Read It Later List."
-                self.parent.sendNotification()
-
-
-    def on_actionTranslate_the_article_activated(self, i=None):
-        """
-        Translate the given article in a different language into English language.
-        
-        """
-        if i is None: return
-        try:
-            toTranslate = self.currentItem
-            selectedItem = toTranslate.article
-            #thisOne = selectedItem.description
-            v1 = purify.cleanText(str(selectedItem.title))
-            vx = purify.cleanText(str(selectedItem.description))
-            v2 = ' '.join(vx.split())
-            translate = Translator().translate
-            translatedTitle = translate(v1, lang_to="en")
-            translatedDescription = translate(v2, lang_to="en")                
-            selectedItem.title = translatedTitle
-            selectedItem.description = translatedDescription
-            self.displayArticle()
-            
-            
-
-        except:
-            text = "Error Translating the article"
-
-
-
-class AddFeedDialog(QDialog):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.ui = Ui_addFeed()
-        self.ui.setupUi(self)
-        self.parent = parent
-
-        self.ui.btnCancel.clicked.connect(self.close)
-        self.ui.btnAdd.clicked.connect(self.addFeed)
-        self.ui.UrlLineEdit.returnPressed.connect(self.addFeed)
-
-
-    def addFeed(self):
-        feedUrl = self.ui.UrlLineEdit.text()
-
-        thread = threading.Thread(target=self.parent.parent.addFeed, args=(feedUrl,))
-        thread.setDaemon(True)
-        thread.start()
-        thread.join()
-
-        if self.parent.parent.refreshDisplay == True:
-            itemList = fm.listNew()
-            classifier.assignItemsToTopics(itemList)
-            self.parent.parent.setNewItemScores()
-            self.parent.displayFeeds()
-        self.close()
-
-
-class RemoveFeedDialog(QDialog):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.ui=Ui_removeFeed()
-        self.ui.setupUi(self)
-        self.feedList = []
-        self.displayFeeds()
-        self.parent = parent
-        self.ui.btnCancel.clicked.connect(self.close)
-        self.ui.btnRemove.clicked.connect(self.removeFeed)
-
-
-    def displayFeeds(self):
-        """
-        function to display the subscribed feeds list in the combo box.
-        """
-        self.feedList = fm.listFeeds()
-        feedTitles = [feed.title for feed in self.feedList]
-        self.ui.feedList.clear()
-        self.ui.feedList.addItems(feedTitles)
-
-
-    def removeFeed(self):
-        selectedIndex = self.ui.feedList.currentIndex()
-        selectedFeed = self.feedList[selectedIndex]
-
-        classifier.removefromScoreTable(selectedFeed)
-        fm.removeFeed(selectedFeed)
-#        self.parent.displayFeeds()
-        #Set the refreshDisplay status to true.
-        self.parent.parent.refreshDisplay = True
-        self.close()
-
-
-class ManageFeedsDialog(QDialog):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.ui=Ui_manageFeeds()
-        self.ui.setupUi(self)
-        self.feedList = []
-        self.displayFeeds()
-        self.parent = parent
-
-        self.ui.btnExit.clicked.connect(self.close)
-        self.ui.btnRemove.clicked.connect(self.removeFeed)
-        self.ui.btnAdd.clicked.connect(self.addFeed)
-
-
-    def displayFeeds(self):
-        self.feedList = fm.listFeeds()
-        feedTitles = [feed.title for feed in self.feedList]
-        self.ui.feedList.clear()
-        self.ui.feedList.addItems(feedTitles)
-
-
-    def removeFeed(self):
-        selectedItemIndex = self.ui.feedList.currentRow()
-        selectedFeed = self.feedList[selectedItemIndex]
-        classifier.removefromScoreTable(selectedFeed)
-        fm.removeFeed(selectedFeed)
-        #Set the refreshDisplay status to true.
-        self.parent.parent.refreshDisplay = True
-        self.displayFeeds()
-
-
-    def addFeed(self):
-        feedUrl = self.ui.urlLine.text()
-        #Run the addFeed function in a new thread so that the ui is responsive.
-        thread = threading.Thread(target=self.parent.parent.addFeed, args=(feedUrl,))
-        thread.setDaemon(True)
-        thread.start()
-        thread.join()
-
-        if self.parent.parent.refreshDisplay == True:
-            itemList = fm.listNew()
-            classifier.assignItemsToTopics(itemList)
-            self.parent.parent.setNewItemScores()
-
-            self.ui.urlLine.clear()
-            self.displayFeeds()
-
-
-class AddTopicDialog(QDialog):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.ui = Ui_addTopic()
-        self.ui.setupUi(self)
-
-        self.parent = parent
-
-        self.ui.btnCancel.clicked.connect(self.close)
-        self.ui.btnAdd.clicked.connect(self.addTopic)
-
-    def addTopic(self):
-        topic = self.ui.addTopicLinedit.text()
-        #topic = purify.cleanText(topic) # gave an error when adding
-        classifier.addTopic(topic)
-
-        #Set the refreshDisplay status to true.
-        self.parent.parent.refreshDisplay = True
-
-        self.close()
-
-
-class RemoveTopicDialog(QDialog):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.ui=Ui_removeTopic()
-        self.ui.setupUi(self)
-
-        self.parent = parent
-
-        self.topicList = []
-        self.displayTopics()
-
-        self.ui.btnCancel.clicked.connect(self.close)
-        self.ui.btnRemove.clicked.connect(self.removeTopic)
-
-
-    def displayTopics(self):
-        """
-        function to display the current topics list in the combo box.
-        """
-        self.topicList = classifier.listTopics()
-        self.topicList.remove(classifier.getTopic("General"))
-        topicTitles = [topic.title for topic in self.topicList]
-        self.ui.topicListCombo.clear()
-        self.ui.topicListCombo.addItems(topicTitles)
-
-
-    def removeTopic(self):
-        selectedIndex = self.ui.topicListCombo.currentIndex()
-        selectedTopic = self.topicList[selectedIndex]
-        classifier.removeTopic(selectedTopic)
-
-        #Set the refreshDisplay status to true.
-        self.parent.parent.refreshDisplay = True
-
-        self.close()
-
-
-class ManageTopicsDialog(QDialog):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.ui=Ui_manageTopics()
-        self.ui.setupUi(self)
-        self.topicList = []
-        self.displayTopics()
-
-        self.parent = parent
-
-        self.ui.btnExit.clicked.connect(self.close)
-        self.ui.btnRemove.clicked.connect(self.removeTopic)
-        self.ui.btnAdd.clicked.connect(self.addTopic)
-
-
-    def displayTopics(self):
-        self.topicList = classifier.listTopics()
-        self.topicList.remove(classifier.getTopic("General"))
-        topicTitles = [topic.title for topic in self.topicList]
-        self.ui.topicList.clear()
-        self.ui.topicList.addItems(topicTitles)
-
-
-    def removeTopic(self):
-        selectedItemIndex = self.ui.topicList.currentRow()
-        selectedTopic = self.topicList[selectedItemIndex]
-        classifier.removeTopic(selectedTopic)
-
-        #Set the refreshDisplay status to true.
-        self.parent.parent.refreshDisplay = True
-
-        self.displayTopics()
-
-
-    def addTopic(self):
-        topic = self.ui.topicLine.text()
-        classifier.addTopic(topic)
-        self.ui.topicLine.clear()
-
-        #Set the refreshDisplay status to true.
-        self.parent.parent.refreshDisplay = True
-
-        self.displayTopics()
-
-
-class TwitterPinDialog(QDialog):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.ui = Ui_twitterPIN()
-        self.ui.setupUi(self)
-        self.ui.btnCancel.clicked.connect(self.close)
-        self.ui.btnOK.clicked.connect(self.getPin)
-
-    def getPin(self):
-        twitterPlugin.VERIFIER = self.ui.pinLineEdit.text()
-        self.close()
-
-
-class RilLoginDialog(QDialog):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.ui = Ui_rilLogin()
-        self.ui.setupUi(self)
-        self.ui.btnCancel.clicked.connect(self.close)
-        self.ui.btnOk.clicked.connect(self.login)
-        self.ui.passwordLineEdit.returnPressed.connect(self.login)
-        self.ui.userNameLineEdit.returnPressed.connect(self.login)
-
-    def login(self):
-        """
-        """
-        username = self.ui.userNameLineEdit.text()
-        password = self.ui.passwordLineEdit.text()
-
-        try:
-             rilPlugin.SESSION = rilPlugin.RilSession(username, password)
-        except rilPlugin.LogInError:
-            self.ui.lblStatus.setText("Invalid username/password!. Please retry.")
-            logging.debug("LoginError! invalid username/password.")
-
-        else:
-            if self.ui.chkKeepSigned.isChecked():
-                #Store the username and PW for RIL
-                s = QSettings()
-                s.setValue("RIL_USER", username)
-                s.setValue("RIL_PW", password)
-
+        query = m.session.query(m.Item)
+        if self.feed_id() is not None:
+            query = query.filter_by(feed_id=self.feed_id())
+        if self.bookmarks_only:
+            query = query.filter_by(bookMarked=True)
+        topic_id = self.topic_id()
+        scores = dict(m.session.query(m.ScoreItem.item_id, m.ScoreItem.score).filter_by(topic_id=topic_id).all())
+        items = query.order_by(m.Item.updated.desc(), m.Item.id.desc()).limit(1000).all()
+        items.sort(key=lambda i: (not i.isUnread, -scores.get(i.id, 1000), -(i.updated or 0), -i.id))
+        selected = None
+        for item in items:
+            node = QtWidgets.QTreeWidgetItem([('★ ' if item.bookMarked else '') + item.title])
+            node.setData(0, QtCore.Qt.ItemDataRole.UserRole, item.id)
+            node.setIcon(0, QtGui.QIcon(':/images/article.png'))
+            node.setToolTip(0, f'{item.feed.title} · Score {scores.get(item.id, 1000)}')
+            target = self.ui.listUnread if item.isUnread else self.ui.listOld
+            target.addTopLevelItem(node)
+            if item.id == previous:
+                selected = (target, node)
+        if selected:
+            selected[0].setCurrentItem(selected[1])
+            self.current_id = previous
+        del blockers
+        if self.current_id is None:
+            self.ui.viewArticle.setHtml(reader.article_html('Welcome to feedIO',
+                '<p>Add a feed or import subscriptions to begin. Select an article to read it offline.</p>'))
+        self.update_actions()
+
+    def select_item(self, node):
+        if node is None:
+            return
+        identity = node.data(0, QtCore.Qt.ItemDataRole.UserRole)
+        item = m.session.get(m.Item, identity)
+        if item is None:
+            return
+        self.current_id = identity
+        self.ui.viewArticle.setHtml(reader.article_html(item.title, item.description, item.feed.title))
+        self.setWindowTitle(item.title + ' — feedIO')
+        if item.isUnread:
+            fm.setItemFlag(item, 2)
+            self.display_items()
+        self.update_actions()
+
+    def update_actions(self):
+        enabled = self.current_id is not None and not self.runner.busy
+        for name in ('actionUpVote', 'actionDownVote', 'actionUnread', 'actionRead',
+                     'actionVisitPage', 'actionFavorite', 'actionReadItLater', 'actionPostToTwitter'):
+            getattr(self.ui, name).setEnabled(enabled)
+        self.ui.btnUp.setEnabled(enabled)
+        self.ui.btnDown.setEnabled(enabled)
+        self.ui.actionRemoveFeed.setEnabled(self.feed_id() is not None and not self.runner.busy)
+        self.ui.actionFetchFeed.setEnabled(self.feed_id() is not None and not self.runner.busy)
+
+    def busy_changed(self, busy):
+        self.ui.menuFile.setEnabled(not busy)
+        self.ui.menuTopics.setEnabled(not busy)
+        self.ui.menuTools.setEnabled(not busy)
+        self.ui.listUnread.setEnabled(not busy)
+        self.ui.listOld.setEnabled(not busy)
+        self.ui.comboFeed.setEnabled(not busy)
+        self.ui.comboTopic.setEnabled(not busy)
+        for name in ('actionAddFeed', 'actionFetchAllFeeds', 'actionPreferences'):
+            getattr(self.ui, name).setEnabled(not busy)
+        self.update_actions()
+        if busy:
+            self.statusBar().showMessage('Working…')
+
+    def finished(self, result):
+        self.refresh_views()
+        results = result if isinstance(result, list) else [result]
+        errors = [r.error for r in results if isinstance(r, fm.RefreshResult) and r.error]
+        added = sum(r.added for r in results if isinstance(r, fm.RefreshResult))
+        message = '; '.join(errors) if errors else (result if isinstance(result, str) else f'Updated. {added} new articles.')
+        self.statusBar().showMessage(message)
+        if added and self.tray and self.notifications_enabled:
+            self.tray.showMessage('feedIO', message)
+        if self._quitting:
+            self._ready_to_close = True
             self.close()
 
+    def failed(self, message):
+        self.statusBar().showMessage(message)
+        if self._quitting:
+            self._ready_to_close = True
+            self.close()
 
-class SettingsDialog(QDialog):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.ui=Ui_settings()
-        self.ui.setupUi(self)
+    def add_feed(self):
+        url, accepted = QtWidgets.QInputDialog.getText(self, 'Add feed', 'RSS, Atom, or website URL:')
+        if accepted and url.strip():
+            self.runner.submit(fm.addFeed, url.strip())
 
-        self.ui.btnCancel.clicked.connect(self.close)
-        self.ui.btnSave.clicked.connect(self.close)
+    def remove_feed(self):
+        identity = self.feed_id()
+        if identity is None:
+            return
+        if QtWidgets.QMessageBox.question(self, 'Remove feed', 'Remove this subscription and its saved articles?') == QtWidgets.QMessageBox.StandardButton.Yes:
+            fm.removeFeed(identity)
+            self.refresh_views()
 
+    def manage_feeds(self):
+        self.manage('Feeds', False)
 
-class AboutDialog(QDialog):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.ui=Ui_About()
-        self.ui.setupUi(self)
+    def manage_topics(self):
+        self.manage('Topics', True)
 
-        self.ui.btnClose.clicked.connect(self.close)
-        self.ui.btnLicense.clicked.connect(self.loadLicense)
-        self.ui.btnCredits.clicked.connect(self.loadCredits)
+    def manage(self, title, topics):
+        values = classifier.listTopics() if topics else fm.listFeeds()
+        values = [value for value in values if not topics or value.title != 'General']
+        if not values:
+            self.add_topic() if topics else self.add_feed()
+            return
+        labels = [f'{v.title} [{v.id}]' for v in values]
+        label, accepted = QtWidgets.QInputDialog.getItem(self, 'Manage ' + title, 'Select to remove:', labels, editable=False)
+        if accepted:
+            value = values[labels.index(label)]
+            if QtWidgets.QMessageBox.question(self, 'Confirm removal', 'Remove ' + value.title + '?') == QtWidgets.QMessageBox.StandardButton.Yes:
+                classifier.removeTopic(value) if topics else fm.removeFeed(value)
+                self.refresh_views()
 
+    def add_topic(self):
+        title, accepted = QtWidgets.QInputDialog.getText(self, 'Add topic', 'Interest name:')
+        if accepted and title.strip():
+            classifier.addTopic(title.strip())
+            self.refresh_views()
 
-    def loadLicense(self):
-        LicenseDialog(self).exec()
+    def remove_topic(self):
+        topic = m.session.get(m.Topic, self.topic_id()) if self.topic_id() else None
+        if topic is None or topic.title == 'General':
+            self.statusBar().showMessage('The General topic cannot be removed.')
+            return
+        if QtWidgets.QMessageBox.question(self, 'Remove topic', 'Remove this interest and its learned preferences?') == QtWidgets.QMessageBox.StandardButton.Yes:
+            classifier.removeTopic(topic)
+            self.refresh_views()
 
+    def fetch_feed(self):
+        if self.feed_id() is not None:
+            self.runner.submit(refresh_job, self.feed_id())
 
-    def loadCredits(self):
-        CreditsDialog(self).exec()
+    def fetch_all(self):
+        if not self._quitting:
+            self.runner.submit(refresh_job)
 
+    def current_item(self):
+        return m.session.get(m.Item, self.current_id) if self.current_id else None
 
-class LicenseDialog(QDialog):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.ui=Ui_License()
-        self.ui.setupUi(self)
+    def vote(self, value):
+        item, topic = self.current_item(), m.session.get(m.Topic, self.topic_id())
+        if item and topic:
+            classifier.voteArticle(value, item, topic)
+            self.runner.submit(rank_job, topic.id)
 
-        self.ui.btnClose.clicked.connect(self.close)
+    def mark_unread(self):
+        item = self.current_item()
+        if item:
+            fm.setItemFlag(item, 1)
+            self.display_items()
 
+    def mark_all_read(self):
+        for widget in (self.ui.listUnread, self.ui.listOld):
+            for index in range(widget.topLevelItemCount()):
+                identity = widget.topLevelItem(index).data(0, QtCore.Qt.ItemDataRole.UserRole)
+                fm.setItemFlag(identity, 2, False)
+        m.session.commit()
+        self.display_items()
 
-class CreditsDialog(QDialog):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.ui=Ui_Credits()
-        self.ui.setupUi(self)
+    def bookmark(self):
+        item = self.current_item()
+        if item:
+            item.bookMarked = not item.bookMarked
+            item.favourite = item.bookMarked
+            m.session.commit()
+            self.display_items()
 
-        self.ui.btnClose.clicked.connect(self.close)
+    def toggle_bookmarks(self):
+        self.bookmarks_only = self.bookmark_action.isChecked()
+        self.display_items()
 
+    def visit_page(self):
+        item = self.current_item()
+        if item and item.url:
+            QtGui.QDesktopServices.openUrl(QtCore.QUrl(portability.http_url(item.url)))
 
+    def copy_link(self):
+        item = self.current_item()
+        if item:
+            QtWidgets.QApplication.clipboard().setText(item.url)
+            self.statusBar().showMessage('Article link copied.' if item.url else 'This entry has no original URL.')
 
-class FeedIO(QWidget):
-    def __init__(self, parent = None):
-        QWidget.__init__(self)
-        logging.debug("FeedIO instance created")
+    def speak(self):
+        if self.speech.playing:
+            self.speech.stop()
+        elif self.current_item():
+            item = self.current_item()
+            self.speech.say(purify.cleanText(item.title + '. ' + item.description))
 
-        self.status = "Running..."
+    def speech_status(self):
+        if self.speech.error:
+            self.statusBar().showMessage(self.speech.error)
+            self.speech.error = None
 
-        #espeak speech engine initiation
-        self.playerState='standby'
-        self.sp=speechengine.SpeechEngine("40","150")
+    def import_opml(self):
+        source, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Import subscriptions', '', 'OPML (*.opml *.xml)')
+        if source:
+            added = portability.import_opml(source)
+            self.refresh_views()
+            self.statusBar().showMessage(f'Imported {added} subscriptions. Refresh to retrieve articles.')
 
-        self.refreshDisplay = False
+    def export_opml(self):
+        destination, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Export subscriptions', 'feeds.opml', 'OPML (*.opml)')
+        if destination:
+            portability.export_opml(destination)
 
-        self.updateInterval = 1800000 # time in miliseconds (30 minutes)
+    def backup(self):
+        destination, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Back up profile (choose a new filename)', 'feedio-backup.sqlite', 'SQLite (*.sqlite)')
+        if destination:
+            from .config import DB_FILE
+            migration.snapshot(DB_FILE, destination)
+            self.statusBar().showMessage('Profile backed up, including reading history and votes.')
 
-        timer = QTimer(self) # timer to fetch feeds automatically
-        timer.timeout.connect(self.fetchAllFeeds)
-        timer.start(self.updateInterval)
+    def import_profile(self):
+        source, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Import into an empty profile', str(migration.legacy_profile() or ''), 'SQLite (*.sqlite *.db)')
+        if source:
+            migration.import_profile(source)
+            classifier.initTopics()
+            self.refresh_views()
+            self.statusBar().showMessage('Profile imported. Legacy model binaries are preserved but not loaded.')
 
+    def reset_learning(self):
+        self.statusBar().showMessage('Learning reset is available after the learning service upgrade.')
 
-    def sendNotification(self, title = "feedIO"):
-        no = notifier.Notifier(title, self.status)
-        no.feedNotification()
+    def preferences(self):
+        QtWidgets.QMessageBox.information(self, 'Preferences', 'Preferences are being migrated to profile storage.')
 
+    def notifications(self, enabled):
+        self.notifications_enabled = enabled
 
-    def addFeed(self, feedUrl):
-        try:
-            fm.addFeed(feedUrl)
-        except:
-            self.status = "Error adding feed!"
-            logging.debug(self.status)
-            self.sendNotification()
+    def help(self):
+        QtWidgets.QMessageBox.information(self, 'feedIO Help',
+            'Feeds → Add feed accepts RSS, Atom, or website URLs. Refresh downloads articles for offline reading. '
+            'Select an article to mark it read; use Mark as Unread to restore it. Vote under an interest to train ranking. '
+            'Original pages open in your browser. Remote images and scripts are blocked in the reader. '
+            'OPML transfers subscriptions; profile backups also preserve history and preferences. '
+            'Lists show the latest 1,000 matching articles.')
+
+    def about(self):
+        QtWidgets.QMessageBox.about(self, 'About feedIO',
+            'feedIO ' + __version__ + '\nA reader that learns your interests.\n'
+            'Copyright 2011 SLIIT and feedIO contributors.\nGPL-3.0-or-later.\n'
+            'Chanaka Jayamal, Lanka Amarasekara, Kolitha Gajanayake, Chamika Viraj.')
+
+    def minimize(self):
+        if self.tray:
+            self.hide()
         else:
-            self.refreshDisplay = True
+            self.showMinimized()
 
-
-    def fetchAllFeeds(self):
-        thread = threading.Thread(target=self.fetchAll, args=())
-        thread.start()
-
-##    def calAllScores(self):
-##        itemList = fm.listNew()
-##        itemList.extend(fm.listUnread())
-##        self.calcScores(itemList)
-
-#    def calcScores(self, articleList):
-#        pass
-##        pri = prioritizer.Prioritizer()
-##        pri.setScores(articleList)
-
-
-    def fetchAll(self):
-        self.status = "fetching Updates..."
-        self.sendNotification()
-        fm.updateAll()
-
-        #assign the newly fetched articles to the topics
-        newList = fm.listNew()
-        classifier.assignItemsToTopics(newList)
-        logging.debug("Assigned the new articles to topics")
-        #calculate the priority scores of the new articles for each topic.
-        self.setNewItemScores()
-
-        self.status = "All feeds updated."
-        logging.debug(self.status)
-        self.sendNotification()
-
-
-    def setNewItemScores(self):
-        """
-        Function to get the New Articles and calculate their scores under all the topics
-        """
-        #get all the topics
-        topicsList = classifier.listTopics()
-
-        for topic in topicsList:
-            pri = prioritizer.Prioritizer(topic)
-            scoreItemsList = pri.listScoreItems()
-            scoreItemList = [scoreItem for scoreItem in scoreItemsList if scoreItem.item.age == 0]
-            pri.setScores(scoreItemList)
-            logging.debug("calculated New article scores for %s" % topic.title)
-
-    def reCalculateAllScores(self):
-        """
-        Function to get all the Unread Articles and calculate their scores under all the topics.
-        """
-        #get all the topics
-        logging.debug("reCalculating All Scores")
-        topicsList = classifier.listTopics()
-
-        for topic in topicsList:
-            self.reCalculateScores(topic)
-
-
-    def reCalculateScores(self, topic):
-        """
-        Function to get all the Unread Articles and calculate their scores under the given topic.
-        """
-        logging.debug("calculating New article scores for %s" % topic.title)
-        pri = prioritizer.Prioritizer(topic)
-        scoreItemsList = pri.listScoreItems()
-#        scoreItemList = [scoreItem for scoreItem in scoreItemsList if scoreItem.item.isUnread == True]
-        pri.setScores(scoreItemsList)
-        logging.debug("calculated New article scores for %s" % topic.title)
-        self.status = "Calculated New article scores for %s" % topic.title
-        self.sendNotification()
-
-
+    def quit_app(self):
+        self._quitting = True
+        self.close()
 
     def closeEvent(self, event):
-        logging.debug("marking all new Items as old before exit")
-        newItems = fm.listNew()
-        for item in newItems:
+        if self.close_to_tray and self.tray and not self._quitting:
+            self.hide()
+            event.ignore()
+            return
+        self._quitting = True
+        self.timer.stop()
+        if self.runner.busy:
+            self.runner.cancel.set()
+            self.statusBar().showMessage('Finishing active request before closing…')
+            event.ignore()
+            return
+        for item in fm.listNew():
             fm.setItemFlag(item, 1, False)
-            logging.debug("marked %s new to unread" % item.title)
-
-        #check whether text to speech is still working
-        if (self.playerState == 'playing'):
-            self.sp.stop()
-            self.playerState='standby'
-            logging.debug("speech engine terminated on exit")
-        else:
-            pass
-
-        # Might need to move this commit to a better place.
-        # this is done to ruduce the number of commites to be performed when exiting, to one
-        fm.session.commit()
+        m.session.commit()
+        self.speech.stop()
+        self.runner.shutdown()
+        reader.close(self.ui.viewArticle)
+        if self.tray:
+            self.tray.hide()
         event.accept()
 
 
+mainUI = MainWindow
+
+
 def initUI():
-
-    app = QApplication(sys.argv)
-
-    # Set up the Organization, Domain and App names to be used for QSettings.
-    app.setOrganizationName("feedIO project")
-    app.setOrganizationDomain("feedio.org")
-    app.setApplicationName("feedIO")
-
-    # Splash screen implementation
-    splash_pix = QPixmap(":/images/splash.png")
-    # splash_pix = QPixmap('./images/feedIO-splash.png')
-    splash = QSplashScreen(splash_pix, QtCore.Qt.WindowType.WindowStaysOnTopHint)
-    splash.setMask(splash_pix.mask())
-
-    splash.show()
-    app.processEvents()
-
-    # create a feedIO QWidget instance
-    feedIO = FeedIO()
-
-    # pass feedIO as the parent for the mainWindow.
-    mainWindow = mainUI(feedIO)
-
-    # system tray icon
-    icon = QIcon()
-    icon.addPixmap(QPixmap(":/images/feedIO.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-
-    # Pass the feedIO instance as the parent and the mainWindow instance as the child.
-    trayIcon = SystemTrayIcon(icon, feedIO, mainWindow)
-
-    #tool tip for the system try icon.
-    # TODO this should be updated appropriately at run time.
-    trayIcon.setToolTip("feedIO " + __version__ + " developer build running...")
-    trayIcon.show()
-
-    mainWindow.show()
-    splash.finish(mainWindow)
-    sys.exit(app.exec())
-
-
-
-if __name__ == "__main__":
-    initUI()
+    app = QtWidgets.QApplication.instance() or QtWidgets.QApplication(sys.argv)
+    app.setApplicationName('feedIO')
+    app.setOrganizationName('feedIO')
+    window = MainWindow()
+    window.show()
+    result = app.exec()
+    window.deleteLater()
+    app.sendPostedEvents(None, QtCore.QEvent.Type.DeferredDelete)
+    app.sendPostedEvents(None, QtCore.QEvent.Type.DeferredDelete)
+    m.close()
+    return result
