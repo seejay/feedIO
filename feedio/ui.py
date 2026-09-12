@@ -101,6 +101,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.bookmark_action.setCheckable(True)
         self._add_action(self.ui.menuArticle, 'Mark displayed articles read', self.mark_all_read)
         self._add_action(self.ui.menuTopics, 'Reset current topic learning', self.reset_learning)
+        self._add_action(self.ui.menuHelp, 'License and credits', self.license)
         self.refresh_views()
         legacy = migration.legacy_profile()
         if legacy and not fm.listFeeds():
@@ -439,6 +440,22 @@ class MainWindow(QtWidgets.QMainWindow):
             'feedIO ' + __version__ + '\nA reader that learns your interests.\n'
             'Copyright 2011 SLIIT and feedIO contributors.\nGPL-3.0-or-later.\n'
             'Chanaka Jayamal, Lanka Amarasekara, Kolitha Gajanayake, Chamika Viraj.')
+
+    def license(self):
+        from importlib.resources import files
+        dialog = QtWidgets.QDialog(self)
+        dialog.setWindowTitle('feedIO — License and credits')
+        dialog.resize(720, 540)
+        layout = QtWidgets.QVBoxLayout(dialog)
+        content = QtWidgets.QPlainTextEdit(dialog)
+        content.setReadOnly(True)
+        content.setPlainText(files('feedio').joinpath('AUTHORS.txt').read_text(encoding='utf-8')
+            + '\n\n' + files('feedio').joinpath('LICENSE.txt').read_text(encoding='utf-8'))
+        layout.addWidget(content)
+        buttons = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.StandardButton.Close)
+        buttons.rejected.connect(dialog.reject)
+        layout.addWidget(buttons)
+        dialog.exec()
 
     def minimize(self):
         if self.tray:

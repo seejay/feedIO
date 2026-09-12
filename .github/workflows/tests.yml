@@ -1,12 +1,40 @@
 name: Tests
 on: [push, pull_request, workflow_dispatch]
 jobs:
-  backend:
-    runs-on: ubuntu-latest
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022, macos-14]
+        python: ['3.10', '3.12', '3.14']
+    runs-on: ${{ matrix.os }}
+    env:
+      QT_QPA_PLATFORM: offscreen
+      QT_QPA_PLATFORMTHEME: generic
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-      - run: python -m pip install -e . pytest
+          python-version: ${{ matrix.python }}
+      - name: Linux Qt dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libegl1 libopengl0 libxkbcommon-x11-0 libxcb-cursor0 libnss3 libasound2t64
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m ruff check .
       - run: python -m pytest -q
+      - run: python scripts/smoke_desktop.py
+      - run: python scripts/generate_ui.py
+      - run: git diff --exit-code
+      - run: python -m build
+      - name: Native development bundle
+        if: matrix.python == '3.12'
+        run: python scripts/build_desktop.py
+      - uses: actions/upload-artifact@v4
+        if: matrix.python == '3.12'
+        with:
+          name: feedio-development-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
+            dist/desktop/

@@ -3,6 +3,8 @@ import json
 import subprocess
 import sys
 import threading
+import tempfile
+from pathlib import Path
 
 
 class SpeechUnavailable(RuntimeError):
@@ -32,19 +34,30 @@ class SpeechEngine:
         self.error = None
         self._stopping = False
         command = ([sys.executable] if getattr(sys, 'frozen', False) else [sys.executable, '-m', 'feedio'])
-        self.process = subprocess.Popen(command + ['--speech-worker'], stdin=subprocess.PIPE,
-                                        stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
-                                        text=True, encoding='utf-8')
-        process = self.process
         payload = json.dumps({'text': text[:50000], 'rate': self.speed, 'voice': self.voice})
+        # Windowed frozen applications have no sys.stdin, even with pipe redirection.
+        with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', suffix='.json',
+                                         prefix='feedio-speech-', delete=False) as handle:
+            handle.write(payload)
+            payload_path = Path(handle.name)
+        try:
+            self.process = subprocess.Popen(command + ['--speech-worker', str(payload_path)],
+                                            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                                            stderr=subprocess.DEVNULL)
+        except Exception:
+            payload_path.unlink(missing_ok=True)
+            raise SpeechUnavailable('Could not start the speech worker.') from None
+        process = self.process
         def communicate():
             try:
-                _, error = process.communicate(payload)
+                process.wait()
                 if process.returncode and not self._stopping:
                     self.error = 'Speech unavailable. Install feedio[speech] and a native speech backend; check your voice setting.'
             except Exception:
                 if not self._stopping:
                     self.error = 'Speech playback failed.'
+            finally:
+                payload_path.unlink(missing_ok=True)
         self._worker = threading.Thread(target=communicate, daemon=True)
         self._worker.start()
 
@@ -59,10 +72,14 @@ class SpeechEngine:
                 self.process.wait(timeout=1)
 
 
-def run_worker():
+def run_worker(payload_path):
     try:
+        path = Path(payload_path)
+        if path.stat().st_size > 1_000_000:
+            return 1
+        values = json.loads(path.read_text(encoding='utf-8'))
+        path.unlink()  # Minimize the lifetime of article text on disk.
         import pyttsx3
-        values = json.loads(sys.stdin.read(250000))
         engine = pyttsx3.init()
         engine.setProperty('rate', int(values['rate']))
         if values.get('voice'):
@@ -71,5 +88,4 @@ def run_worker():
         engine.runAndWait()
         return 0
     except Exception:
-        print('Speech backend unavailable', file=sys.stderr)
         return 1
