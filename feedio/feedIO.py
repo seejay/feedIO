@@ -9,7 +9,11 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description='feedIO desktop reader')
     parser.add_argument('--profile', help='Use a separate profile directory')
     parser.add_argument('--check', action='store_true', help='Initialize and check the profile without opening a window')
+    parser.add_argument('--speech-worker', action='store_true', help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
+    if args.speech_worker:
+        from feedio.speechengine import run_worker
+        return run_worker()
     from feedio import config, models, classifier
     if args.profile:
         config.USER_DIR = str(Path(args.profile).expanduser().resolve())

@@ -4,6 +4,8 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from .UI.feedIO_ui import Ui_feedIO
 from . import models as m, classifier, feedmanager as fm, prioritizer, purify
 from . import portability, migration, reader
+from . import settings
+from .preferences_ui import PreferencesDialog
 from .workers import TaskRunner
 from .speechengine import SpeechEngine, SpeechUnavailable
 from . import __version__
@@ -49,6 +51,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.fetch_all)
         self.timer.start(30 * 60 * 1000)
+        self.apply_preferences()
         self.speech_timer = QtCore.QTimer(self)
         self.speech_timer.timeout.connect(self.speech_status)
         self.speech_timer.start(500)
@@ -406,10 +409,22 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.statusBar().showMessage('Topic learning reset.')
 
     def preferences(self):
-        QtWidgets.QMessageBox.information(self, 'Preferences', 'Preferences are being migrated to profile storage.')
+        if PreferencesDialog(self).exec() == QtWidgets.QDialog.DialogCode.Accepted:
+            self.apply_preferences()
+
+    def apply_preferences(self):
+        values = settings.load()
+        self.close_to_tray = values.close_to_tray
+        self.notifications_enabled = values.notifications
+        self.speech.speed = values.speech_rate
+        self.speech.voice = values.speech_voice
+        self.timer.setInterval(values.refresh_minutes * 60 * 1000)
 
     def notifications(self, enabled):
-        self.notifications_enabled = enabled
+        values = settings.load()
+        values.notifications = enabled
+        settings.save(values)
+        self.apply_preferences()
 
     def help(self):
         QtWidgets.QMessageBox.information(self, 'feedIO Help',
