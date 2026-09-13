@@ -1,15 +1,47 @@
 """Offline article renderer: no scripts, remote requests, or file navigation."""
 import html
 from bs4 import BeautifulSoup
-from PyQt6.QtCore import QUrl, QCoreApplication
+from PyQt6.QtCore import QUrl, QCoreApplication, QBuffer, QIODevice
 from PyQt6.QtGui import QDesktopServices
 from PyQt6.QtWebEngineCore import (QWebEnginePage, QWebEngineProfile,
-                                  QWebEngineSettings, QWebEngineUrlRequestInterceptor)
+                                  QWebEngineSettings, QWebEngineUrlRequestInterceptor,
+                                  QWebEngineUrlScheme, QWebEngineUrlSchemeHandler,
+                                  QWebEngineUrlRequestJob)
+
+
+# Qt requires registration before QApplication is constructed. Only this
+# profile's in-memory article is served; no socket or temporary HTML file exists.
+_scheme = QWebEngineUrlScheme(b'feedio')
+_scheme.setSyntax(QWebEngineUrlScheme.Syntax.Host)
+_scheme.setFlags(QWebEngineUrlScheme.Flag.SecureScheme |
+                 QWebEngineUrlScheme.Flag.LocalScheme |
+                 QWebEngineUrlScheme.Flag.NoAccessAllowed)
+QWebEngineUrlScheme.registerScheme(_scheme)
+
+
+def is_article_url(url):
+    return url.scheme() == 'feedio' and url.host() == 'reader' and url.path() == '/article'
+
+
+class ArticleContent(QWebEngineUrlSchemeHandler):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.content = b''
+        self.revision = 0
+
+    def requestStarted(self, request):
+        if not is_article_url(request.requestUrl()) or request.requestMethod() != b'GET':
+            request.fail(QWebEngineUrlRequestJob.Error.RequestDenied)
+            return
+        buffer = QBuffer(request)
+        buffer.setData(self.content)
+        buffer.open(QIODevice.OpenModeFlag.ReadOnly)
+        request.reply(b'text/html', buffer)
 
 
 class OfflineRequests(QWebEngineUrlRequestInterceptor):
     def interceptRequest(self, info):
-        if info.requestUrl().scheme() not in ('data', 'about', 'qrc'):
+        if info.requestUrl().scheme() not in ('data', 'about', 'qrc') and not is_article_url(info.requestUrl()):
             info.block(True)
 
 
@@ -19,13 +51,15 @@ class ReaderPage(QWebEnginePage):
             if url.scheme() in ('https', 'http'):
                 QDesktopServices.openUrl(url)
             return False
-        return url.scheme() in ('data', 'about', 'qrc')
+        return url.scheme() in ('data', 'about', 'qrc') or is_article_url(url)
 
 
 def configure(view):
     profile = QWebEngineProfile(QCoreApplication.instance())
     interceptor = OfflineRequests(profile)
     profile.setUrlRequestInterceptor(interceptor)
+    content = ArticleContent(profile)
+    profile.installUrlSchemeHandler(b'feedio', content)
     page = ReaderPage(profile, view)
     view.destroyed.connect(profile.deleteLater)
     settings = page.settings()
@@ -36,6 +70,15 @@ def configure(view):
     view.setPage(page)
     # Keep Python wrappers alive for Qt virtual callbacks.
     view._reader_objects = (profile, interceptor, page)
+    view._article_content = content
+
+
+def show_html(view, html):
+    """Avoid Chromium's 2 MB data-URL limit without truncating long articles."""
+    content = view._article_content
+    content.content = html.encode('utf-8')
+    content.revision += 1
+    view.setUrl(QUrl(f'feedio://reader/article?revision={content.revision}'))
 
 
 def close(view):

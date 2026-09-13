@@ -17,6 +17,10 @@ class Cancelled(FetchError):
     pass
 
 
+class RetryableFetchError(FetchError):
+    pass
+
+
 @dataclass(frozen=True)
 class Response:
     url: str
@@ -32,13 +36,27 @@ def check_cancel(cancel):
 
 
 def retrieve(url, etag='', modified='', cancel=None):
+    deadline = time.monotonic() + 30
+    for attempt in range(2):
+        try:
+            return _retrieve(url, etag, modified, cancel, deadline)
+        except RetryableFetchError:
+            if attempt or time.monotonic() + 0.5 >= deadline:
+                raise
+            if cancel is not None:
+                if cancel.wait(0.5):
+                    raise Cancelled('Operation cancelled') from None
+            else:
+                time.sleep(0.5)
+
+
+def _retrieve(url, etag, modified, cancel, deadline):
     url = http_url(url)
     headers = {'User-Agent': 'feedIO/2', 'Accept': 'application/atom+xml,application/rss+xml,application/xml,text/html;q=0.8'}
     if etag:
         headers['If-None-Match'] = etag
     if modified:
         headers['If-Modified-Since'] = modified
-    deadline = time.monotonic() + 30
     redirected, permanent = False, True
     try:
         with requests.Session() as client:
@@ -60,7 +78,8 @@ def retrieve(url, etag='', modified='', cancel=None):
                     if response.status_code == 304:
                         return Response(response.url, 304, dict(response.headers), b'')
                     if response.status_code != 200:
-                        raise FetchError(f'Feed server returned HTTP {response.status_code}')
+                        error_class = RetryableFetchError if response.status_code in (500, 502, 503, 504) else FetchError
+                        raise error_class(f'Feed server returned HTTP {response.status_code}')
                     chunks, size = [], 0
                     for chunk in response.iter_content(65536):
                         check_cancel(cancel)
@@ -75,4 +94,4 @@ def retrieve(url, etag='', modified='', cancel=None):
             raise FetchError('Too many feed redirects')
     except requests.RequestException as error:
         # Request exception strings may include private URL query parameters.
-        raise FetchError('Unable to fetch feed. Check the network and server address.') from error
+        raise RetryableFetchError('Unable to fetch feed. Check the network and server address.') from error

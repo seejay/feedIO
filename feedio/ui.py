@@ -9,6 +9,8 @@ from .preferences_ui import PreferencesDialog
 from .workers import TaskRunner
 from .speechengine import SpeechEngine, SpeechUnavailable
 from . import __version__
+from sqlalchemy import and_, func, update
+from sqlalchemy.orm import joinedload
 
 
 def refresh_job(feed_id=None, cancel=None):
@@ -36,6 +38,9 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__()
         self.ui = Ui_feedIO()
         self.ui.setupUi(self)
+        self.ui.splitter_2.setSizes([280, 650])
+        self.ui.splitter_2.setStretchFactor(0, 0)
+        self.ui.splitter_2.setStretchFactor(1, 1)
         reader.configure(self.ui.viewArticle)
         self.runner = TaskRunner(self)
         self.runner.succeeded.connect(self.finished)
@@ -45,6 +50,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self._ready_to_close = False
         self.current_id = None
         self.bookmarks_only = False
+        self.page_offset = 0
+        self.page_size = 250
+        self._filter_key = None
         self.speech = SpeechEngine()
         self.close_to_tray = False
         self.notifications_enabled = True
@@ -87,10 +95,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.actionMinimizeToTray.setEnabled(self.tray is not None)
         self.ui.btnUp.clicked.connect(lambda: self.invoke(lambda: self.vote('up')))
         self.ui.btnDown.clicked.connect(lambda: self.invoke(lambda: self.vote('down')))
-        self.ui.comboFeed.currentIndexChanged.connect(self.display_items)
-        self.ui.comboTopic.currentIndexChanged.connect(self.display_items)
-        self.ui.listUnread.currentItemChanged.connect(lambda item, old: self.select_item(item))
-        self.ui.listOld.currentItemChanged.connect(lambda item, old: self.select_item(item))
+        self.ui.comboFeed.currentIndexChanged.connect(lambda: self.invoke(self.display_items))
+        self.ui.comboTopic.currentIndexChanged.connect(lambda: self.invoke(self.display_items))
+        self.ui.listUnread.currentItemChanged.connect(lambda item, old: self.invoke(lambda: self.select_item(item)))
+        self.ui.listOld.currentItemChanged.connect(lambda item, old: self.invoke(lambda: self.select_item(item)))
         self.ui.listUnread.itemDoubleClicked.connect(lambda item, column: self.visit_page())
         self.ui.listOld.itemDoubleClicked.connect(lambda item, column: self.visit_page())
         self._add_action(self.ui.menuFile, 'Import subscriptions (OPML)…', self.import_opml)
@@ -99,6 +107,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self._add_action(self.ui.menuFile, 'Import / restore profile…', self.import_profile)
         self.bookmark_action = self._add_action(self.ui.menuArticle, 'Show bookmarks only', self.toggle_bookmarks)
         self.bookmark_action.setCheckable(True)
+        self.previous_page = self._add_action(self.ui.menuArticle, 'Previous article page', lambda: self.change_page(-1))
+        self.next_page = self._add_action(self.ui.menuArticle, 'Next article page', lambda: self.change_page(1))
+        self.page_label = QtWidgets.QLabel(self)
+        self.statusBar().addPermanentWidget(self.page_label)
+        self.cancel_button = QtWidgets.QPushButton('Cancel', self)
+        self.cancel_button.setToolTip('Cancel the current refresh or ranking operation')
+        self.cancel_button.clicked.connect(self.cancel_work)
+        self.statusBar().addPermanentWidget(self.cancel_button)
+        self.cancel_button.hide()
         self._add_action(self.ui.menuArticle, 'Mark displayed articles read', self.mark_all_read)
         self._add_action(self.ui.menuTopics, 'Reset current topic learning', self.reset_learning)
         self._add_action(self.ui.menuHelp, 'License and credits', self.license)
@@ -168,20 +185,33 @@ class MainWindow(QtWidgets.QMainWindow):
         self.display_items()
 
     def display_items(self, *args):
+        filter_key = (self.feed_id(), self.topic_id(), self.bookmarks_only)
+        if self._filter_key != filter_key:
+            self.page_offset = 0
+            self._filter_key = filter_key
+            self.current_id = None
         previous = self.current_id
         self.current_id = None
         blockers = [QtCore.QSignalBlocker(self.ui.listUnread), QtCore.QSignalBlocker(self.ui.listOld)]
         self.ui.listUnread.clear()
         self.ui.listOld.clear()
-        query = m.session.query(m.Item)
+        query = m.session.query(m.Item).options(joinedload(m.Item.feed))
         if self.feed_id() is not None:
             query = query.filter_by(feed_id=self.feed_id())
         if self.bookmarks_only:
             query = query.filter_by(bookMarked=True)
         topic_id = self.topic_id()
-        scores = dict(m.session.query(m.ScoreItem.item_id, m.ScoreItem.score).filter_by(topic_id=topic_id).all())
-        items = query.order_by(m.Item.updated.desc(), m.Item.id.desc()).limit(1000).all()
-        items.sort(key=lambda i: (not i.isUnread, -scores.get(i.id, 1000), -(i.updated or 0), -i.id))
+        total = query.count()
+        self.page_offset = min(self.page_offset, max(0, (total - 1) // self.page_size * self.page_size))
+        query = query.outerjoin(m.ScoreItem, and_(m.ScoreItem.item_id == m.Item.id,
+                                                  m.ScoreItem.topic_id == topic_id))
+        items = query.order_by(m.Item.isUnread.desc(), func.coalesce(m.ScoreItem.score, 1000).desc(),
+                              m.Item.updated.desc(), m.Item.id.desc()).offset(self.page_offset).limit(self.page_size).all()
+        scores = dict(m.session.query(m.ScoreItem.item_id, m.ScoreItem.score).filter(
+            m.ScoreItem.topic_id == topic_id, m.ScoreItem.item_id.in_([item.id for item in items])).all())
+        self.previous_page.setEnabled(self.page_offset > 0)
+        self.next_page.setEnabled(self.page_offset + self.page_size < total)
+        self.page_label.setText(f'{self.page_offset + 1 if total else 0}–{self.page_offset + len(items)} of {total}')
         selected = None
         for item in items:
             node = QtWidgets.QTreeWidgetItem([('★ ' if item.bookMarked else '') + item.title])
@@ -195,9 +225,15 @@ class MainWindow(QtWidgets.QMainWindow):
         if selected:
             selected[0].setCurrentItem(selected[1])
             self.current_id = previous
+        elif previous is not None:
+            # Marking read can move an article to a later ranked page. Keep its
+            # content and actions available instead of replacing it with Welcome.
+            previous_item = m.session.get(m.Item, previous)
+            if previous_item is not None and (not self.bookmarks_only or previous_item.bookMarked):
+                self.current_id = previous
         del blockers
         if self.current_id is None:
-            self.ui.viewArticle.setHtml(reader.article_html('Welcome to feedIO',
+            reader.show_html(self.ui.viewArticle, reader.article_html('Welcome to feedIO',
                 '<p>Add a feed or import subscriptions to begin. Select an article to read it offline.</p>'))
         self.update_actions()
 
@@ -209,7 +245,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if item is None:
             return
         self.current_id = identity
-        self.ui.viewArticle.setHtml(reader.article_html(item.title, item.description, item.feed.title))
+        reader.show_html(self.ui.viewArticle, reader.article_html(item.title, item.description, item.feed.title))
         self.setWindowTitle(item.title + ' — feedIO')
         if item.isUnread:
             fm.setItemFlag(item, 2)
@@ -227,9 +263,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.actionFetchFeed.setEnabled(self.feed_id() is not None and not self.runner.busy)
 
     def busy_changed(self, busy):
+        self.cancel_button.setVisible(busy)
+        self.cancel_button.setEnabled(busy)
         self.ui.menuFile.setEnabled(not busy)
         self.ui.menuTopics.setEnabled(not busy)
         self.ui.menuTools.setEnabled(not busy)
+        self.ui.menuArticle.setEnabled(not busy)
         self.ui.listUnread.setEnabled(not busy)
         self.ui.listOld.setEnabled(not busy)
         self.ui.comboFeed.setEnabled(not busy)
@@ -239,6 +278,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.update_actions()
         if busy:
             self.statusBar().showMessage('Working…')
+
+    def cancel_work(self):
+        self.runner.cancel.set()
+        self.cancel_button.setEnabled(False)
+        self.statusBar().showMessage('Cancelling the current operation…')
 
     def finished(self, result):
         self.refresh_views()
@@ -350,6 +394,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.bookmarks_only = self.bookmark_action.isChecked()
         self.display_items()
 
+    def change_page(self, direction):
+        self.page_offset = max(0, self.page_offset + direction * self.page_size)
+        self.current_id = None
+        self.display_items()
+
     def visit_page(self):
         item = self.current_item()
         if item and item.url:
@@ -397,6 +446,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if source:
             migration.import_profile(source)
             classifier.initTopics()
+            self.apply_preferences()
             self.refresh_views()
             self.statusBar().showMessage('Profile imported. Legacy model binaries are preserved but not loaded.')
 
@@ -410,6 +460,9 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.statusBar().showMessage('Topic learning reset.')
 
     def preferences(self):
+        if self.runner.busy:
+            self.statusBar().showMessage('Wait for the current operation before changing preferences.')
+            return
         if PreferencesDialog(self).exec() == QtWidgets.QDialog.DialogCode.Accepted:
             self.apply_preferences()
 
@@ -433,7 +486,7 @@ class MainWindow(QtWidgets.QMainWindow):
             'Select an article to mark it read; use Mark as Unread to restore it. Vote under an interest to train ranking. '
             'Original pages open in your browser. Remote images and scripts are blocked in the reader. '
             'OPML transfers subscriptions; profile backups also preserve history and preferences. '
-            'Lists show the latest 1,000 matching articles.')
+            'Use Article → Next/Previous article page to browse the entire library, ranked within the selected interest.')
 
     def about(self):
         QtWidgets.QMessageBox.about(self, 'About feedIO',
@@ -479,9 +532,16 @@ class MainWindow(QtWidgets.QMainWindow):
             self.statusBar().showMessage('Finishing active request before closing…')
             event.ignore()
             return
-        for item in fm.listNew():
-            fm.setItemFlag(item, 1, False)
-        m.session.commit()
+        try:
+            m.session.execute(update(m.Item).where(m.Item.age == 0).values(age=1, isUnread=True))
+            m.session.commit()
+        except Exception:
+            m.session.rollback()
+            self._quitting = False
+            self.timer.start()
+            self.statusBar().showMessage('Could not save reading state before closing. Check available disk space and profile permissions, then try again.')
+            event.ignore()
+            return
         self.speech.stop()
         self.runner.shutdown()
         reader.close(self.ui.viewArticle)

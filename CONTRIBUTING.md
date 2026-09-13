@@ -26,7 +26,8 @@ Feed fixtures should be small, reproducible and free of private URLs or credenti
 
 Include the feedIO, Python and Qt versions, operating system and architecture,
 installation method, steps to reproduce, and expected and actual results. Check
-whether the problem also occurs with a new profile.
+whether the problem also occurs with a new profile. For graphics problems,
+include the result with `--software-rendering` as well.
 
 A minimal feed or OPML example helps with parsing bugs. Check logs and examples
 for private URLs and article content before sharing them. Profiles and core

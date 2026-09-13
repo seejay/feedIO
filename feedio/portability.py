@@ -8,10 +8,15 @@ from . import models as m
 
 
 def http_url(value):
-    parts = urlsplit(value.strip())
-    if parts.scheme not in ('http', 'https') or not parts.hostname or parts.username or parts.password:
+    value = value.strip()
+    if any(ord(character) < 33 for character in value):
+        raise ValueError('URL contains whitespace or control characters')
+    parts = urlsplit(value)
+    if parts.scheme not in ('http', 'https') or not parts.hostname or parts.username is not None or parts.password is not None:
         raise ValueError('Use an HTTP(S) URL without embedded credentials')
-    return value.strip()
+    if parts.port is not None and parts.port == 0:
+        raise ValueError('URL port must be between 1 and 65535')
+    return parts._replace(fragment='').geturl()
 
 
 def export_opml(destination):

@@ -34,6 +34,8 @@ local and included in profile backups. Article HTML is sanitized; scripts and
 remote resources are blocked. Original links open in your system browser.
 Preferences control periodic refresh, notifications, close-to-tray and speech.
 Closing exits by default; tray behavior depends on desktop support.
+Use Cancel in the status bar to stop a refresh or ranking operation. Article →
+Next/Previous article page reaches older articles throughout the library.
 
 Speech is optional: `python -m pip install '.[speech]'`. It also requires an OS
 speech backend (for example eSpeak on Linux). Reading works without a speech
@@ -58,3 +60,6 @@ python scripts/build_desktop.py
 See the [contribution guide](CONTRIBUTING.md), [test commands](docs/TESTING.md),
 [architecture](docs/ARCHITECTURE.md), and [build instructions](docs/RELEASING.md).
 GPL-3.0-or-later; see [license](LICENSE.txt) and [authors](AUTHORS.txt).
+
+For graphics-driver problems, try `python -m feedio --software-rendering`.
+This turns off GPU acceleration while keeping the browser sandbox enabled.

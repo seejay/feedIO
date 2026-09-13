@@ -2,6 +2,7 @@
 from . import classifier
 from .models import session, ScoreItem, Item
 from .network import check_cancel
+from sqlalchemy.orm import contains_eager
 
 
 class Prioritizer:
@@ -11,7 +12,7 @@ class Prioritizer:
             raise ValueError('Unknown topic')
 
     def listScoreItems(self, feed=None):
-        query = session.query(ScoreItem).join(ScoreItem.item).filter(
+        query = session.query(ScoreItem).join(ScoreItem.item).options(contains_eager(ScoreItem.item)).filter(
             ScoreItem.topic_id == self.topic.id, Item.isUnread.is_(True))
         if feed is not None:
             query = query.filter(Item.feed_id == (feed if isinstance(feed, int) else feed.id))

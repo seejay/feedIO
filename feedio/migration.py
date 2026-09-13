@@ -1,4 +1,5 @@
 """Offline, backed-up conversion. Legacy model binaries are never deserialized."""
+from contextlib import closing
 from pathlib import Path
 import os
 import sqlite3
@@ -12,8 +13,8 @@ def snapshot(source, destination):
         raise ValueError('Backup destination must differ from the database')
     if destination.exists():
         raise ValueError('Backup destination already exists')
-    with sqlite3.connect(source.resolve().as_uri() + '?mode=ro', uri=True) as old:
-        with sqlite3.connect(destination) as new:
+    with closing(sqlite3.connect(source.resolve().as_uri() + '?mode=ro', uri=True)) as old:
+        with closing(sqlite3.connect(destination)) as new, new:
             old.backup(new)
     return destination
 
@@ -39,7 +40,7 @@ def convert_legacy(source, destination):
     engine = m.make_engine(destination)
     try:
         m.Base.metadata.create_all(engine)
-        with sqlite3.connect(source.resolve().as_uri() + '?mode=ro', uri=True) as old:
+        with closing(sqlite3.connect(source.resolve().as_uri() + '?mode=ro', uri=True)) as old:
             old.row_factory = sqlite3.Row
             feed_rows = _rows(old, ['feed'])
             topic_rows = _rows(old, ['topic'])
@@ -95,25 +96,63 @@ def prepare_database(path):
     from .models import SCHEMA_VERSION
     if not path.exists() or not path.stat().st_size:
         return
-    with sqlite3.connect(path) as db:
+    with closing(sqlite3.connect(path)) as db:
         version = db.execute('PRAGMA user_version').fetchone()[0]
         tables = [r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")]
         if version == SCHEMA_VERSION:
+            from .models import Base
+            for table in Base.metadata.sorted_tables:
+                columns = {r[1] for r in db.execute(f'PRAGMA table_info("{table.name}")')}
+                if not {column.name for column in table.columns}.issubset(columns):
+                    raise ValueError('Profile schema is incomplete or damaged; restore a verified backup')
+            if db.execute('PRAGMA quick_check').fetchone()[0] != 'ok':
+                raise ValueError('Profile integrity check failed')
+            if db.execute('PRAGMA foreign_key_check').fetchall():
+                raise ValueError('Profile contains broken relationships')
             return
         if version > SCHEMA_VERSION:
             raise ValueError('This profile requires a newer version of feedIO')
         if not tables:
             return
-    backup = path.with_name(path.name + '.pre-v1-' + uuid.uuid4().hex[:8] + '.bak')
+    backup = path.with_name(path.name + f'.pre-v{2 if version == 1 else 1}-' + uuid.uuid4().hex[:8] + '.bak')
     snapshot(path, backup)
     descriptor, temporary = tempfile.mkstemp(prefix='migration-', suffix='.sqlite', dir=path.parent)
     os.close(descriptor)
     try:
-        convert_legacy(backup, temporary)
+        if version == 1:
+            upgrade_v1(backup, temporary)
+        else:
+            convert_legacy(backup, temporary)
+        prepare_database(Path(temporary))
         os.replace(temporary, path)
     except Exception:
         Path(temporary).unlink(missing_ok=True)
         raise
+
+
+def upgrade_v1(source, destination):
+    """Rebuild the development v1 schema so IDs cannot be reused after deletion."""
+    from . import models as m
+    engine = m.make_engine(destination)
+    try:
+        m.Base.metadata.create_all(engine)
+        with closing(sqlite3.connect(destination, uri=True)) as target, target:
+            target.execute('PRAGMA foreign_keys=ON')
+            target.execute('ATTACH DATABASE ? AS old', (Path(source).resolve().as_uri() + '?mode=ro',))
+            for table in m.Base.metadata.sorted_tables:
+                columns = ','.join('"' + column.name + '"' for column in table.columns)
+                target.execute(f'INSERT INTO "{table.name}" ({columns}) SELECT {columns} FROM old."{table.name}"')
+            # Historical votes may outlive their deleted subscriptions. Reserve
+            # their IDs as well so later subscriptions cannot inherit evidence.
+            old_feed_ids = [int(row[0].split(':', 1)[0]) for row in target.execute('SELECT item_key FROM vote')
+                            if row[0].split(':', 1)[0].isdigit()]
+            maximum = max(old_feed_ids + [target.execute('SELECT coalesce(max(id),0) FROM feed').fetchone()[0]])
+            target.execute("UPDATE sqlite_sequence SET seq=? WHERE name='feed'", (maximum,))
+            if not target.execute("SELECT 1 FROM sqlite_sequence WHERE name='feed'").fetchone():
+                target.execute("INSERT INTO sqlite_sequence(name,seq) VALUES ('feed',?)", (maximum,))
+            target.execute(f'PRAGMA user_version={m.SCHEMA_VERSION}')
+    finally:
+        engine.dispose()
 
 
 def import_profile(source):
@@ -122,7 +161,9 @@ def import_profile(source):
     source = Path(source)
     if not source.is_file():
         raise ValueError('Select a feedIO SQLite database')
-    if m.session.query(m.Feed).count():
+    if (m.session.query(m.Feed).count() or m.session.query(m.Vote).count()
+            or m.session.query(m.Topic).filter(m.Topic.title != 'General').count()
+            or m.session.query(m.Setting).filter(m.Setting.key != 'migration_notice').count()):
         raise ValueError('Import requires an empty profile. Back up and use a new profile directory.')
     if source.resolve() == Path(config.DB_FILE).resolve():
         raise ValueError('Cannot import the active database into itself')
@@ -133,7 +174,7 @@ def import_profile(source):
     try:
         snapshot(source, temporary)
         prepare_database(Path(temporary))
-        with sqlite3.connect(temporary) as check:
+        with closing(sqlite3.connect(temporary)) as check:
             if check.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
                 raise ValueError('Profile integrity check failed')
             if check.execute('PRAGMA foreign_key_check').fetchall():

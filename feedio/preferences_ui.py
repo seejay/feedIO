@@ -40,7 +40,10 @@ class PreferencesDialog(QtWidgets.QDialog):
         try:
             settings.save(settings.Preferences(self.interval.value(), self.notifications.isChecked(),
                           self.tray.isChecked(), self.rate.value(), self.voice.text().strip()))
-        except (ValueError, OSError) as error:
-            QtWidgets.QMessageBox.warning(self, 'Cannot save preferences', str(error))
+        except Exception as error:
+            from .models import session
+            session.rollback()
+            QtWidgets.QMessageBox.warning(self, 'Cannot save preferences',
+                str(error) if isinstance(error, ValueError) else 'Preferences could not be saved. Previous settings were retained.')
             return
         self.accept()

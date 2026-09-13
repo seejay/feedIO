@@ -8,7 +8,7 @@ import hashlib
 import math
 from pathlib import Path
 import re
-from sqlalchemy import delete
+from sqlalchemy import delete, insert, select, literal
 from . import config, purify
 from .models import session, Topic, Item, Feed, ScoreItem, ScoreFeed, Vote
 
@@ -89,8 +89,11 @@ def addTopic(title):
     try:
         topic = Topic(title=title)
         session.add(topic)
-        topic.items.extend(session.query(Item).all())
-        topic.feeds.extend(session.query(Feed).all())
+        session.flush()
+        session.execute(insert(ScoreItem).from_select(['topic_id', 'item_id', 'score'],
+                        select(literal(topic.id), Item.id, literal(5000))))
+        session.execute(insert(ScoreFeed).from_select(['topic_id', 'feed_id', 'score'],
+                        select(literal(topic.id), Feed.id, literal(1))))
         session.commit()
         return topic
     except Exception:

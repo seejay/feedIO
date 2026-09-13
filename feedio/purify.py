@@ -3,8 +3,6 @@
 Purification module for feedIO using BeautifulSoup.
 """
 
-__version__ = "2.0.0"
-
 from bs4 import BeautifulSoup
 
 SHORTEN_LENGTH = 100
@@ -33,10 +31,3 @@ def shorten(text, numChars=SHORTEN_LENGTH):
     if not text:
         return ""
     return (text[:numChars] + '..') if len(text) > numChars else text
-
-def shortenUrl(url):
-    """
-    Shorten a long URL using a simple service.
-    """
-    # For now, just return the original URL as tinyurl dependency might be missing
-    return url

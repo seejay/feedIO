@@ -14,6 +14,12 @@ database and preserves a `.pre-v1-*.bak` snapshot before schema replacement.
 Conversion leaves the source unchanged. Keep all backups
 until you have compared subscription counts, articles, topics and reading flags.
 
+Schema 2 also upgrades development schema 1 through a `.pre-v2-*.bak` snapshot
+and temporary rebuild. It prevents IDs being reused after deletion, including
+IDs referenced by retained votes. Startup rejects incomplete current schemas
+and broken foreign keys; it does not silently create missing tables over them.
+The application holds a profile lock so two instances cannot write one profile.
+
 Recognized legacy schemas use feed/topic/item and score tables, including
 `models_` prefixes. Ambiguous tables, missing article feeds, corrupt databases
 and future schema versions fail safely rather than guessing. Historical profile

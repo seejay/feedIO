@@ -25,7 +25,10 @@ class RefreshResult:
 
 
 def _parse(response):
-    data = feedparser.parse(response.content)
+    # Parsing downloaded bytes needs an explicit base URL for relative article
+    # links and HTML links, including feeds reached through redirects.
+    data = feedparser.parse(response.content, response_headers={
+        'content-location': response.url, 'content-type': 'application/xml'})
     if not data.get('version') or data.get('bozo'):
         raise FeedError('The server did not return a valid RSS or Atom feed')
     return data
@@ -80,10 +83,10 @@ def _normalize(entry):
         if title == 'Untitled article' and not body:
             raise ValueError('Empty entry')
         identity = 'sha256:' + hashlib.sha256((title + '\0' + body).encode()).hexdigest()
-    stamp = entry.get('updated_parsed') or entry.get('published_parsed')
+    stamp = dict.get(entry, 'updated_parsed') or dict.get(entry, 'published_parsed')
     try:
         updated = float(calendar.timegm(stamp)) if stamp else 0
-    except (ValueError, TypeError, OverflowError):
+    except (ValueError, TypeError, OverflowError, IndexError):
         updated = 0
     return dict(entry_id=identity, title=title, description=body, url=link,
                 updated=updated, author=str(entry.get('author') or ''))

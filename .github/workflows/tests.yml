@@ -22,14 +22,34 @@ jobs:
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e ".[dev]"
       - run: python -m ruff check .
-      - run: python -m pytest -q
+      - run: python -m pytest -q --junitxml=build/test-results.xml
       - run: python scripts/smoke_desktop.py
+      - name: Offline desktop acceptance
+        if: matrix.python == '3.12'
+        run: python scripts/accept_desktop.py --software-rendering --output build/desktop-acceptance.json
       - run: python scripts/generate_ui.py
       - run: git diff --exit-code
       - run: python -m build
+      - run: python scripts/check_artifacts.py --wheel dist/feedio-2.0.0.dev0-py3-none-any.whl
       - name: Native development bundle
         if: matrix.python == '3.12'
         run: python scripts/build_desktop.py
+      - name: Linux bundle smoke
+        if: matrix.python == '3.12' && runner.os == 'Linux'
+        run: python scripts/check_artifacts.py --desktop dist/desktop/feedio/feedio
+      - name: Windows bundle smoke
+        if: matrix.python == '3.12' && runner.os == 'Windows'
+        run: python scripts/check_artifacts.py --desktop dist/desktop/feedio/feedio.exe
+      - name: macOS bundle smoke
+        if: matrix.python == '3.12' && runner.os == 'macOS'
+        run: python scripts/check_artifacts.py --desktop dist/desktop/feedio.app/Contents/MacOS/feedio
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: validation-${{ runner.os }}-${{ runner.arch }}-py${{ matrix.python }}
+          path: |
+            build/test-results.xml
+            build/desktop-acceptance.json
       - uses: actions/upload-artifact@v4
         if: matrix.python == '3.12'
         with:

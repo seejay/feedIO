@@ -7,11 +7,12 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from . import config
 
 Base = declarative_base()
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 
 class Feed(Base):
     __tablename__ = 'feed'
+    __table_args__ = {'sqlite_autoincrement': True}
     id = Column(Integer, primary_key=True)
     url = Column(Text, unique=True, nullable=False)
     title = Column(Text, nullable=False)
@@ -31,7 +32,7 @@ class Feed(Base):
 
 class Item(Base):
     __tablename__ = 'item'
-    __table_args__ = (UniqueConstraint('feed_id', 'entry_id'),)
+    __table_args__ = (UniqueConstraint('feed_id', 'entry_id'), {'sqlite_autoincrement': True})
     id = Column(Integer, primary_key=True)
     entry_id = Column(Text, nullable=False, default=lambda: __import__('uuid').uuid4().hex)
     url = Column(Text, default='')
@@ -53,6 +54,7 @@ class Item(Base):
 
 class Topic(Base):
     __tablename__ = 'topic'
+    __table_args__ = {'sqlite_autoincrement': True}
     id = Column(Integer, primary_key=True)
     title = Column(Text, unique=True, nullable=False)
     numVotes = Column(Integer, default=1)
@@ -82,7 +84,7 @@ class ScoreItem(Base):
 
 class Vote(Base):
     __tablename__ = 'vote'
-    __table_args__ = (UniqueConstraint('topic_id', 'item_key'),)
+    __table_args__ = (UniqueConstraint('topic_id', 'item_key'), {'sqlite_autoincrement': True})
     id = Column(Integer, primary_key=True)
     topic_id = Column(Integer, ForeignKey('topic.id', ondelete='CASCADE'), nullable=False)
     item_key = Column(Text, nullable=False)
