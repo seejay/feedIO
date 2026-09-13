@@ -1,12 +1,13 @@
 # Changelog
 
-## 2.0.0.dev0 (unreleased)
+## 2.0.0b1 (beta)
 
 - Modern Python/Qt packaging and offline, resource-complete startup.
 - Versioned SQLite profiles, stable identities, backed-up legacy import and OPML.
 - Bounded RSS/Atom retrieval, conditional refresh and durable reading state.
 - Managed background work, secure offline reader and restored desktop actions.
 - Durable topic-local learning without CRM, downloaded corpora or pickle files.
+- Rebuildable vote-based preference models use article titles, bodies and feed history.
 - Persisted preferences, local bookmarks and isolated optional speech.
 - Retired Pocket/Twitter account integrations and deferred translation.
 - Regression tests, target-platform CI and development distribution tooling.
@@ -20,5 +21,5 @@
 - Real loopback HTTP regression tests and repeatable desktop acceptance reports.
 - Give the article reader more space in the initial window layout.
 
-See [platform status](docs/TESTING.md#platform-status) for testing coverage and
-known limitations.
+This beta has been exercised on Linux ARM64. See [platform status](docs/TESTING.md#platform-status)
+for testing coverage and known limitations.

@@ -2,6 +2,7 @@
 import json
 import sqlite3
 import threading
+from contextlib import closing
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -240,7 +241,7 @@ def test_v1_upgrade_retains_data_and_backup(profile):
     m.session.add(m.Feed(title='Development v1', url='https://example.test/v1'))
     m.session.commit()
     m.close()
-    with sqlite3.connect(config.DB_FILE) as db:
+    with closing(sqlite3.connect(config.DB_FILE)) as db:
         db.execute('PRAGMA user_version=1')
     m.initDB()
     assert m.session.query(m.Feed).one().title == 'Development v1'

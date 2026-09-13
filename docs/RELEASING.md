@@ -36,8 +36,9 @@ bundle; Windows uses a windowed executable. Speech is intentionally excluded
 from default bundles. WebEngine's sandbox remains enabled in packaged builds.
 CI uploads development artifacts for testing.
 
-Before a stable release, complete the remaining [platform checks](TESTING.md#platform-status),
-select a version in `feedio/__init__.py`, update CHANGELOG.md and rebuild from that revision.
+For the 2.0.0b1 beta, set the version in `feedio/__init__.py`, update CHANGELOG.md
+and rebuild from that revision. Before a stable release, complete the remaining
+[platform checks](TESTING.md#platform-status).
 Generate checksums, attach source/license and dependency notices, sign Windows
 and macOS artifacts, and notarize macOS using maintainer-managed credentials.
 Release notes should list the tested operating systems and architectures and any

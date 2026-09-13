@@ -1,7 +1,7 @@
 # feedIO
 
 A desktop RSS/Atom reader with offline reading, topic-specific voting and learned
-ranking. Version 2.0 is under development.
+ranking. This is the first beta of version 2.0.
 
 ## Run from source
 
@@ -45,6 +45,14 @@ is currently unavailable.
 
 Existing users: read [migration and recovery](docs/MIGRATION.md) before importing
 your profile. Old CRM/pickle training files are never executed or loaded.
+
+## Learning and ranking
+
+feedIO learns locally from up and down votes. Each interest has its own small
+text preference model, built from article titles and cleaned article bodies.
+Scores combine that text evidence with the article's feed history. The model is
+stored as vote records in SQLite and rebuilt when needed; it does not use CRM114,
+downloaded training corpora, pickle files or a separate machine-learning service.
 
 ## Development and distribution
 

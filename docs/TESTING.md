@@ -50,7 +50,7 @@ See [releasing](RELEASING.md) for installed wheel and native bundle checks.
 
 ## Platform status
 
-The development version has been tested on Linux ARM64 with Python 3.10 and 3.14.
+The 2.0.0b1 beta has been tested on Linux ARM64 with Python 3.10 and 3.14.
 The regression suite, software-rendered browser checks, Wayland and XWayland
 workflows, installed wheel and native development bundle have passed there.
 CI is configured for Linux, Windows and macOS with Python 3.10, 3.12 and 3.14;

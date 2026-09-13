@@ -1,4 +1,4 @@
-__version__ = "2.0.0.dev0"
+__version__ = "2.0.0b1"
 
 __license__ = """
     Copyright (C) 2011 Sri Lanka Institute of Information Technology.
